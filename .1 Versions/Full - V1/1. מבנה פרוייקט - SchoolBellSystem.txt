@@ -1,0 +1,20 @@
+SchoolBellSystem/
+│
+├── CLAUDE.md              # קובץ ההנחיות המרכזי ל-Claude Code (כולל חוקי קדימויות)
+├── Context.md             # קובץ הזיכרון, החוקים העסקיים והיררכיית השמע
+├── schedule.json          # קובץ ברירת המחדל של לוח הזמנים והשירים
+├── requirements.txt       # ספריות פייתון נדרשות
+│
+├── audio/                 # תיקיית קבצי שמע (MP3)
+│   ├── bell_standard.mp3
+│   ├── bell_warning.mp3
+│   ├── bell_festive.mp3
+│   ├── emergency_alarm.mp3
+│   └── playlist/          # תיקיית שירים ומוזיקה להפסקות
+│       ├── song_1.mp3
+│       └── song_2.mp3
+│
+└── src/                   # קוד המערכת
+    ├── core_engine.py     # מנוע הליבה הקשיח (מנהל ערוצי שמע, Threads & Fade-out)
+    ├── schedule_agent.py  # סוכן ה-AI למעטפת התצורה והלוגיקה
+    └── telegram_bot.py    # בוט טלגרם לממשק המנהל/ת

@@ -1,0 +1,145 @@
+{
+  "active_profile": "standard",
+  "profiles": {
+    "standard": [
+      {
+        "time": "08:00",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "תחילת שיעור ראשון"
+      },
+      {
+        "time": "08:45",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "סיום שיעור ראשון"
+      },
+      {
+        "time": "08:50",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "תחילת שיעור שני"
+      },
+      {
+        "time": "09:35",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "יציאה להפסקה גדולה"
+      },
+      {
+        "time": "09:36",
+        "audio": "playlist/song_1.mp3",
+        "type": "music",
+        "duration_seconds": 1200,
+        "label": "מוזיקה בהפסקה הגדולה"
+      },
+      {
+        "time": "09:59",
+        "audio": "bell_warning.mp3",
+        "type": "bell",
+        "label": "צלצול אזהרה - 1 דקה לסיום ההפסקה"
+      },
+      {
+        "time": "10:00",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "תחילת שיעור שלישי"
+      },
+      {
+        "time": "10:45",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "סיום שיעור שלישי"
+      },
+      {
+        "time": "10:50",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "תחילת שיעור רביעי"
+      },
+      {
+        "time": "11:35",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "יציאה להפסקת צהריים"
+      },
+      {
+        "time": "12:00",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "תחילת שיעור חמישי"
+      },
+      {
+        "time": "12:45",
+        "audio": "bell_standard.mp3",
+        "type": "bell",
+        "label": "סיום יום לימודים"
+      }
+    ],
+    "friday": [
+      {
+        "time": "08:00",
+        "audio": "bell_festive.mp3",
+        "type": "bell",
+        "label": "תחילת יום שישי"
+      },
+      {
+        "time": "11:45",
+        "audio": "bell_festive.mp3",
+        "type": "bell",
+        "label": "סיום יום שישי"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "time": "12:29",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": true
+    },
+    {
+      "time": "12:03",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": false
+    },
+    {
+      "time": "12:32",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": true
+    },
+    {
+      "time": "12:32",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": false
+    },
+    {
+      "time": "12:31",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": true
+    },
+    {
+      "time": "12:33",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "שינוי חד פעמי",
+      "executed": true
+    },
+    {
+      "time": "12:33",
+      "type": "bell",
+      "audio": "bell_standard.mp3",
+      "label": "קבוע",
+      "executed": false
+    }
+  ]
+}

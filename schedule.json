@@ -1,0 +1,43 @@
+{
+  "system_status": "enabled",
+  "disabled_until": null,
+  "active_profile": "standard",
+  "weekly_schedule": {
+    "Sunday": [
+      {
+        "id": "s1",
+        "time": "08:00",
+        "type": "bell",
+        "label": "צלצול בוקר - כניסה ללימודים",
+        "audio": "bell_standard.mp3",
+        "duration_seconds": 5,
+        "enabled": true
+      },
+      {
+        "id": "s2",
+        "time": "09:45",
+        "type": "music",
+        "label": "מוזיקת הפסקה גדולה",
+        "audio": "playlist/song_1.mp3",
+        "duration_seconds": 900,
+        "enabled": true
+      },
+      {
+        "id": "s3",
+        "time": "10:00",
+        "type": "bell",
+        "label": "סיום הפסקה - חזרה לכיתות",
+        "audio": "bell_standard.mp3",
+        "duration_seconds": 5,
+        "enabled": true
+      }
+    ],
+    "Monday": [],
+    "Tuesday": [],
+    "Wednesday": [],
+    "Thursday": [],
+    "Friday": [],
+    "Saturday": []
+  },
+  "overrides": []
+}
