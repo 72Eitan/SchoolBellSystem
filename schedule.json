@@ -1,43 +1,1285 @@
 {
-  "system_status": "enabled",
-  "disabled_until": null,
-  "active_profile": "standard",
-  "weekly_schedule": {
-    "Sunday": [
-      {
-        "id": "s1",
-        "time": "08:00",
-        "type": "bell",
-        "label": "צלצול בוקר - כניסה ללימודים",
-        "audio": "bell_standard.mp3",
-        "duration_seconds": 5,
-        "enabled": true
-      },
-      {
-        "id": "s2",
-        "time": "09:45",
-        "type": "music",
-        "label": "מוזיקת הפסקה גדולה",
-        "audio": "playlist/song_1.mp3",
-        "duration_seconds": 900,
-        "enabled": true
-      },
-      {
-        "id": "s3",
-        "time": "10:00",
-        "type": "bell",
-        "label": "סיום הפסקה - חזרה לכיתות",
-        "audio": "bell_standard.mp3",
-        "duration_seconds": 5,
-        "enabled": true
-      }
-    ],
-    "Monday": [],
-    "Tuesday": [],
-    "Wednesday": [],
-    "Thursday": [],
-    "Friday": [],
-    "Saturday": []
-  },
-  "overrides": []
+    "system_status": "enabled",
+    "disabled_until": null,
+    "active_profile": "standard",
+    "weekly_schedule": {
+        "Sunday": [
+            {
+                "enabled": true,
+                "time": "07:30:00",
+                "label": "שעת 0",
+                "type": "Bell",
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "07:58:00",
+                "label": "תפילה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "08:53:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 100,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "08:55:00",
+                "label": "שיעור 1",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "09:40:00",
+                "label": "שיעור 2",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:05:00",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "type": "music",
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "10:25:00",
+                "label": "שירים בהפסקה",
+                "type": "Bell",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 85,
+                "duration_seconds": 1049
+            },
+            {
+                "enabled": true,
+                "time": "10:43:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:45:00",
+                "label": "שיעור 3",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "11:30:00",
+                "label": "שיעור 4 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "שירים בהפסקה",
+                "type": "music",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 70,
+                "duration_seconds": 749
+            },
+            {
+                "enabled": true,
+                "time": "12:28:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 90,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "12:30:00",
+                "label": "שיעור 5",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "13:15:00",
+                "label": "שינוי - שיעור 6 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "14:00:00",
+                "label": "תפילת מנחה",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "14:24:00",
+                "label": "שיעור 6",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "15:00:00",
+                "label": "שיעור 8 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:40:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "15:48:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:50:00",
+                "label": "שיעור 9",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "16:30:00",
+                "label": "סוף יום",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            }
+        ],
+        "Monday": [
+            {
+                "id": "1",
+                "label": "שעת 0",
+                "time": "07:30:00",
+                "duration_seconds": 30,
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "2",
+                "label": "תפילה",
+                "time": "07:58:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "3",
+                "label": "תזכורת 2 דק'",
+                "time": "08:53:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 100,
+                "enabled": true
+            },
+            {
+                "id": "4",
+                "label": "שיעור 1",
+                "time": "08:55:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "5",
+                "label": "שיעור 2",
+                "time": "09:40:00",
+                "duration_seconds": 10,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "6",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "time": "10:05:00",
+                "duration_seconds": 30,
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "type": "music",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "8",
+                "label": "שירים בהפסקה",
+                "time": "10:25:00",
+                "duration_seconds": 1049,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "9",
+                "label": "תזכורת 2 דק'",
+                "time": "10:43:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "10",
+                "label": "שיעור 3",
+                "time": "10:45:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "11",
+                "label": "שיעור 4 מעבר",
+                "time": "11:30:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "12",
+                "label": "הפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "13",
+                "label": "שירים בהפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 749,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "music",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "14",
+                "label": "תזכורת 2 דק'",
+                "time": "12:28:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 90,
+                "enabled": true
+            },
+            {
+                "id": "15",
+                "label": "שיעור 5",
+                "time": "12:30:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "16",
+                "label": "שינוי - שיעור 6 מעבר",
+                "time": "13:15:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "17",
+                "label": "תפילת מנחה",
+                "time": "14:00:00",
+                "duration_seconds": 15,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "18",
+                "label": "שיעור 6",
+                "time": "14:20:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "19",
+                "label": "שיעור 8 מעבר",
+                "time": "15:00:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "20",
+                "label": "הפסקה",
+                "time": "15:40:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "21",
+                "label": "תזכורת 2 דק'",
+                "time": "15:48:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "22",
+                "label": "שיעור 9",
+                "time": "15:50:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "23",
+                "label": "סוף יום",
+                "time": "16:30:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            }
+        ],
+        "Tuesday": [
+            {
+                "enabled": true,
+                "time": "07:30:00",
+                "label": "שעת 0",
+                "type": "Bell",
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "07:58:00",
+                "label": "תפילה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "08:53:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 100,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "08:55:00",
+                "label": "שיעור 1",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "09:40:00",
+                "label": "שיעור 2",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:05:00",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "type": "music",
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "10:25:00",
+                "label": "שירים בהפסקה",
+                "type": "Bell",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 85,
+                "duration_seconds": 1049
+            },
+            {
+                "enabled": true,
+                "time": "10:43:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:45:00",
+                "label": "שיעור 3",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "11:30:00",
+                "label": "שיעור 4 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "שירים בהפסקה",
+                "type": "music",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 70,
+                "duration_seconds": 749
+            },
+            {
+                "enabled": true,
+                "time": "12:28:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 90,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "12:30:00",
+                "label": "שיעור 5",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "13:15:00",
+                "label": "שינוי - שיעור 6 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "14:00:00",
+                "label": "תפילת מנחה",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "14:20:00",
+                "label": "שיעור 6",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "15:00:00",
+                "label": "שיעור 8 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:40:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "15:48:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:50:00",
+                "label": "שיעור 9",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "16:30:00",
+                "label": "סוף יום",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            }
+        ],
+        "Wednesday": [
+            {
+                "id": "1",
+                "label": "שעת 0",
+                "time": "07:30:00",
+                "duration_seconds": 30,
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "2",
+                "label": "תפילה",
+                "time": "07:58:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "3",
+                "label": "תזכורת 2 דק'",
+                "time": "08:53:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 100,
+                "enabled": true
+            },
+            {
+                "id": "4",
+                "label": "שיעור 1",
+                "time": "08:55:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "5",
+                "label": "שיעור 2",
+                "time": "09:40:00",
+                "duration_seconds": 10,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "6",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "time": "10:05:00",
+                "duration_seconds": 30,
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "type": "music",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "8",
+                "label": "שירים בהפסקה",
+                "time": "10:25:00",
+                "duration_seconds": 1049,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "9",
+                "label": "תזכורת 2 דק'",
+                "time": "10:43:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "10",
+                "label": "שיעור 3",
+                "time": "10:45:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "11",
+                "label": "שיעור 4 מעבר",
+                "time": "11:30:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "12",
+                "label": "הפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "13",
+                "label": "שירים בהפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 749,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "music",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "14",
+                "label": "תזכורת 2 דק'",
+                "time": "12:28:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 90,
+                "enabled": true
+            },
+            {
+                "id": "15",
+                "label": "שיעור 5",
+                "time": "12:30:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "16",
+                "label": "שינוי - שיעור 6 מעבר",
+                "time": "13:15:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "17",
+                "label": "תפילת מנחה",
+                "time": "14:00:00",
+                "duration_seconds": 15,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "18",
+                "label": "שיעור 6",
+                "time": "14:20:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "19",
+                "label": "שיעור 8 מעבר",
+                "time": "15:00:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "20",
+                "label": "הפסקה",
+                "time": "15:40:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "21",
+                "label": "תזכורת 2 דק'",
+                "time": "15:48:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "22",
+                "label": "שיעור 9",
+                "time": "15:50:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "23",
+                "label": "סוף יום",
+                "time": "16:30:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            }
+        ],
+        "Thursday": [
+            {
+                "enabled": true,
+                "time": "07:30:00",
+                "label": "שעת 0",
+                "type": "Bell",
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "07:58:00",
+                "label": "תפילה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "08:53:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 100,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "08:55:00",
+                "label": "שיעור 1",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "09:40:00",
+                "label": "שיעור 2",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:05:00",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "type": "music",
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "10:25:00",
+                "label": "שירים בהפסקה",
+                "type": "Bell",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 85,
+                "duration_seconds": 1049
+            },
+            {
+                "enabled": true,
+                "time": "10:43:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 70,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "10:45:00",
+                "label": "שיעור 3",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "11:30:00",
+                "label": "שיעור 4 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "12:15:00",
+                "label": "שירים בהפסקה",
+                "type": "music",
+                "audio": "(♫)D:\\...\\סליחות",
+                "volume": 70,
+                "duration_seconds": 749
+            },
+            {
+                "enabled": true,
+                "time": "12:28:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 90,
+                "duration_seconds": 10
+            },
+            {
+                "enabled": true,
+                "time": "12:30:00",
+                "label": "שיעור 5",
+                "type": "Bell",
+                "audio": "Ring 1.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "13:15:00",
+                "label": "שינוי - שיעור 6 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "14:00:00",
+                "label": "שיעור 6",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "14:20:00",
+                "label": "תפילת מנחה",
+                "type": "Bell",
+                "audio": null,
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:00:00",
+                "label": "שיעור 8 מעבר",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:40:00",
+                "label": "הפסקה",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "15:48:00",
+                "label": "תזכורת 2 דק'",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 15
+            },
+            {
+                "enabled": true,
+                "time": "15:50:00",
+                "label": "שיעור 9",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 60,
+                "duration_seconds": 30
+            },
+            {
+                "enabled": true,
+                "time": "16:30:00",
+                "label": "סוף יום",
+                "type": "Bell",
+                "audio": "Tune 4.mp3",
+                "volume": 85,
+                "duration_seconds": 30
+            }
+        ],
+        "Friday": [
+            {
+                "id": "1",
+                "label": "שעת 0",
+                "time": "07:30:00",
+                "duration_seconds": 30,
+                "audio": "D:\\Projects\\SchoolBellSystem\\audio\\Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "2",
+                "label": "תפילה",
+                "time": "07:58:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "3",
+                "label": "תזכורת 2 דק'",
+                "time": "08:53:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 100,
+                "enabled": true
+            },
+            {
+                "id": "4",
+                "label": "שיעור 1",
+                "time": "08:55:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "5",
+                "label": "שיעור 2",
+                "time": "09:40:00",
+                "duration_seconds": 10,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "6",
+                "label": "תרגיל - כניסה למרחב מוגן",
+                "time": "10:05:00",
+                "duration_seconds": 30,
+                "audio": "1. כניסה למרחב מוגן  -   תרגיל.mp3",
+                "type": "music",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "8",
+                "label": "שירים בהפסקה",
+                "time": "10:25:00",
+                "duration_seconds": 1049,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "9",
+                "label": "תזכורת 2 דק'",
+                "time": "10:43:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "10",
+                "label": "שיעור 3",
+                "time": "10:45:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "11",
+                "label": "שיעור 4 מעבר",
+                "time": "11:30:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "12",
+                "label": "הפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "13",
+                "label": "שירים בהפסקה",
+                "time": "12:15:00",
+                "duration_seconds": 749,
+                "audio": "(♫)D:\\...\\סליחות",
+                "type": "music",
+                "volume": 70,
+                "enabled": true
+            },
+            {
+                "id": "14",
+                "label": "תזכורת 2 דק'",
+                "time": "12:28:00",
+                "duration_seconds": 10,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 90,
+                "enabled": true
+            },
+            {
+                "id": "15",
+                "label": "שיעור 5",
+                "time": "12:30:00",
+                "duration_seconds": 30,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "16",
+                "label": "שינוי - שיעור 6 מעבר",
+                "time": "13:15:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "17",
+                "label": "תפילת מנחה",
+                "time": "14:00:00",
+                "duration_seconds": 15,
+                "audio": "Ring 1.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "18",
+                "label": "שיעור 6",
+                "time": "14:20:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "19",
+                "label": "שיעור 8 מעבר",
+                "time": "15:00:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "20",
+                "label": "הפסקה",
+                "time": "15:40:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "21",
+                "label": "תזכורת 2 דק'",
+                "time": "15:48:00",
+                "duration_seconds": 15,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            },
+            {
+                "id": "22",
+                "label": "שיעור 9",
+                "time": "15:50:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 60,
+                "enabled": true
+            },
+            {
+                "id": "23",
+                "label": "סוף יום",
+                "time": "16:30:00",
+                "duration_seconds": 30,
+                "audio": "Tune 4.mp3",
+                "type": "Bell",
+                "volume": 85,
+                "enabled": true
+            }
+        ],
+        "Saturday": []
+    },
+    "overrides": [],
+    "institution_info": {
+        "name": "",
+        "contact": "",
+        "phone": "",
+        "email": "",
+        "address": "",
+        "license_status": "פעיל בתוקף"
+    },
+    "disabled_scope": null,
+    "disabled_date": null
 }
