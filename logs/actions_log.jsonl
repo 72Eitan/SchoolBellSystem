@@ -1,0 +1,53 @@
+{"timestamp": "2026-09-23T10:12:19", "action": "system_status", "details": "today", "user_role": "system"}
+{"timestamp": "2026-09-23T10:12:22", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"timestamp": "2026-09-23T10:12:24", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"timestamp": "2026-09-23T10:12:56", "action": "import_excel", "details": "Schedule_Import.xlsx", "user_role": "system"}
+{"timestamp": "2026-09-23T10:19:12", "action": "import_excel", "details": "Schedule_Import.xlsx", "user_role": "system"}
+{"timestamp": "2026-09-23T10:20:29", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:20:34", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:20:37", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:20:47", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:21:02", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:22:02", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:22:31", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:29:41", "action": "update_settings", "details": "", "user_role": "system"}
+{"timestamp": "2026-09-23T10:30:59", "action": "add_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:31:34", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:32:13", "action": "edit_event", "details": "Wednesday: תזכורת 2 דק'", "user_role": "system"}
+{"timestamp": "2026-09-23T10:32:22", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:32:35", "action": "edit_event", "details": "Wednesday: תזכורת 2 דק'", "user_role": "system"}
+{"timestamp": "2026-09-23T10:33:21", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:33:57", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:15", "action": "edit_event", "details": "Wednesday: תזכורת 2 דק'", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:24", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:30", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:41", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:49", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:34:55", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:35:06", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:35:12", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:35:21", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:35:45", "action": "edit_event", "details": "Wednesday: שיעור 3", "user_role": "system"}
+{"timestamp": "2026-09-23T10:36:09", "action": "edit_event", "details": "Wednesday: תזכורת 2 דק'", "user_role": "system"}
+{"timestamp": "2026-09-23T10:47:36", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:48:28", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:49:20", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:50:13", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T10:50:37", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T11:03:09", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"timestamp": "2026-09-23T11:03:35", "action": "edit_event", "details": "Wednesday: בדיקה", "user_role": "system"}
+{"timestamp": "2026-09-23T11:04:08", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"timestamp": "2026-09-23T11:04:11", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"timestamp": "2026-09-23T11:04:14", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"timestamp": "2026-09-23T11:39:53", "action": "import_excel", "details": "Schedule_Import.xlsx", "user_role": "system"}
+{"timestamp": "2026-09-23T11:40:45", "action": "add_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T11:40:53", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T11:43:13", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"timestamp": "2026-09-23T11:43:17", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"timestamp": "2026-09-23T11:43:46", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"timestamp": "2026-09-23T11:44:07", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"timestamp": "2026-09-23T11:45:50", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T11:46:28", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T11:46:45", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T11:47:37", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
+{"timestamp": "2026-09-23T15:21:31", "action": "edit_event", "details": "Wednesday: !!! - ב ד י ק ה - !!!", "user_role": "system"}
