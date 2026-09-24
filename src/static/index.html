@@ -9,6 +9,7 @@
   :root {
     --accent-1: #1e3c72;
     --accent-2: #2a5298;
+    --page-bg: #eef1f6;
     --base-font-size: 15px;
   }
   * { box-sizing: border-box; }
@@ -16,7 +17,7 @@
   body {
     font-family: 'Rubik', sans-serif;
     direction: rtl;
-    background: #eef1f6;
+    background: var(--page-bg);
     color: #222;
     display: flex;
     flex-direction: column;
@@ -24,34 +25,60 @@
     font-size: var(--base-font-size);
   }
 
-  /* ---------- כותרת ---------- */
+  /* ---------- כותרת: שעון ראשי, יציב, לא זז משינויי טקסט ---------- */
   header {
     flex: 0 0 auto;
     background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+    background-color: var(--accent-1);
+    opacity: 0.96;
     color: #fff;
-    padding: 12px 24px;
-    display: flex;
+    padding: 10px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 14px rgba(0,0,0,0.18);
     z-index: 10;
   }
-  .pill-group { display: flex; flex-direction: column; gap: 6px; min-width: 190px; }
+  .pill-group { display: flex; flex-direction: column; gap: 6px; min-width: 190px; justify-self: start; }
   .pill { background: rgba(255,255,255,0.13); border-radius: 8px; padding: 5px 12px; font-size: 0.82rem; transition: all .2s; }
   .pill.status-banner {
-    font-size: 1.15rem;
-    font-weight: 800;
-    padding: 8px 14px;
-    background: rgba(255,255,255,0.22);
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.35) inset;
+    font-size: 1.1rem; font-weight: 800; padding: 8px 14px;
+    background: rgba(255,255,255,0.22); box-shadow: 0 0 0 2px rgba(255,255,255,0.35) inset;
   }
-  .clock-block { text-align: center; }
-  #clock { font-size: 2.5rem; font-weight: 900; letter-spacing: 1.5px; font-variant-numeric: tabular-nums; line-height: 1; }
-  #clock-sub { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
-  .next-block { text-align: center; background: rgba(255,255,255,0.13); border-radius: 10px; padding: 6px 16px; min-width: 170px; }
-  .next-label { font-size: 0.75rem; opacity: 0.8; }
-  #next-time { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-  #next-label-text { font-size: 0.8rem; opacity: 0.9; }
+
+  /* שורת: אירוע קודם (דהוי) | שעון מרכזי | אירוע הבא - ברוחב קבוע, לא זז */
+  .clock-row {
+    display: grid;
+    grid-template-columns: 190px auto 190px;
+    align-items: center;
+    gap: 14px;
+    justify-self: center;
+  }
+  .side-event { text-align: center; overflow: hidden; }
+  .side-event.prev { opacity: 0.55; }
+  .side-event .se-label { font-size: 0.68rem; opacity: 0.85; white-space: nowrap; }
+  .side-event .se-time { font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .side-event .se-desc {
+    font-size: 0.72rem; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 180px; margin: 0 auto;
+  }
+  .clock-center { text-align: center; min-width: 260px; }
+  #clock {
+    font-size: var(--clock-font-size, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    font-variation-settings: "wght" 750;
+  }
+  #clock-sub-day { font-size: 1rem; opacity: 0.92; margin-top: 4px; font-weight: 600; }
+  #clock-sub-heb { font-size: 0.78rem; opacity: 0.75; margin-top: 1px; }
+
+  .clock-size-controls { display: flex; gap: 4px; justify-self: end; align-items: center; }
+  .clock-size-controls button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 6px;
+    width: 26px; height: 26px; font-size: 0.85rem; cursor: pointer;
+  }
 
   /* ---------- סרגל בקרה ---------- */
   .controls-bar {
@@ -60,16 +87,12 @@
     gap: 8px;
     padding: 10px 24px 4px 24px;
     align-items: center;
+    flex-wrap: wrap;
   }
   .controls-bar .title { font-weight: 700; margin-left: auto; color: #444; font-size: 0.9rem; }
   button {
-    font-family: inherit;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 14px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: transform .12s ease, filter .12s ease;
+    font-family: inherit; border: none; border-radius: 8px; padding: 7px 14px;
+    font-size: 0.85rem; cursor: pointer; transition: transform .12s ease, filter .12s ease;
   }
   button:hover { filter: brightness(0.95); transform: translateY(-1px); }
   button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -78,107 +101,63 @@
   .btn-off { background: #fbdede; color: #a5202a; }
   .btn-ghost { background: #eef1f5; color: #444; }
   .btn-primary { background: var(--accent-1); color: #fff; }
+  .btn-small { padding: 3px 8px; font-size: 0.72rem; border-radius: 6px; }
 
   /* ---------- לוח שבועי ---------- */
-  main {
-    flex: 1 1 auto;
-    min-height: 0;
-    padding: 8px 24px 16px 24px;
-    display: flex;
-    flex-direction: column;
-  }
-  .week-grid {
-    flex: 1 1 auto;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-  }
+  main { flex: 1 1 auto; min-height: 0; padding: 8px 24px 16px 24px; display: flex; flex-direction: column; }
+  .week-grid { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
   .day-col {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    background: #fff;
-    border: 1px solid #e2e6ec;
-    border-radius: 12px;
-    overflow: hidden;
+    display: flex; flex-direction: column; min-height: 0;
+    background: #fff; border: 1px solid #e2e6ec; border-radius: 12px; overflow: hidden;
   }
   .day-col.today { border: 2px solid #a9c3f5; background: #f7faff; }
   .day-head {
-    flex: 0 0 auto;
-    text-align: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    padding: 8px 4px;
-    background: #f0f3f7;
-    border-bottom: 1px solid #e2e6ec;
+    flex: 0 0 auto; text-align: center; font-weight: 700; font-size: 0.9rem;
+    padding: 6px 4px; background: #f0f3f7; border-bottom: 1px solid #e2e6ec;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
   }
   .day-col.today .day-head { background: #dfeaff; color: var(--accent-1); }
+  .day-head .dup-btn { font-size: 0.68rem; padding: 2px 6px; }
   .day-events {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 6px;
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 6px;
     scroll-behavior: smooth;
   }
   .day-events::-webkit-scrollbar { width: 6px; }
   .day-events::-webkit-scrollbar-thumb { background: #cdd6e0; border-radius: 4px; }
 
   .event-card {
-    background: #f8f9fb;
-    border: 1px solid #e5e8ee;
-    border-radius: 8px;
-    padding: 6px 8px;
-    margin-bottom: 6px;
-    cursor: pointer;
-    user-select: none;
-    min-height: 52px;
-    position: relative;
+    background: #f8f9fb; border: 1px solid #e5e8ee; border-radius: 10px;
+    padding: 6px 8px; margin-bottom: 6px; user-select: none; min-height: 68px; position: relative;
   }
   .event-card:hover { border-color: #a9c3f5; }
-  .event-card.next { border: 2px solid #ff8c00; background: #fff6ea; }
-  .event-card.disabled { opacity: 0.4; }
-  .event-time { font-size: 1rem; font-weight: 800; color: var(--accent-1); font-variant-numeric: tabular-nums; }
-  .event-label {
-    font-size: 0.78rem;
-    color: #444;
-    margin-top: 1px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .event-card.next { border: 2px solid #ff8c00; background: #fff6ea; box-shadow: 0 3px 10px rgba(255,140,0,0.2); }
+  .event-card.disabled { opacity: 0.42; }
+  .event-time-row { display: flex; align-items: baseline; gap: 4px; justify-content: center; }
+  .event-time {
+    font-size: 1.5rem; font-weight: 800; color: var(--accent-1); font-variant-numeric: tabular-nums;
+    text-align: center; cursor: pointer; border-bottom: 1px dashed transparent;
   }
-  .event-icon { position: absolute; top: 5px; left: 6px; font-size: 0.85rem; }
+  .event-time:hover { border-bottom-color: var(--accent-1); }
+  .event-label { font-size: 0.78rem; color: #444; margin-top: 2px; text-align: center;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .event-icon { position: absolute; top: 5px; left: 6px; font-size: 0.85rem; cursor: pointer; }
+  .event-enabled-toggle { position: absolute; top: 5px; right: 6px; cursor: pointer; }
+  .event-mini-actions { display: flex; justify-content: center; gap: 4px; margin-top: 4px; }
+  .event-mini-actions button { font-size: 0.62rem; padding: 1px 5px; }
+  .event-vol-row { display: flex; align-items: center; gap: 3px; margin-top: 3px; padding: 0 2px; }
+  .event-vol-row input[type=range] { flex: 1; height: 12px; }
+  .event-vol-row span { font-size: 0.62rem; color: #777; min-width: 26px; text-align: center; }
 
-  .add-btn {
-    flex: 0 0 auto;
-    margin: 6px;
-    background: #eef3fb;
-    color: var(--accent-1);
-    border: 1px dashed #a9c3f5;
-    font-size: 0.8rem;
-  }
+  .add-btn { flex: 0 0 auto; margin: 6px; background: #eef3fb; color: var(--accent-1);
+    border: 1px dashed #a9c3f5; font-size: 0.8rem; }
 
   /* ---------- מודלים ---------- */
-  .overlay {
-    position: fixed; inset: 0;
-    background: rgba(20,25,35,0.45);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 100;
-  }
+  .overlay { position: fixed; inset: 0; background: rgba(20,25,35,0.45);
+    display: flex; align-items: center; justify-content: center; z-index: 100; }
   .overlay.hidden { display: none; }
-  .modal {
-    background: #fff;
-    border-radius: 14px;
-    padding: 22px 24px;
-    width: 400px;
-    max-width: 92vw;
-    max-height: 88vh;
-    overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-  }
-  .modal.wide { width: 620px; }
+  .modal { background: #fff; border-radius: 14px; padding: 22px 24px; width: 400px; max-width: 92vw;
+    max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+  .modal.wide { width: 640px; }
   .modal h3 { margin: 0 0 14px 0; color: var(--accent-1); }
   .field { margin-bottom: 12px; }
   .field label { display: block; font-size: 0.82rem; color: #555; margin-bottom: 4px; }
@@ -194,15 +173,19 @@
   .btn-delete { background: #fbdede; color: #a5202a; padding: 9px 14px; }
   .btn-cancel { background: #eef1f5; color: #444; padding: 9px 14px; }
 
-  /* ---------- מכוון שעה +/- ---------- */
-  .time-spinner { display: flex; align-items: center; justify-content: center; gap: 6px; background: #f4f6fa; border-radius: 10px; padding: 10px; }
+  /* מכוון שעה +/- , HH:MM:SS בסדר קבוע LTR למניעת היפוך RTL */
+  .time-spinner { display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #f4f6fa; border-radius: 10px; padding: 10px; direction: ltr; }
   .spin-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .spin-col button { background: var(--accent-1); color: #fff; width: 34px; height: 30px; font-size: 1rem; padding: 0; border-radius: 6px; }
   .spin-value { font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 42px; text-align: center; }
   .spin-sep { font-size: 1.5rem; font-weight: 800; color: #999; }
-  .spin-caption { text-align: center; font-size: 0.68rem; color: #888; margin-top: 2px; }
+  .spin-caption { text-align: center; font-size: 0.68rem; color: #888; margin-top: 2px; direction: rtl; }
 
-  /* ---------- הגדרות: טאבים ---------- */
+  .radio-row { display: flex; gap: 14px; align-items: center; margin-bottom: 6px; }
+  .radio-row label { display: flex; align-items: center; gap: 4px; font-size: 0.85rem; }
+
+  /* הגדרות: טאבים */
   .settings-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e2e6ec; margin-bottom: 16px; flex-wrap: wrap; }
   .settings-tab-btn { background: none; border-radius: 8px 8px 0 0; padding: 8px 12px; font-size: 0.82rem; color: #666; }
   .settings-tab-btn.active { background: #eef3fb; color: var(--accent-1); font-weight: 700; }
@@ -210,16 +193,20 @@
   .settings-pane.active { display: block; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
 
+  .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  .theme-swatch { border-radius: 10px; padding: 10px 4px; text-align: center; cursor: pointer; border: 2px solid transparent; font-size: 0.72rem; color: #fff; }
+  .theme-swatch.selected { border-color: #333; }
+
   .log-entry { border-bottom: 1px solid #eee; padding: 6px 2px; font-size: 0.8rem; }
   .log-entry .log-time { color: #888; font-size: 0.72rem; }
   .log-entry .log-action { font-weight: 700; color: var(--accent-1); }
 
-  .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  .history-entry { display: flex; justify-content: space-between; align-items: center; padding: 6px 4px; border-bottom: 1px solid #eee; font-size: 0.8rem; }
+  .history-entry button { font-size: 0.72rem; padding: 3px 10px; }
+
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: #222; color: #fff; padding: 9px 18px; border-radius: 20px;
-    font-size: 0.85rem; z-index: 200; opacity: 0; transition: opacity .3s;
-    pointer-events: none;
-  }
+    font-size: 0.85rem; z-index: 200; opacity: 0; transition: opacity .3s; pointer-events: none; }
   .toast.show { opacity: 1; }
 </style>
 </head>
@@ -230,14 +217,28 @@
     <div class="pill" id="status-pill">⚡ טוען...</div>
     <div class="pill" id="active-pill">🔔 —</div>
   </div>
-  <div class="clock-block">
-    <div id="clock">--:--:--</div>
-    <div id="clock-sub">—</div>
+
+  <div class="clock-row">
+    <div class="side-event prev" id="prev-event-block">
+      <div class="se-label">⏮ אירוע קודם</div>
+      <div class="se-time" id="prev-time">--:--:--</div>
+      <div class="se-desc" id="prev-label-text">—</div>
+    </div>
+    <div class="clock-center">
+      <div id="clock">--:--:--</div>
+      <div id="clock-sub-day">—</div>
+      <div id="clock-sub-heb">—</div>
+    </div>
+    <div class="side-event next" id="next-event-block">
+      <div class="se-label">⏭ אירוע הבא</div>
+      <div class="se-time" id="next-time">--:--:--</div>
+      <div class="se-desc" id="next-label-text">—</div>
+    </div>
   </div>
-  <div class="next-block">
-    <div class="next-label">⏭ האירוע הבא</div>
-    <div id="next-time">--:--:--</div>
-    <div id="next-label-text">—</div>
+
+  <div class="clock-size-controls">
+    <button type="button" onclick="adjustClockSize(-2)" title="הקטן שעון">א−</button>
+    <button type="button" onclick="adjustClockSize(2)" title="הגדל שעון">א+</button>
   </div>
 </header>
 
@@ -245,6 +246,9 @@
   <button class="btn-enable" id="btn-sys-enable" onclick="setSystem('enabled')">🟢 הפעל מערכת</button>
   <button class="btn-today" id="btn-sys-today" onclick="setSystem('today')">🟡 השבת להיום בלבד</button>
   <button class="btn-off" id="btn-sys-indefinite" onclick="setSystem('indefinite')">🔴 השבת עד הפעלה ידנית</button>
+  <button class="btn-ghost" onclick="doUndo()">↩️ בטל פעולה אחרונה</button>
+  <button class="btn-ghost" onclick="openHistory()">🕘 היסטוריה</button>
+  <button class="btn-ghost" id="btn-toggle-disabled" onclick="toggleShowDisabled()">👁 הצג לא-פעילים</button>
   <button class="btn-ghost" onclick="openSettings()">⚙️ הגדרות</button>
   <button class="btn-ghost" id="btn-auth" onclick="handleAuthClick()">🔒 התחברות כעורך</button>
   <div class="title">לוח צלצולים שבועי</div>
@@ -263,7 +267,7 @@
       <label for="f-enabled" style="margin:0;">אירוע פעיל</label>
     </div>
     <div class="field">
-      <label>שעת התחלה</label>
+      <label>שעת התחלה (HH:MM:SS)</label>
       <div class="time-spinner">
         <div class="spin-col">
           <button type="button" onclick="adjustSpin('h',1)">▲</button>
@@ -287,10 +291,7 @@
         </div>
       </div>
     </div>
-    <div class="field">
-      <label>תיאור האירוע</label>
-      <input type="text" id="f-label">
-    </div>
+    <div class="field"><label>תיאור האירוע</label><input type="text" id="f-label"></div>
     <div class="field">
       <label>סוג אירוע</label>
       <select id="f-type">
@@ -300,8 +301,13 @@
       </select>
     </div>
     <div class="field">
-      <label>קובץ שמע</label>
-      <select id="f-audio"></select>
+      <label>מקור שמע</label>
+      <div class="radio-row">
+        <label><input type="radio" name="audio-kind" value="file" checked onchange="onAudioKindChange()"> קובץ בודד</label>
+        <label><input type="radio" name="audio-kind" value="path" onchange="onAudioKindChange()"> נתיב מלא / תיקייה (הקלדה)</label>
+      </div>
+      <select id="f-audio-file"></select>
+      <input type="text" id="f-audio-path" placeholder="לדוגמה: D:\Music\Selichot (תיקייה) או D:\Music\song.mp3" style="display:none;">
     </div>
     <div class="field">
       <label>עוצמת שמע (%)</label>
@@ -310,9 +316,13 @@
         <input type="number" id="f-volume-num" min="0" max="100" value="85">
       </div>
     </div>
+    <div class="field"><label>משך (שניות)</label><input type="number" id="f-duration" min="1" max="3600" value="30"></div>
+    <div class="field checkbox-row"><input type="checkbox" id="f-loop"><label for="f-loop" style="margin:0;">השמעה בלולאה (חוזר עד תום הזמן)</label></div>
     <div class="field">
-      <label>משך (שניות)</label>
-      <input type="number" id="f-duration" min="1" max="3600" value="30">
+      <label>Fade In (מילישניות)</label><input type="number" id="f-fadein" min="0" max="10000" step="100" value="0">
+    </div>
+    <div class="field">
+      <label>Fade Out (מילישניות)</label><input type="number" id="f-fadeout" min="0" max="10000" step="100" value="0">
     </div>
     <div class="modal-actions">
       <button class="btn-save" onclick="saveEvent()">💾 שמירה</button>
@@ -322,18 +332,56 @@
   </div>
 </div>
 
+<!-- ---------- מודל שכפול קוביה ---------- -->
+<div class="overlay hidden" id="dup-overlay">
+  <div class="modal">
+    <h3>שכפול אירוע</h3>
+    <div class="field">
+      <label>שכפל אל יום</label>
+      <select id="dup-target-day"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="confirmDuplicateEvent()">📋 שכפל</button>
+      <button class="btn-cancel" onclick="closeDupModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- מודל שכפול יום ---------- -->
+<div class="overlay hidden" id="dupday-overlay">
+  <div class="modal">
+    <h3 id="dupday-title">שכפול יום שלם</h3>
+    <p style="font-size:0.82rem;color:#a5202a;">שימו לב: כל האירועים ביום היעד יוחלפו באירועי יום המקור.</p>
+    <div class="field">
+      <label>שכפל אל יום</label>
+      <select id="dupday-target-day"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="confirmDuplicateDay()">📋 שכפל יום</button>
+      <button class="btn-cancel" onclick="closeDupDayModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
 <!-- ---------- מודל התחברות ---------- -->
 <div class="overlay hidden" id="login-overlay">
   <div class="modal">
     <h3>התחברות כעורך</h3>
-    <div class="field">
-      <label>סיסמת עריכה</label>
-      <input type="password" id="login-password">
-    </div>
+    <div class="field"><label>סיסמת עריכה</label><input type="password" id="login-password"></div>
     <div class="modal-actions">
       <button class="btn-save" onclick="doLogin()">🔓 התחבר</button>
       <button class="btn-cancel" onclick="closeLoginModal()">ביטול</button>
     </div>
+  </div>
+</div>
+
+<!-- ---------- מודל היסטוריה (Undo עם קפיצה לאחור) ---------- -->
+<div class="overlay hidden" id="history-overlay">
+  <div class="modal">
+    <h3>🕘 היסטוריית שינויים</h3>
+    <p style="font-size:0.78rem;color:#888;">לחיצה על "חזור לכאן" משחזרת את המצב מלפני הפעולות שאחרי נקודה זו (כולל).</p>
+    <div id="history-list" style="max-height:340px;overflow-y:auto;"></div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeHistory()" style="flex:1;">סגור</button></div>
   </div>
 </div>
 
@@ -345,11 +393,10 @@
       <button class="settings-tab-btn active" data-tab="tab-inst" onclick="switchSettingsTab('tab-inst')">🏫 מוסד ורישוי</button>
       <button class="settings-tab-btn" data-tab="tab-audio" onclick="switchSettingsTab('tab-audio')">🔊 שמע ומראה</button>
       <button class="settings-tab-btn" data-tab="tab-io" onclick="switchSettingsTab('tab-io')">📥 ייבוא / ייצוא</button>
-      <button class="settings-tab-btn" data-tab="tab-log" onclick="switchSettingsTab('tab-log')">📜 לוג ו-Undo</button>
+      <button class="settings-tab-btn" data-tab="tab-log" onclick="switchSettingsTab('tab-log')">📜 לוג פעולות</button>
       <button class="settings-tab-btn" data-tab="tab-bot" onclick="switchSettingsTab('tab-bot')">🤖 טלגרם</button>
     </div>
 
-    <!-- מוסד ורישוי -->
     <div class="settings-pane active" id="tab-inst">
       <div class="two-col">
         <div class="field"><label>שם המוסד</label><input type="text" id="s-name"></div>
@@ -381,15 +428,16 @@
       <button class="btn-primary" onclick="saveInstitutionSettings()">💾 שמור הגדרות</button>
     </div>
 
-    <!-- שמע ומראה -->
     <div class="settings-pane" id="tab-audio">
       <div class="field">
         <label>התקן פלט שמע (של המחשב שמריץ את main.py)</label>
         <select id="s-audio-device"></select>
       </div>
-      <div class="field"><label>צבע הדגשה (Accent)</label><input type="text" id="s-accent" placeholder="#1e3c72"></div>
+      <hr>
+      <label style="font-size:0.85rem;color:#555;">ערכת נושא</label>
+      <div class="theme-grid" id="theme-grid"></div>
       <div class="field">
-        <label>גודל גופן</label>
+        <label>גודל גופן כללי</label>
         <select id="s-font-size">
           <option value="small">קטן</option>
           <option value="normal">רגיל</option>
@@ -399,7 +447,6 @@
       <button class="btn-primary" onclick="saveAudioAppearance()">💾 שמור</button>
     </div>
 
-    <!-- ייבוא/ייצוא -->
     <div class="settings-pane" id="tab-io">
       <div class="field">
         <label>ייבוא מקובץ Excel (מבנה Schedule_Import.xlsx) - יחליף את כל לוח הזמנים</label>
@@ -411,14 +458,11 @@
       <button class="btn-ghost" onclick="window.location.href='/api/export'">📊 ייצוא ל-Excel</button>
     </div>
 
-    <!-- לוג ו-Undo -->
     <div class="settings-pane" id="tab-log">
-      <button class="btn-off" onclick="doUndo()">↩️ שחזר פעולה אחרונה (Undo)</button>
-      <p style="font-size:0.75rem;color:#888;margin-top:6px;">קובץ המעקב הוא Append-only - כל פעולה, כולל Undo עצמו, נרשמת לצמיתות ולא ניתנת למחיקה דרך הממשק.</p>
-      <div id="log-list" style="margin-top:10px;max-height:300px;overflow-y:auto;"></div>
+      <p style="font-size:0.75rem;color:#888;">קובץ המעקב הוא Append-only - כל פעולה, כולל Undo עצמו, נרשמת לצמיתות ולא ניתנת למחיקה דרך הממשק.</p>
+      <div id="log-list" style="margin-top:10px;max-height:340px;overflow-y:auto;"></div>
     </div>
 
-    <!-- טלגרם -->
     <div class="settings-pane" id="tab-bot">
       <p>המערכת מחוברת לבוט Telegram לבקרה, עדכונים ושליטה מרחוק.</p>
       <ul style="font-size:0.85rem;color:#444;">
@@ -428,9 +472,7 @@
       </ul>
     </div>
 
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeSettings()" style="flex:1;">סגור</button>
-    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeSettings()" style="flex:1;">סגור</button></div>
   </div>
 </div>
 
@@ -444,11 +486,16 @@ const FONT_SIZES = {small: "13px", normal: "15px", large: "18px"};
 
 let schedule = null;
 let audioFiles = [];
+let themes = {};
 let sessionRole = "viewer";
 let passwordSet = false;
 let modalState = { mode: "add", day: null, index: null };
+let dupState = { day: null, index: null };
+let dupDayState = { day: null };
 let spin = { h: 8, m: 0, s: 0 };
+let clockFontSize = 2.6; // rem
 let lastNextEventKey = null;
+let showDisabledEvents = true;
 
 function pad2(n) { return String(n).padStart(2, "0"); }
 function escapeHtml(s) {
@@ -469,6 +516,7 @@ function showToast(msg) {
 async function fetchSchedule() {
   const res = await fetch("/api/schedule");
   schedule = await res.json();
+  showDisabledEvents = schedule.show_disabled_events !== false;
   applyAppearance();
   render();
 }
@@ -476,8 +524,19 @@ async function fetchSchedule() {
 async function fetchAudioFiles() {
   const res = await fetch("/api/audio-files");
   audioFiles = await res.json();
-  const sel = document.getElementById("f-audio");
+  const sel = document.getElementById("f-audio-file");
   sel.innerHTML = audioFiles.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join("");
+}
+
+async function fetchThemes() {
+  const res = await fetch("/api/themes");
+  themes = await res.json();
+  const grid = document.getElementById("theme-grid");
+  grid.innerHTML = Object.entries(themes).map(([key, t]) => `
+    <div class="theme-swatch" data-theme="${key}" style="background:${t.accent_color};" onclick="selectTheme('${key}')">
+      ${key}
+    </div>
+  `).join("");
 }
 
 async function fetchSession() {
@@ -490,18 +549,35 @@ async function fetchSession() {
 
 function applyAppearance() {
   if (!schedule || !schedule.appearance) return;
-  const accent = schedule.appearance.accent_color || "#1e3c72";
+  const themeKey = schedule.appearance.theme;
+  const themeDef = themes[themeKey];
+  const accent = schedule.appearance.accent_color || (themeDef && themeDef.accent_color) || "#1e3c72";
+  const accent2 = (themeDef && themeDef.accent_2) || accent;
+  const bg = (themeDef && themeDef.bg) || "#eef1f6";
   document.documentElement.style.setProperty("--accent-1", accent);
+  document.documentElement.style.setProperty("--accent-2", accent2);
+  document.documentElement.style.setProperty("--page-bg", bg);
   const size = FONT_SIZES[schedule.appearance.font_size] || FONT_SIZES.normal;
   document.documentElement.style.setProperty("--base-font-size", size);
 }
 
 // ============================================================
-// שעון + אירוע הבא
+// שעון ראשי: גודל מתכוונן
 // ============================================================
-function getNextEvent(now) {
+function adjustClockSize(delta) {
+  clockFontSize = Math.max(1.6, Math.min(4.2, clockFontSize + delta * 0.1));
+  document.documentElement.style.setProperty("--clock-font-size", clockFontSize + "rem");
+}
+
+// ============================================================
+// אירוע קודם/הבא + תאריך עברי (Intl מובנה בדפדפן, ללא ספרייה חיצונית)
+// ============================================================
+function getAdjacentEvents(now) {
   const todayIdx = now.getDay();
   const nowStr = `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
+
+  // הבא: מהיום קדימה
+  let next = null;
   for (let offset = 0; offset < 8; offset++) {
     const dayIdx = (todayIdx + offset) % 7;
     const dayKey = DAY_ORDER[dayIdx];
@@ -510,29 +586,62 @@ function getNextEvent(now) {
     events = events.slice().sort((a,b) => a.time.localeCompare(b.time));
     if (events.length) {
       const originalIndex = schedule.weekly_schedule[dayKey].indexOf(events[0]);
-      return { dayKey, index: originalIndex, event: events[0] };
+      next = { dayKey, index: originalIndex, event: events[0] };
+      break;
     }
   }
-  return null;
+
+  // קודם: מהיום אחורה
+  let prev = null;
+  for (let offset = 0; offset < 8; offset++) {
+    const dayIdx = (todayIdx - offset + 700) % 7;
+    const dayKey = DAY_ORDER[dayIdx];
+    let events = (schedule.weekly_schedule[dayKey] || []).filter(e => e.enabled !== false);
+    if (offset === 0) events = events.filter(e => e.time <= nowStr);
+    events = events.slice().sort((a,b) => a.time.localeCompare(b.time));
+    if (events.length) {
+      const chosen = events[events.length - 1];
+      const originalIndex = schedule.weekly_schedule[dayKey].indexOf(chosen);
+      prev = { dayKey, index: originalIndex, event: chosen };
+      break;
+    }
+  }
+
+  return { prev, next };
 }
+
+let hebrewDateFormatter = null;
+try {
+  hebrewDateFormatter = new Intl.DateTimeFormat('he-u-ca-hebrew', {day:'numeric', month:'long', year:'numeric'});
+} catch (e) { hebrewDateFormatter = null; }
 
 function tickClock() {
   const now = new Date();
   document.getElementById("clock").textContent =
     `${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
-  document.getElementById("clock-sub").textContent =
+  document.getElementById("clock-sub-day").textContent =
     `יום ${DAY_HEB[now.getDay()]} | ${pad2(now.getDate())}/${pad2(now.getMonth()+1)}/${now.getFullYear()}`;
+  document.getElementById("clock-sub-heb").textContent = hebrewDateFormatter ? hebrewDateFormatter.format(now) : "";
 
   if (schedule) {
-    const nxt = getNextEvent(now);
-    if (nxt) {
-      document.getElementById("next-time").textContent = nxt.event.time;
-      const sameDay = nxt.dayKey === DAY_ORDER[now.getDay()];
+    const { prev, next } = getAdjacentEvents(now);
+    if (next) {
+      document.getElementById("next-time").textContent = next.event.time;
+      const sameDay = next.dayKey === DAY_ORDER[now.getDay()];
       document.getElementById("next-label-text").textContent =
-        sameDay ? nxt.event.label : `${nxt.event.label} (${DAY_HEB[DAY_ORDER.indexOf(nxt.dayKey)]})`;
+        sameDay ? next.event.label : `${next.event.label} (${DAY_HEB[DAY_ORDER.indexOf(next.dayKey)]})`;
     } else {
       document.getElementById("next-time").textContent = "--:--:--";
       document.getElementById("next-label-text").textContent = "אין אירועים קרובים";
+    }
+    if (prev) {
+      document.getElementById("prev-time").textContent = prev.event.time;
+      const sameDay = prev.dayKey === DAY_ORDER[now.getDay()];
+      document.getElementById("prev-label-text").textContent =
+        sameDay ? prev.event.label : `${prev.event.label} (${DAY_HEB[DAY_ORDER.indexOf(prev.dayKey)]})`;
+    } else {
+      document.getElementById("prev-time").textContent = "--:--:--";
+      document.getElementById("prev-label-text").textContent = "—";
     }
   }
 }
@@ -544,7 +653,7 @@ function render() {
   if (!schedule) return;
   const now = new Date();
   const todayKey = DAY_ORDER[now.getDay()];
-  const nxt = getNextEvent(now);
+  const { next: nxt } = getAdjacentEvents(now);
 
   let statusText = "🟢 פעיל";
   let disabled = schedule.system_status !== "enabled";
@@ -563,6 +672,8 @@ function render() {
   const activeCount = todaysEvents.filter(e => e.enabled !== false).length;
   document.getElementById("active-pill").textContent = `🔔 ${activeCount} אירועים היום`;
 
+  document.getElementById("btn-toggle-disabled").textContent = showDisabledEvents ? "🙈 הסתר לא-פעילים" : "👁 הצג לא-פעילים";
+
   const grid = document.getElementById("week-grid");
   grid.innerHTML = "";
   let nextCardEl = null;
@@ -573,23 +684,56 @@ function render() {
 
     const head = document.createElement("div");
     head.className = "day-head";
-    head.textContent = DAY_HEB[i];
+    head.innerHTML = `<span>${DAY_HEB[i]}</span><button type="button" class="btn-ghost btn-small dup-btn" onclick="openDupDayModal('${dayKey}')">📋 שכפל יום</button>`;
     col.appendChild(head);
 
     const eventsWrap = document.createElement("div");
     eventsWrap.className = "day-events";
 
-    const events = (schedule.weekly_schedule[dayKey] || []).slice().sort((a,b) => a.time.localeCompare(b.time));
-    events.forEach((ev, idx) => {
+    const allEvents = (schedule.weekly_schedule[dayKey] || []);
+    const sortedWithIndex = allEvents.map((ev, idx) => ({ ev, idx })).sort((a,b) => a.ev.time.localeCompare(b.ev.time));
+
+    sortedWithIndex.forEach(({ ev, idx }) => {
+      if (ev.enabled === false && !showDisabledEvents) return;
+
       const card = document.createElement("div");
       const isNext = nxt && nxt.dayKey === dayKey && nxt.index === idx;
       card.className = "event-card" + (isNext ? " next" : "") + (ev.enabled === false ? " disabled" : "");
+
+      const enabledIcon = ev.enabled !== false ? "✅" : "⬜";
       card.innerHTML = `
-        <div class="event-icon">${TYPE_ICON[ev.type] || "🔔"}</div>
-        <div class="event-time">${ev.time.slice(0,5)}</div>
+        <div class="event-enabled-toggle" title="פעיל/לא פעיל">${enabledIcon}</div>
+        <div class="event-icon" title="${ev.type}">${TYPE_ICON[ev.type] || "🔔"}</div>
+        <div class="event-time-row"><span class="event-time" title="לחץ לעריכת שעה מהירה">${ev.time}</span></div>
         <div class="event-label">${escapeHtml(ev.label || "")}</div>
+        <div class="event-vol-row">
+          <span>🔉</span>
+          <input type="range" min="0" max="100" value="${ev.volume ?? 85}">
+          <span>${ev.volume ?? 85}%</span>
+        </div>
+        <div class="event-mini-actions">
+          <button type="button" class="btn-ghost btn-small edit-btn">✎ עריכה</button>
+          <button type="button" class="btn-ghost btn-small dup-single-btn">📋</button>
+        </div>
       `;
-      card.addEventListener("dblclick", () => openModal("edit", dayKey, idx));
+
+      card.querySelector(".event-enabled-toggle").addEventListener("click", (e) => {
+        e.stopPropagation();
+        quickUpdateEvent(dayKey, idx, { enabled: ev.enabled === false });
+      });
+      card.querySelector(".event-time").addEventListener("click", (e) => {
+        e.stopPropagation();
+        promptQuickTime(dayKey, idx, ev.time);
+      });
+      const volInput = card.querySelector(".event-vol-row input[type=range]");
+      const volLabel = card.querySelector(".event-vol-row span:last-child");
+      volInput.addEventListener("input", (e) => { volLabel.textContent = e.target.value + "%"; });
+      volInput.addEventListener("change", (e) => {
+        quickUpdateEvent(dayKey, idx, { volume: parseInt(e.target.value, 10) });
+      });
+      card.querySelector(".edit-btn").addEventListener("click", () => openModal("edit", dayKey, idx));
+      card.querySelector(".dup-single-btn").addEventListener("click", () => openDupModal(dayKey, idx));
+
       eventsWrap.appendChild(card);
       if (isNext) nextCardEl = card;
     });
@@ -606,12 +750,16 @@ function render() {
     grid.appendChild(col);
   });
 
-  // גלילה אוטומטית שממקמת את האירוע הבא במרכז הטור שלו - רק כשהוא באמת השתנה
+  // תיקון סעיף 27.1: מרכוז אמיתי ואמין של האירוע הבא בטור שלו, מחושב מול scrollHeight בפועל
   if (nextCardEl) {
     const key = nxt.dayKey + "|" + nxt.index + "|" + nxt.event.time;
     if (key !== lastNextEventKey) {
       lastNextEventKey = key;
-      nextCardEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      requestAnimationFrame(() => {
+        const container = nextCardEl.parentElement;
+        const target = nextCardEl.offsetTop - (container.clientHeight / 2) + (nextCardEl.offsetHeight / 2);
+        container.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+      });
     }
   }
 
@@ -619,63 +767,71 @@ function render() {
 }
 
 // ============================================================
+// עריכה מיידית מהקובייה (סעיף 23)
+// ============================================================
+async function quickUpdateEvent(day, index, fields) {
+  if (!canEdit()) { showToast("יש להתחבר כעורך כדי לערוך"); return; }
+  const res = await fetch("/api/event/quick", {
+    method: "PATCH", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ day, index, fields })
+  });
+  if (!res.ok) { showToast("שגיאה בעדכון"); return; }
+  await fetchSchedule();
+}
+
+function promptQuickTime(day, index, currentTime) {
+  if (!canEdit()) { showToast("יש להתחבר כעורך כדי לערוך"); return; }
+  const input = prompt("שעה חדשה (HH:MM:SS):", currentTime);
+  if (input === null) return;
+  const m = input.trim().match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/);
+  if (!m) { showToast("פורמט שעה לא תקין"); return; }
+  const h = pad2(parseInt(m[1],10) % 24), mi = pad2(parseInt(m[2],10) % 60), se = pad2(m[4] ? parseInt(m[4],10) % 60 : 0);
+  quickUpdateEvent(day, index, { time: `${h}:${mi}:${se}` });
+}
+
+// ============================================================
+// הצגה/הסתרה של אירועים לא פעילים (סעיף 28)
+// ============================================================
+async function toggleShowDisabled() {
+  showDisabledEvents = !showDisabledEvents;
+  render();
+  if (canEdit()) {
+    await fetch("/api/settings", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ show_disabled_events: showDisabledEvents })
+    });
+  }
+}
+
+// ============================================================
 // הרשאות (עריכה/צפייה)
 // ============================================================
-function canEdit() {
-  return sessionRole === "editor" || !passwordSet;
-}
+function canEdit() { return sessionRole === "editor" || !passwordSet; }
 
 function updateAuthUI() {
   const btn = document.getElementById("btn-auth");
-  if (!passwordSet) {
-    btn.textContent = "🔓 עריכה פתוחה לכולם";
-    btn.disabled = true;
-  } else if (sessionRole === "editor") {
-    btn.textContent = "🔓 מחובר כעורך (התנתק)";
-    btn.disabled = false;
-  } else {
-    btn.textContent = "🔒 התחברות כעורך";
-    btn.disabled = false;
-  }
+  if (!passwordSet) { btn.textContent = "🔓 עריכה פתוחה לכולם"; btn.disabled = true; }
+  else if (sessionRole === "editor") { btn.textContent = "🔓 מחובר כעורך (התנתק)"; btn.disabled = false; }
+  else { btn.textContent = "🔒 התחברות כעורך"; btn.disabled = false; }
   updateSystemButtonsState();
 }
-
 function updateSystemButtonsState() {
   const disabled = !canEdit();
-  ["btn-sys-enable","btn-sys-today","btn-sys-indefinite"].forEach(id => {
-    document.getElementById(id).disabled = disabled;
-  });
+  ["btn-sys-enable","btn-sys-today","btn-sys-indefinite"].forEach(id => { document.getElementById(id).disabled = disabled; });
 }
-
 function handleAuthClick() {
   if (!passwordSet) return;
-  if (sessionRole === "editor") {
-    fetch("/api/logout", { method: "POST" }).then(fetchSession);
-  } else {
-    document.getElementById("login-overlay").classList.remove("hidden");
-  }
+  if (sessionRole === "editor") { fetch("/api/logout", { method: "POST" }).then(fetchSession); }
+  else { document.getElementById("login-overlay").classList.remove("hidden"); }
 }
-
 async function doLogin() {
   const password = document.getElementById("login-password").value;
-  const res = await fetch("/api/login", {
-    method: "POST", headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({password})
-  });
+  const res = await fetch("/api/login", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({password}) });
   const result = await res.json();
-  if (result.ok) {
-    closeLoginModal();
-    await fetchSession();
-    render();
-    showToast("התחברת בהצלחה כעורך");
-  } else {
-    showToast("סיסמה שגויה");
-  }
+  if (result.ok) { closeLoginModal(); await fetchSession(); render(); showToast("התחברת בהצלחה כעורך"); }
+  else { showToast("סיסמה שגויה"); }
 }
-function closeLoginModal() {
-  document.getElementById("login-overlay").classList.add("hidden");
-  document.getElementById("login-password").value = "";
-}
+function closeLoginModal() { document.getElementById("login-overlay").classList.add("hidden"); document.getElementById("login-password").value = ""; }
 
 // ============================================================
 // מכוון שעה (+/-)
@@ -695,20 +851,25 @@ function setSpinFromString(t) {
   spin = { h: parts[0] || 0, m: parts[1] || 0, s: parts[2] || 0 };
   renderSpin();
 }
-function spinToString() {
-  return `${pad2(spin.h)}:${pad2(spin.m)}:${pad2(spin.s)}`;
-}
+function spinToString() { return `${pad2(spin.h)}:${pad2(spin.m)}:${pad2(spin.s)}`; }
 
 // ============================================================
 // מודל אירוע
 // ============================================================
+function onAudioKindChange() {
+  const kind = document.querySelector('input[name="audio-kind"]:checked').value;
+  document.getElementById("f-audio-file").style.display = kind === "file" ? "" : "none";
+  document.getElementById("f-audio-path").style.display = kind === "path" ? "" : "none";
+}
+
 function openModal(mode, day, index) {
   if (!canEdit()) { showToast("יש להתחבר כעורך כדי לערוך"); return; }
   modalState = { mode, day, index };
   const title = document.getElementById("modal-title");
   const deleteBtn = document.getElementById("delete-btn");
 
-  let ev = { enabled: true, time: "08:00:00", label: "", type: "Bell", audio: audioFiles[0] || "", volume: 85, duration_seconds: 30 };
+  let ev = { enabled: true, time: "08:00:00", label: "", type: "Bell", audio: audioFiles[0] || "",
+             volume: 85, duration_seconds: 30, loop: false, fade_in_ms: 0, fade_out_ms: 0 };
   if (mode === "edit") {
     ev = schedule.weekly_schedule[day][index];
     title.textContent = `עריכת אירוע — ${DAY_HEB[DAY_ORDER.indexOf(day)]}`;
@@ -722,46 +883,50 @@ function openModal(mode, day, index) {
   setSpinFromString(ev.time);
   document.getElementById("f-label").value = ev.label || "";
   document.getElementById("f-type").value = ev.type || "Bell";
-  if (!audioFiles.includes(ev.audio)) {
-    const opt = document.createElement("option");
-    opt.value = ev.audio; opt.textContent = ev.audio;
-    document.getElementById("f-audio").appendChild(opt);
-  }
-  document.getElementById("f-audio").value = ev.audio || (audioFiles[0] || "");
+
+  const isKnownFile = audioFiles.includes(ev.audio);
+  document.querySelector(`input[name="audio-kind"][value="${isKnownFile ? 'file' : 'path'}"]`).checked = true;
+  document.getElementById("f-audio-file").value = isKnownFile ? ev.audio : (audioFiles[0] || "");
+  document.getElementById("f-audio-path").value = isKnownFile ? "" : (ev.audio || "");
+  onAudioKindChange();
+
   document.getElementById("f-volume-range").value = ev.volume ?? 85;
   document.getElementById("f-volume-num").value = ev.volume ?? 85;
   document.getElementById("f-duration").value = ev.duration_seconds ?? 30;
+  document.getElementById("f-loop").checked = !!ev.loop;
+  document.getElementById("f-fadein").value = ev.fade_in_ms ?? 0;
+  document.getElementById("f-fadeout").value = ev.fade_out_ms ?? 0;
 
   document.getElementById("overlay").classList.remove("hidden");
 }
 function closeModal() { document.getElementById("overlay").classList.add("hidden"); }
 
-document.getElementById("f-volume-range").addEventListener("input", e => {
-  document.getElementById("f-volume-num").value = e.target.value;
-});
-document.getElementById("f-volume-num").addEventListener("input", e => {
-  document.getElementById("f-volume-range").value = e.target.value;
-});
+document.getElementById("f-volume-range").addEventListener("input", e => { document.getElementById("f-volume-num").value = e.target.value; });
+document.getElementById("f-volume-num").addEventListener("input", e => { document.getElementById("f-volume-range").value = e.target.value; });
 
 async function saveEvent() {
   const existing = modalState.mode === "edit" ? schedule.weekly_schedule[modalState.day][modalState.index] : {};
+  const audioKind = document.querySelector('input[name="audio-kind"]:checked').value;
+  const audioValue = audioKind === "file" ? document.getElementById("f-audio-file").value : document.getElementById("f-audio-path").value.trim();
+
   const event = {
     ...existing,
     enabled: document.getElementById("f-enabled").checked,
     time: spinToString(),
     label: document.getElementById("f-label").value || "אירוע חדש",
     type: document.getElementById("f-type").value,
-    audio: document.getElementById("f-audio").value,
+    audio: audioValue,
     volume: parseInt(document.getElementById("f-volume-num").value, 10),
-    duration_seconds: parseInt(document.getElementById("f-duration").value, 10)
+    duration_seconds: parseInt(document.getElementById("f-duration").value, 10),
+    loop: document.getElementById("f-loop").checked,
+    fade_in_ms: parseInt(document.getElementById("f-fadein").value, 10) || 0,
+    fade_out_ms: parseInt(document.getElementById("f-fadeout").value, 10) || 0
   };
 
   const res = await fetch("/api/event", {
     method: modalState.mode === "add" ? "POST" : "PUT",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(modalState.mode === "add"
-      ? { day: modalState.day, event }
-      : { day: modalState.day, index: modalState.index, event })
+    body: JSON.stringify(modalState.mode === "add" ? { day: modalState.day, event } : { day: modalState.day, index: modalState.index, event })
   });
   if (!res.ok) { showToast("שגיאה בשמירה"); return; }
   closeModal();
@@ -771,11 +936,53 @@ async function saveEvent() {
 async function deleteEvent() {
   if (modalState.mode !== "edit") return;
   if (!confirm("למחוק את האירוע?")) return;
-  await fetch("/api/event", {
-    method: "DELETE", headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ day: modalState.day, index: modalState.index })
-  });
+  await fetch("/api/event", { method: "DELETE", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ day: modalState.day, index: modalState.index }) });
   closeModal();
+  await fetchSchedule();
+}
+
+// ============================================================
+// שכפול (סעיף 25)
+// ============================================================
+function openDupModal(day, index) {
+  if (!canEdit()) { showToast("יש להתחבר כעורך כדי לשכפל"); return; }
+  dupState = { day, index };
+  const sel = document.getElementById("dup-target-day");
+  sel.innerHTML = DAY_ORDER.map((d,i) => `<option value="${d}" ${d===day?'selected':''}>${DAY_HEB[i]}</option>`).join("");
+  document.getElementById("dup-overlay").classList.remove("hidden");
+}
+function closeDupModal() { document.getElementById("dup-overlay").classList.add("hidden"); }
+async function confirmDuplicateEvent() {
+  const target_day = document.getElementById("dup-target-day").value;
+  const res = await fetch("/api/event/duplicate", {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ day: dupState.day, index: dupState.index, target_day })
+  });
+  if (!res.ok) { showToast("שגיאה בשכפול"); return; }
+  closeDupModal();
+  showToast("האירוע שוכפל");
+  await fetchSchedule();
+}
+
+function openDupDayModal(day) {
+  if (!canEdit()) { showToast("יש להתחבר כעורך כדי לשכפל"); return; }
+  dupDayState = { day };
+  document.getElementById("dupday-title").textContent = `שכפול יום ${DAY_HEB[DAY_ORDER.indexOf(day)]}`;
+  const sel = document.getElementById("dupday-target-day");
+  sel.innerHTML = DAY_ORDER.map((d,i) => `<option value="${d}" ${d===day?'disabled':''}>${DAY_HEB[i]}</option>`).join("");
+  document.getElementById("dupday-overlay").classList.remove("hidden");
+}
+function closeDupDayModal() { document.getElementById("dupday-overlay").classList.add("hidden"); }
+async function confirmDuplicateDay() {
+  const target_day = document.getElementById("dupday-target-day").value;
+  if (!confirm(`להחליף את כל האירועים של יום ${DAY_HEB[DAY_ORDER.indexOf(target_day)]} באירועי יום ${DAY_HEB[DAY_ORDER.indexOf(dupDayState.day)]}?`)) return;
+  const res = await fetch("/api/day/duplicate", {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ source_day: dupDayState.day, target_day })
+  });
+  if (!res.ok) { showToast("שגיאה בשכפול יום"); return; }
+  closeDupDayModal();
+  showToast("היום שוכפל");
   await fetchSchedule();
 }
 
@@ -783,17 +990,61 @@ async function deleteEvent() {
 // סטטוס מערכת
 // ============================================================
 async function setSystem(mode) {
-  const res = await fetch("/api/system", {
-    method: "POST", headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ mode })
-  });
+  const res = await fetch("/api/system", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ mode }) });
   if (!res.ok) { showToast("יש להתחבר כעורך"); return; }
+  await fetchSchedule();
+}
+
+// ============================================================
+// Undo + היסטוריה (סעיף 24)
+// ============================================================
+async function doUndo() {
+  if (!canEdit()) { showToast("יש להתחבר כעורך"); return; }
+  const res = await fetch("/api/undo", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({steps_back:1}) });
+  const result = await res.json();
+  if (!res.ok) { showToast(result.error || "אין מה לשחזר"); return; }
+  showToast("הפעולה האחרונה שוחזרה");
+  await fetchSchedule();
+}
+
+async function openHistory() {
+  const res = await fetch("/api/undo/history");
+  const items = await res.json();
+  const list = document.getElementById("history-list");
+  if (!items.length) { list.innerHTML = "<p style='color:#888;'>אין היסטוריה זמינה.</p>"; }
+  else {
+    list.innerHTML = items.map(it => `
+      <div class="history-entry">
+        <div>
+          <div>${escapeHtml(it.action_name)}</div>
+          <div style="color:#888;font-size:0.72rem;">${escapeHtml(it.timestamp)}</div>
+        </div>
+        <button type="button" class="btn-ghost" onclick="jumpToHistory(${it.steps_back})">חזור לכאן</button>
+      </div>
+    `).join("");
+  }
+  document.getElementById("history-overlay").classList.remove("hidden");
+}
+function closeHistory() { document.getElementById("history-overlay").classList.add("hidden"); }
+async function jumpToHistory(stepsBack) {
+  if (!canEdit()) { showToast("יש להתחבר כעורך"); return; }
+  if (!confirm("לשחזר את המערכת לנקודה זו? כל השינויים שאחריה יאבדו.")) return;
+  const res = await fetch("/api/undo", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({steps_back: stepsBack}) });
+  if (!res.ok) { showToast("שגיאה בשחזור"); return; }
+  closeHistory();
+  showToast("המערכת שוחזרה");
   await fetchSchedule();
 }
 
 // ============================================================
 // הגדרות
 // ============================================================
+let selectedThemeKey = "classic";
+function selectTheme(key) {
+  selectedThemeKey = key;
+  document.querySelectorAll(".theme-swatch").forEach(el => el.classList.toggle("selected", el.dataset.theme === key));
+}
+
 function openSettings() {
   const info = schedule.institution_info || {};
   document.getElementById("s-name").value = info.name || "";
@@ -811,7 +1062,8 @@ function openSettings() {
   document.getElementById("s-payment").value = info.payment_status || "";
   document.getElementById("s-new-password").value = "";
 
-  document.getElementById("s-accent").value = (schedule.appearance || {}).accent_color || "#1e3c72";
+  selectedThemeKey = (schedule.appearance || {}).theme || "classic";
+  selectTheme(selectedThemeKey);
   document.getElementById("s-font-size").value = (schedule.appearance || {}).font_size || "normal";
 
   loadAudioDevices(info.audio_device || "");
@@ -820,7 +1072,6 @@ function openSettings() {
   document.getElementById("settings-overlay").classList.remove("hidden");
 }
 function closeSettings() { document.getElementById("settings-overlay").classList.add("hidden"); }
-
 function switchSettingsTab(tabId) {
   document.querySelectorAll(".settings-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
   document.querySelectorAll(".settings-pane").forEach(p => p.classList.toggle("active", p.id === tabId));
@@ -860,9 +1111,7 @@ async function saveInstitutionSettings() {
   const pw = document.getElementById("s-new-password").value;
   if (pw !== "") body.new_edit_password = pw;
 
-  const res = await fetch("/api/settings", {
-    method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)
-  });
+  const res = await fetch("/api/settings", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body) });
   if (!res.ok) { showToast("שגיאה בשמירת הגדרות"); return; }
   showToast("ההגדרות נשמרו");
   await fetchSchedule();
@@ -873,13 +1122,12 @@ async function saveAudioAppearance() {
   const body = {
     audio_device: document.getElementById("s-audio-device").value,
     appearance: {
-      accent_color: document.getElementById("s-accent").value || "#1e3c72",
+      theme: selectedThemeKey,
+      accent_color: (themes[selectedThemeKey] || {}).accent_color || "#1e3c72",
       font_size: document.getElementById("s-font-size").value
     }
   };
-  const res = await fetch("/api/settings", {
-    method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)
-  });
+  const res = await fetch("/api/settings", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body) });
   if (!res.ok) { showToast("שגיאה בשמירה"); return; }
   showToast("נשמר");
   await fetchSchedule();
@@ -905,20 +1153,10 @@ async function refreshLog() {
   if (!entries.length) { list.innerHTML = "<p style='color:#888;'>אין רישומים עדיין.</p>"; return; }
   list.innerHTML = entries.map(e => `
     <div class="log-entry">
-      <span class="log-time">${escapeHtml(e.timestamp)}</span> —
-      <span class="log-action">${escapeHtml(e.action)}</span>
+      <span class="log-time">${escapeHtml(e.timestamp)}</span> — <span class="log-action">${escapeHtml(e.action)}</span>
       ${e.details ? " - " + escapeHtml(e.details) : ""}
     </div>
   `).join("");
-}
-
-async function doUndo() {
-  const res = await fetch("/api/undo", { method: "POST" });
-  const result = await res.json();
-  if (!res.ok) { showToast(result.error || "אין מה לשחזר"); return; }
-  showToast("הפעולה האחרונה שוחזרה");
-  await fetchSchedule();
-  refreshLog();
 }
 
 // ============================================================
@@ -927,6 +1165,7 @@ async function doUndo() {
 async function init() {
   await fetchSession();
   await fetchAudioFiles();
+  await fetchThemes();
   await fetchSchedule();
   setInterval(tickClock, 1000);
   setInterval(fetchSchedule, 20000);

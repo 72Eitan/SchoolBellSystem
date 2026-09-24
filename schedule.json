@@ -12,7 +12,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -22,7 +25,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -32,7 +38,10 @@
                 "type": "Bell",
                 "volume": 100,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -42,7 +51,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -52,7 +64,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -62,7 +77,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -72,7 +90,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -82,7 +103,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -92,7 +116,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -102,7 +129,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -112,7 +142,10 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -122,7 +155,10 @@
                 "type": "Bell",
                 "volume": 90,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "uid": "346f24c853c3",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -132,7 +168,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שינוי - שיעור 6 מעבר",
@@ -142,7 +181,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "uid": "4de7f7d0722b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילת מנחה",
@@ -152,7 +194,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -162,7 +207,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -172,7 +220,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -182,7 +233,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -192,7 +246,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 9",
@@ -202,7 +259,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "סוף יום",
@@ -212,7 +272,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "uid": "34f9ca0fae17",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             }
         ],
         "Monday": [
@@ -224,7 +287,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -232,9 +298,12 @@
                 "duration_seconds": 30,
                 "audio": "bell_standard.mp3",
                 "type": "Bell",
-                "volume": 85,
+                "volume": 55,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -244,7 +313,10 @@
                 "type": "Bell",
                 "volume": 100,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -254,7 +326,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -264,7 +339,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -274,7 +352,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -284,7 +365,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -294,7 +378,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -304,7 +391,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -314,7 +404,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -324,7 +417,10 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -334,7 +430,10 @@
                 "type": "Bell",
                 "volume": 90,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "uid": "346f24c853c3",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -344,7 +443,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שינוי - שיעור 6 מעבר",
@@ -354,7 +456,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "uid": "4de7f7d0722b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילת מנחה",
@@ -364,7 +469,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -374,7 +482,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -384,7 +495,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -394,7 +508,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -404,7 +521,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 9",
@@ -414,7 +534,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "סוף יום",
@@ -424,7 +547,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "uid": "34f9ca0fae17",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             }
         ],
         "Tuesday": [
@@ -436,7 +562,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -446,7 +575,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -456,7 +588,10 @@
                 "type": "Bell",
                 "volume": 100,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -466,7 +601,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -476,7 +614,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -486,7 +627,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -496,7 +640,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -506,7 +653,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -516,7 +666,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -526,7 +679,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -536,7 +692,10 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -546,7 +705,10 @@
                 "type": "Bell",
                 "volume": 90,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "uid": "346f24c853c3",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -556,7 +718,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שינוי - שיעור 6 מעבר",
@@ -566,7 +731,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "uid": "4de7f7d0722b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילת מנחה",
@@ -576,7 +744,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -586,7 +757,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -596,7 +770,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -606,7 +783,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -616,7 +796,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 9",
@@ -626,7 +809,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "סוף יום",
@@ -636,7 +822,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "uid": "34f9ca0fae17",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             }
         ],
         "Wednesday": [
@@ -648,7 +837,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -658,7 +850,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -668,7 +863,10 @@
                 "type": "Bell",
                 "volume": 100,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -678,7 +876,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -688,7 +889,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -698,7 +902,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -708,7 +915,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -718,7 +928,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -728,7 +941,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -738,7 +954,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -748,7 +967,10 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -758,7 +980,10 @@
                 "type": "Bell",
                 "volume": 90,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "uid": "346f24c853c3",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -768,7 +993,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שינוי - שיעור 6 מעבר",
@@ -778,7 +1006,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "uid": "4de7f7d0722b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילת מנחה",
@@ -788,7 +1019,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -798,7 +1032,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -808,7 +1045,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "audio": "bell_standard.mp3",
@@ -818,7 +1058,10 @@
                 "time": "15:22:00",
                 "type": "Bell",
                 "uid": "fa91359b3c26",
-                "volume": 33
+                "volume": 33,
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -828,7 +1071,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -838,7 +1084,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 9",
@@ -848,7 +1097,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "סוף יום",
@@ -858,7 +1110,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "uid": "34f9ca0fae17",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             }
         ],
         "Thursday": [
@@ -870,7 +1125,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -880,7 +1138,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -888,9 +1149,12 @@
                 "duration_seconds": 10,
                 "audio": "bell_standard.mp3",
                 "type": "Bell",
-                "volume": 100,
+                "volume": 86,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -900,7 +1164,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -910,7 +1177,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -920,7 +1190,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -930,7 +1203,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -940,7 +1216,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -950,7 +1229,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -960,7 +1242,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -970,17 +1255,23 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
-                "label": "תזכורת 2 דק'",
-                "time": "12:28:00",
-                "duration_seconds": 10,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 90,
+                "duration_seconds": 10,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "label": "תזכורת 2 דק'",
+                "time": "12:25:00",
+                "type": "Bell",
+                "uid": "346f24c853c3",
+                "volume": 90,
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -990,17 +1281,23 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
-                "label": "שינוי - שיעור 6 מעבר",
-                "time": "13:15:00",
-                "duration_seconds": 15,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 85,
+                "duration_seconds": 15,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "fade_in_ms": 0,
+                "fade_out_ms": 0,
+                "label": "שינוי - שיעור 6 מעבר",
+                "loop": false,
+                "time": "13:15:00",
+                "type": "Bell",
+                "uid": "4de7f7d0722b",
+                "volume": 85
             },
             {
                 "label": "תפילת מנחה",
@@ -1008,9 +1305,12 @@
                 "duration_seconds": 15,
                 "audio": "bell_standard.mp3",
                 "type": "Bell",
-                "volume": 85,
+                "volume": 80,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -1018,9 +1318,12 @@
                 "duration_seconds": 30,
                 "audio": "bell_standard.mp3",
                 "type": "Bell",
-                "volume": 60,
+                "volume": 98,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -1030,7 +1333,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -1040,7 +1346,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -1050,27 +1359,49 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
+                "audio": "bell_standard.mp3",
+                "duration_seconds": 45,
+                "enabled": true,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0,
                 "label": "שיעור 9",
+                "loop": true,
                 "time": "15:50:00",
-                "duration_seconds": 30,
-                "audio": "bell_standard.mp3",
                 "type": "Bell",
-                "volume": 60,
-                "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "volume": 60
             },
             {
-                "label": "סוף יום",
-                "time": "16:30:00",
-                "duration_seconds": 30,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 85,
+                "duration_seconds": 400,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "fade_in_ms": 4000,
+                "fade_out_ms": 4000,
+                "label": "!!! - ב ד י ק ה - !!!",
+                "loop": true,
+                "time": "16:00:00",
+                "type": "Bell",
+                "uid": "f0d63a9bce76",
+                "volume": 62
+            },
+            {
+                "audio": "bell_standard.mp3",
+                "duration_seconds": 45,
+                "enabled": true,
+                "fade_in_ms": 4000,
+                "fade_out_ms": 4000,
+                "label": "סוף יום",
+                "loop": true,
+                "time": "16:30:00",
+                "type": "Bell",
+                "uid": "34f9ca0fae17",
+                "volume": 85
             }
         ],
         "Friday": [
@@ -1082,7 +1413,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "3c509a35e528"
+                "uid": "3c509a35e528",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילה",
@@ -1092,7 +1426,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "bf18987131e6"
+                "uid": "bf18987131e6",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -1102,7 +1439,10 @@
                 "type": "Bell",
                 "volume": 100,
                 "enabled": true,
-                "uid": "cb59fe7cc772"
+                "uid": "cb59fe7cc772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 1",
@@ -1112,7 +1452,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "9aaf71cafe54"
+                "uid": "9aaf71cafe54",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 2",
@@ -1122,7 +1465,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "ea6b8ef26c99"
+                "uid": "ea6b8ef26c99",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -1132,7 +1478,10 @@
                 "type": "music",
                 "volume": 85,
                 "enabled": true,
-                "uid": "da39f04ac976"
+                "uid": "da39f04ac976",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -1142,7 +1491,10 @@
                 "type": "Bell",
                 "volume": 70,
                 "enabled": true,
-                "uid": "39af64843e7b"
+                "uid": "39af64843e7b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 3",
@@ -1152,7 +1504,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "f79806a8c7d4"
+                "uid": "f79806a8c7d4",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 4 מעבר",
@@ -1162,7 +1517,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "c06eb999de14"
+                "uid": "c06eb999de14",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -1172,7 +1530,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "1a66e84092cb"
+                "uid": "1a66e84092cb",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שירים בהפסקה",
@@ -1182,7 +1543,10 @@
                 "type": "music",
                 "volume": 70,
                 "enabled": true,
-                "uid": "e6dc490cc796"
+                "uid": "e6dc490cc796",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -1192,7 +1556,10 @@
                 "type": "Bell",
                 "volume": 90,
                 "enabled": true,
-                "uid": "346f24c853c3"
+                "uid": "346f24c853c3",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 5",
@@ -1202,7 +1569,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "0c19916249d1"
+                "uid": "0c19916249d1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שינוי - שיעור 6 מעבר",
@@ -1212,7 +1582,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "4de7f7d0722b"
+                "uid": "4de7f7d0722b",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תפילת מנחה",
@@ -1222,7 +1595,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "e35cf668b772"
+                "uid": "e35cf668b772",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 6",
@@ -1232,7 +1608,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "abab9612b070"
+                "uid": "abab9612b070",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 8 מעבר",
@@ -1242,7 +1621,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "37ea0e1d07c1"
+                "uid": "37ea0e1d07c1",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "הפסקה",
@@ -1252,7 +1634,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "7535f449de26"
+                "uid": "7535f449de26",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "תזכורת 2 דק'",
@@ -1262,7 +1647,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "8de2f74f6f07"
+                "uid": "8de2f74f6f07",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "שיעור 9",
@@ -1272,7 +1660,10 @@
                 "type": "Bell",
                 "volume": 60,
                 "enabled": true,
-                "uid": "b2b5a24a1ca9"
+                "uid": "b2b5a24a1ca9",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             },
             {
                 "label": "סוף יום",
@@ -1282,7 +1673,10 @@
                 "type": "Bell",
                 "volume": 85,
                 "enabled": true,
-                "uid": "34f9ca0fae17"
+                "uid": "34f9ca0fae17",
+                "loop": false,
+                "fade_in_ms": 0,
+                "fade_out_ms": 0
             }
         ],
         "Saturday": []
@@ -1307,10 +1701,12 @@
         "audio_device": "רמקולים (Realtek(R) Audio)"
     },
     "appearance": {
-        "accent_color": "#1e3c72",
-        "font_size": "normal"
+        "accent_color": "#14532d",
+        "font_size": "normal",
+        "theme": "forest"
     },
     "permissions": {
         "edit_password_hash": ""
-    }
+    },
+    "show_disabled_events": true
 }

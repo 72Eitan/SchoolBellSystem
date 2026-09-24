@@ -14,7 +14,6 @@ main.py
 import json
 import os
 import time
-import random
 import logging
 from datetime import datetime, date
 
@@ -169,169 +168,37 @@ def init_mixer(devicename=None):
 # ============================================================
 # השמעה
 # ============================================================
-def resolve_audio_target(audio_field):
-    """קובע אם audio_field מצביע על קובץ בודד או על תיקייה שלמה (השמעה אקראית ממנה)."""
+def resolve_audio_path(audio_field):
+    """תומך גם בשם קובץ פשוט (יחסי ל-audio/) וגם בנתיב מלא שנשמר בעבר בתוך ה-JSON."""
     if not audio_field:
-        return None, None
+        return None
     audio_field = str(audio_field)
+    # נתיב מלא (Windows: יש ':' אחרי אות הכונן, או שכבר קיים כקובץ)
     if os.path.isabs(audio_field) or (len(audio_field) > 1 and audio_field[1] == ":"):
-        path = audio_field
-    else:
-        path = os.path.join(AUDIO_DIR, audio_field)
-    if os.path.isdir(path):
-        return "folder", path
-    return "file", path
+        return audio_field
+    return os.path.join(AUDIO_DIR, audio_field)
 
 
-def list_folder_audio_files(folder_path):
-    try:
-        return [os.path.join(folder_path, f) for f in os.listdir(folder_path)
-                if f.lower().endswith((".mp3", ".wav", ".ogg"))]
-    except Exception as e:
-        logging.error(f"שגיאה בקריאת תיקיית שמע '{folder_path}': {e}")
-        return []
-
-
-def stop_playback_record(rec, hard=False):
-    """עוצר נגינה פעילה. hard=True (למשל בעצירת חירום) - קטיעה מיידית בלי fade.
-    אחרת - fadeout לפי fade_out_ms אם הוגדר, אחרת עצירה רגילה."""
-    channel = rec.get("channel")
-    if not channel:
-        return
-    try:
-        fade_out_ms = 0 if hard else int(rec.get("fade_out_ms", 0) or 0)
-        if fade_out_ms > 0:
-            channel.fadeout(fade_out_ms)
-        else:
-            channel.stop()
-    except Exception:
-        pass
-
-
-def play_event(ev, remaining_seconds=None):
-    """מתחיל אירוע ומחזיר 'רשומת נגינה' שמתוחזקת ע"י הלולאה הראשית (קובץ בודד/לולאה/תיקייה אקראית).
-    remaining_seconds - כשמוגדר (לדוגמה בהמשכת אירוע שהיה באמצע השמעה כשהמערכת הושבתה/הופעלה מחדש),
-    זהו מספר השניות שנותרו לניגון במקום duration_seconds המלא של האירוע."""
+def play_event(ev, day_heb_label=""):
     label = ev.get("label", "")
     audio_field = ev.get("audio", "")
     volume = max(0, min(100, int(ev.get("volume", 85)))) / 100.0
     duration = int(ev.get("duration_seconds", 30))
-    if remaining_seconds is not None:
-        duration = max(1, int(remaining_seconds))
-    loop = bool(ev.get("loop", False))
-    fade_in_ms = max(0, int(ev.get("fade_in_ms", 0) or 0))
-    fade_out_ms = max(0, int(ev.get("fade_out_ms", 0) or 0))
 
-    kind, path = resolve_audio_target(audio_field)
-    if kind is None:
-        logging.error(f"לא הוגדר קובץ/תיקיית שמע עבור האירוע '{label}' (זמן {ev.get('time')}).")
-        return None
-
-    rec = {
-        "label": label, "volume": volume, "fade_in_ms": fade_in_ms, "fade_out_ms": fade_out_ms,
-        "stop_at": time.monotonic() + duration, "channel": None,
-    }
-
-    if kind == "file":
-        if not os.path.exists(path):
-            logging.error(f"קובץ שמע לא נמצא עבור האירוע '{label}' (זמן {ev.get('time')}): '{audio_field}' -> '{path}'")
-            return None
-        try:
-            sound = pygame.mixer.Sound(path)
-            sound.set_volume(volume)
-            channel = sound.play(loops=-1 if loop else 0, fade_ms=fade_in_ms)
-            rec["kind"] = "single"
-            rec["channel"] = channel
-            resumed_note = f" (המשך אחרי הפעלה מחדש, {duration}s נותרו)" if remaining_seconds is not None else ""
-            logging.info(
-                f"מנגן: '{label}' | שעה {ev.get('time')} | קובץ '{path}' | עוצמה {int(volume*100)}% | "
-                f"משך {duration}s | loop={loop} | fade_in={fade_in_ms}ms | fade_out={fade_out_ms}ms{resumed_note}"
-            )
-            return rec
-        except Exception as e:
-            logging.error(f"שגיאה בהשמעת '{label}' מהקובץ '{path}': {e}")
-            return None
-
-    # kind == "folder": השמעה אקראית של קבצים מתוך התיקייה, ברצף, עד תום duration_seconds
-    files = list_folder_audio_files(path)
-    if not files:
-        logging.error(f"תיקיית השמע '{path}' עבור האירוע '{label}' ריקה או לא קיימת.")
-        return None
-    rec["kind"] = "folder"
-    rec["folder_files"] = files
-    rec["last_file"] = None
-    rec["first_track_played"] = False
-    resumed_note = f" (המשך אחרי הפעלה מחדש, {duration}s נותרו)" if remaining_seconds is not None else ""
-    logging.info(
-        f"מתחיל השמעה אקראית מתיקייה: '{label}' | שעה {ev.get('time')} | תיקייה '{path}' "
-        f"({len(files)} קבצים) | משך כולל {duration}s | fade_in={fade_in_ms}ms | fade_out={fade_out_ms}ms{resumed_note}"
-    )
-    return rec
-
-
-def advance_folder_session(rec, now_mono):
-    """מפעיל את הקטע הבא בתיקייה כשהקודם הסתיים (או מתחיל את הראשון), כל עוד לא חרגנו מהזמן הכולל."""
-    channel = rec.get("channel")
-    if channel is not None and channel.get_busy():
-        return  # עדיין מתנגן קטע - אין מה לעשות
-
-    if now_mono >= rec["stop_at"]:
-        return  # הזמן נגמר - הטיפול בעצירה נעשה במקום אחר
-
-    files = rec["folder_files"]
-    candidate = random.choice(files)
-    if len(files) > 1:
-        # מנסים לא לחזור מיד על אותו קובץ שרק ננגן
-        attempts = 0
-        while candidate == rec.get("last_file") and attempts < 5:
-            candidate = random.choice(files)
-            attempts += 1
+    path = resolve_audio_path(audio_field)
+    if not path or not os.path.exists(path):
+        logging.error(f"קובץ שמע לא נמצא עבור האירוע '{label}' (זמן {ev.get('time')}): '{audio_field}' -> '{path}'")
+        return
 
     try:
-        sound = pygame.mixer.Sound(candidate)
-        sound.set_volume(rec["volume"])
-        fade_ms = rec["fade_in_ms"] if not rec["first_track_played"] else 0
-        rec["channel"] = sound.play(fade_ms=fade_ms)
-        rec["last_file"] = candidate
-        rec["first_track_played"] = True
-        logging.info(f"תיקיית שמע '{rec['label']}': מנגן '{os.path.basename(candidate)}'")
+        sound = pygame.mixer.Sound(path)
+        sound.set_volume(volume)
+        channel = sound.play()
+        logging.info(f"מנגן: '{label}' | שעה {ev.get('time')} | קובץ '{path}' | עוצמה {int(volume*100)}% | משך {duration}s")
+        return channel, time.monotonic() + duration
     except Exception as e:
-        logging.error(f"שגיאה בהשמעת קטע מתיקייה עבור '{rec['label']}' מהקובץ '{candidate}': {e}")
-        rec["channel"] = None
-
-
-# ============================================================
-# עזר לחישובי זמן/אירועים (משותף לבדיקת "אירוע פעיל עכשיו" ולהתחלה רגילה)
-# ============================================================
-def event_time_seconds(ev):
-    try:
-        h, m, s = [int(x) for x in ev["time"].split(":")]
-        return h * 3600 + m * 60 + s
-    except Exception:
+        logging.error(f"שגיאה בהשמעת '{label}' מהקובץ '{path}': {e}")
         return None
-
-
-def find_event_in_progress(data, now):
-    """בודק אם יש אירוע פעיל (מהיום הנוכחי) שזמנו כבר הגיע אך עדיין לא הסתיים לפי
-    duration_seconds - כלומר אירוע שהיה 'אמור להתנגן עכשיו'. מוחזר יחד עם מספר
-    השניות שנותרו לו. משמש כדי להמשיך השמעה שנקטעה ע"י השבתה/רישיון לא תקף,
-    ברגע שהמערכת חוזרת לפעולה תוך כדי חלון הזמן המקורי של האירוע."""
-    day_key = now.strftime("%A")
-    if day_key not in DAY_ORDER:
-        return None, None
-    now_seconds = now.hour * 3600 + now.minute * 60 + now.second
-    for ev in data.get("weekly_schedule", {}).get(day_key, []):
-        if not ev.get("enabled", True):
-            continue
-        ev_seconds = event_time_seconds(ev)
-        if ev_seconds is None:
-            continue
-        duration = int(ev.get("duration_seconds", 30))
-        ev_end = ev_seconds + duration
-        if ev_seconds <= now_seconds < ev_end:
-            remaining = ev_end - now_seconds
-            return ev, remaining
-    return None, None
 
 
 # ============================================================
@@ -346,13 +213,11 @@ def main():
     current_device = startup_device
     write_available_devices()
 
-    played_today = set()      # מפתחות uid|time שכבר נוגנו היום (עמיד לשינויי סדר/עריכה במהלך היום)
-    active_playbacks = []     # רשימת רשומות נגינה פעילות (קובץ בודד/לולאה/תיקייה אקראית)
+    played_today = set()   # מפתחות uid|time שכבר נוגנו היום (עמיד לשינויי סדר/עריכה במהלך היום)
+    scheduled_stops = []   # [(channel, stop_at_monotonic), ...] לעצירת קטעים לפי duration_seconds
     current_date = date.today()
     tick_counter = 0
     last_status_log_tick = -STATUS_LOG_THROTTLE_TICKS
-    playback_halted_for_stop_request = False  # דגל: כבר עצרנו השמעה פעילה בעקבות השבתה/רישיון לא תקף
-    was_blocked_last_tick = False             # דגל: הטיק הקודם היה במצב חסום (מושבת/רישיון לא תקף) - לזיהוי "חזרה לפעולה"
 
     # באתחול: לא "לתפוס" ולנגן בבת אחת את כל האירועים שכבר עברו היום עד כה
     startup_now_str = datetime.now().strftime("%H:%M:%S")
@@ -386,57 +251,20 @@ def main():
                 init_mixer(wanted_device)
                 current_device = wanted_device
 
-            blocked_now = (not is_license_valid(data)) or is_system_disabled(data, today_iso)
-
-            # רישיון לא תקף = אין שום השמעה, בלי קשר למצב system_status.
-            # אם משהו כרגע מתנגן בפועל - עוצרים אותו מידית (לא מחכים שהוא יסתיים לבד).
+            # רישיון לא תקף = אין שום השמעה, בלי קשר למצב system_status
             if not is_license_valid(data):
-                if not playback_halted_for_stop_request:
-                    pygame.mixer.stop()
-                    active_playbacks = []
-                    playback_halted_for_stop_request = True
-                    logging.warning("הרישיון אינו תקף - כל השמעה פעילה נעצרה מידית.")
                 if tick_counter - last_status_log_tick >= STATUS_LOG_THROTTLE_TICKS:
                     logging.warning("הרישיון אינו תקף - ההשמעה מושבתת. יש לעדכן רישיון תקף בהגדרות המערכת.")
                     last_status_log_tick = tick_counter
-                was_blocked_last_tick = True
                 time.sleep(POLL_INTERVAL_SECONDS)
                 continue
 
             if is_system_disabled(data, today_iso):
-                if not playback_halted_for_stop_request:
-                    pygame.mixer.stop()
-                    active_playbacks = []
-                    playback_halted_for_stop_request = True
-                    logging.warning("המערכת הושבתה ע\"י המשתמש - כל השמעה פעילה נעצרה מידית (למשל: לצורך מבחן).")
                 if tick_counter - last_status_log_tick >= STATUS_LOG_THROTTLE_TICKS:
                     logging.info("המערכת מושבתת כרגע (לפי הגדרת המשתמש) - אין השמעה.")
                     last_status_log_tick = tick_counter
-                was_blocked_last_tick = True
                 time.sleep(POLL_INTERVAL_SECONDS)
                 continue
-
-            # המערכת פעילה ומורשית - מאפסים את הדגל כדי שההשבתה הבאה תעצור מיידית שוב
-            playback_halted_for_stop_request = False
-
-            # ---- זיהוי "חזרה לפעולה" מתוך מצב חסום: אם היינו חסומים בטיק הקודם וכעת פעילים,
-            # ובדיוק כרגע יש אירוע שזמנו כבר הגיע אך עוד לא הסתיים (לפי הלוח) - ממשיכים
-            # להשמיע אותו מהרגע הזה ועד לזמן הסיום המקורי שלו, ולא מחכים לאירוע הבא. ----
-            if was_blocked_last_tick:
-                in_progress_ev, remaining = find_event_in_progress(data, now)
-                if in_progress_ev is not None and remaining and remaining > 0:
-                    day_key_now = now.strftime("%A")
-                    event_uid = in_progress_ev.get("uid") or f"noid|{in_progress_ev.get('label')}"
-                    play_key = f"{day_key_now}|{event_uid}|{in_progress_ev.get('time')}"
-                    played_today.add(play_key)  # לא לנגן אותו שוב מההתחלה בהמשך הטיקים הרגילים
-                    logging.info(
-                        f"חזרה לפעולה תוך כדי חלון הזמן של אירוע פעיל - ממשיך להשמיע "
-                        f"'{in_progress_ev.get('label')}' למשך {remaining} שניות נוספות (עד תום הזמן המתוכנן)."
-                    )
-                    rec = play_event(in_progress_ev, remaining_seconds=remaining)
-                    if rec:
-                        active_playbacks.append(rec)
-            was_blocked_last_tick = False
 
             # יום השבוע הנוכחי בפורמט תואם ל-DAY_ORDER (Python: Monday=0 .. Sunday=6)
             day_key = now.strftime("%A")
@@ -477,21 +305,23 @@ def main():
                     continue
 
                 played_today.add(play_key)
-                rec = play_event(ev)
-                if rec:
-                    active_playbacks.append(rec)
+                result = play_event(ev)
+                if result:
+                    channel, stop_at = result
+                    scheduled_stops.append((channel, stop_at))
 
-            # תחזוקת נגינות פעילות: התקדמות תיקיות אקראיות + עצירה בתום הזמן שהוגדר
+            # עצירת קטעים שהגיעו לסוף משך ההשמעה שהוגדר להם
             now_mono = time.monotonic()
-            still_active = []
-            for rec in active_playbacks:
-                if now_mono >= rec["stop_at"]:
-                    stop_playback_record(rec, hard=False)
-                    continue
-                if rec["kind"] == "folder":
-                    advance_folder_session(rec, now_mono)
-                still_active.append(rec)
-            active_playbacks = still_active
+            still_pending = []
+            for channel, stop_at in scheduled_stops:
+                if now_mono >= stop_at:
+                    try:
+                        channel.stop()
+                    except Exception:
+                        pass
+                else:
+                    still_pending.append((channel, stop_at))
+            scheduled_stops = still_pending
 
         except Exception as e:
             # שום שגיאה לא תפיל את הלולאה - זה הרכיב הקריטי במערכת

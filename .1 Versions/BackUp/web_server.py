@@ -1,8 +1,7 @@
 """
 web_server.py
 שרת ניהול למערכת הצלצולים: API על schedule.json (כולל ייבוא/ייצוא, הגדרות, הרשאות,
-לוג פעולות בלתי-ניתן-למחיקה, היסטוריית Undo עם קפיצה לאחור, שכפול קוביות/ימים)
-+ הגשת ממשק הניהול הסטטי.
+לוג פעולות בלתי-ניתן-למחיקה, Undo) + הגשת ממשק הניהול הסטטי.
 לא נוגע במנוע ההשמעה (main.py) - קורא/כותב לאותו schedule.json בלבד, בכתיבה אטומית.
 
 הרצה:  python src/web_server.py       (ברירת מחדל: http://localhost:8500)
@@ -12,7 +11,6 @@ import json
 import os
 import io
 import uuid
-import copy
 import tempfile
 import hashlib
 import logging
@@ -30,9 +28,9 @@ AUDIO_DIR = os.path.join(BASE_DIR, "audio")
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 LOG_FILE = os.path.join(LOGS_DIR, "app.log")
 ACTIONS_LOG_FILE = os.path.join(LOGS_DIR, "actions_log.jsonl")   # לוג פעולות - קובץ מעקב, לא נמחק ע"י המערכת
-UNDO_STACK_FILE = os.path.join(LOGS_DIR, "undo_stack.json")      # מצבים קודמים לצורך Undo עם קפיצה לאחור
+UNDO_STACK_FILE = os.path.join(LOGS_DIR, "undo_stack.json")      # מצבים קודמים לצורך Undo (מוגבל בכמות)
 STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
-MAX_UNDO_STEPS = 50
+MAX_UNDO_STEPS = 20
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 logging.basicConfig(
@@ -41,17 +39,8 @@ logging.basicConfig(
 )
 
 DAY_ORDER = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-DAY_HEB = {"Sunday": "ראשון", "Monday": "שני", "Tuesday": "שלישי", "Wednesday": "רביעי",
-           "Thursday": "חמישי", "Friday": "שישי", "Saturday": "שבת"}
 AUDIO_DEVICES_FILE = os.path.join(BASE_DIR, "audio_devices.json")  # נכתב ע"י main.py - רשימת התקנים אמיתית מהמחשב שמחובר לרמקולים
 VALID_LICENSE_VALUE = "פעיל בתוקף"  # עקבי עם main.py - זהו הערך היחיד שנחשב "רישיון תקף"
-
-THEME_PRESETS = {
-    "classic": {"accent_color": "#1e3c72", "accent_2": "#2a5298", "bg": "#eef1f6"},
-    "midnight": {"accent_color": "#4c1d95", "accent_2": "#6d28d9", "bg": "#1e1b2e"},
-    "forest": {"accent_color": "#14532d", "accent_2": "#16a34a", "bg": "#eef7ef"},
-    "sunset": {"accent_color": "#9a3412", "accent_2": "#ea580c", "bg": "#fff4ec"},
-}
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
 app.secret_key = os.environ.get("BELL_SECRET_KEY", "school-bell-system-local-secret")  # מספיק לשימוש מקומי ברשת בית ספר
@@ -81,9 +70,8 @@ DEFAULT_DATA = {
         "license_key": "", "license_status": VALID_LICENSE_VALUE,
         "payment_status": "", "audio_device": ""
     },
-    "appearance": {"theme": "classic", "accent_color": "#1e3c72", "font_size": "normal"},
+    "appearance": {"accent_color": "#1e3c72", "font_size": "normal"},
     "permissions": {"edit_password_hash": ""},
-    "show_disabled_events": True,
     "weekly_schedule": {day: [] for day in DAY_ORDER}
 }
 
@@ -115,10 +103,6 @@ def load_data():
             ev.setdefault("type", "Bell")
             ev.setdefault("volume", 85)
             ev.setdefault("duration_seconds", 30)
-            ev.setdefault("loop", False)
-            ev.setdefault("fade_in_ms", 0)
-            ev.setdefault("fade_out_ms", 0)
-            ev.setdefault("uid", uuid.uuid4().hex[:12])
         events.sort(key=lambda x: x.get("time", "00:00:00"))
         weekly[day] = events
     data["weekly_schedule"] = weekly
@@ -126,7 +110,7 @@ def load_data():
 
 
 def save_data(data, log_action=True, action_name="update", action_details=""):
-    """כתיבה אטומית + (אופציונלי) רישום ללוג פעולות."""
+    """כתיבה אטומית + (אופציונלי) רישום ללוג פעולות + שמירת snapshot ל-Undo."""
     dir_name = os.path.dirname(SCHEDULE_FILE)
     fd, tmp_path = tempfile.mkstemp(dir=dir_name, prefix=".schedule_", suffix=".tmp")
     try:
@@ -145,11 +129,10 @@ def save_data(data, log_action=True, action_name="update", action_details=""):
 
 
 # ============================================================
-# לוג פעולות (audit trail - לא ניתן למחיקה דרך ה-API) + היסטוריית Undo עם קפיצה לאחור
+# לוג פעולות (audit trail - לא ניתן למחיקה דרך ה-API) + Undo
 # ============================================================
 def append_action_log(action_name, details=""):
     entry = {
-        "id": uuid.uuid4().hex[:10],
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "action": action_name,
         "details": details,
@@ -160,10 +143,9 @@ def append_action_log(action_name, details=""):
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except Exception as e:
         logging.error(f"שגיאה בכתיבה ללוג הפעולות: {e}")
-    return entry
 
 
-def read_action_log(limit=300):
+def read_action_log(limit=200):
     if not os.path.exists(ACTIONS_LOG_FILE):
         return []
     with open(ACTIONS_LOG_FILE, "r", encoding="utf-8") as f:
@@ -178,68 +160,44 @@ def read_action_log(limit=300):
     return entries
 
 
-def load_undo_stack():
+def push_undo_snapshot(pre_change_data):
+    """שומר עותק של המצב *לפני* שינוי, לצורך שחזור עתידי."""
+    stack = []
+    if os.path.exists(UNDO_STACK_FILE):
+        try:
+            with open(UNDO_STACK_FILE, "r", encoding="utf-8") as f:
+                stack = json.load(f)
+        except Exception:
+            stack = []
+    stack.append(pre_change_data)
+    stack = stack[-MAX_UNDO_STEPS:]
+    with open(UNDO_STACK_FILE, "w", encoding="utf-8") as f:
+        json.dump(stack, f, ensure_ascii=False)
+
+
+def pop_undo_snapshot():
     if not os.path.exists(UNDO_STACK_FILE):
-        return []
+        return None
     try:
         with open(UNDO_STACK_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            stack = json.load(f)
     except Exception:
-        return []
-
-
-def save_undo_stack(stack):
-    with open(UNDO_STACK_FILE, "w", encoding="utf-8") as f:
-        json.dump(stack[-MAX_UNDO_STEPS:], f, ensure_ascii=False)
-
-
-def push_undo_snapshot(pre_change_data, action_name, log_entry_id):
-    """שומר עותק של המצב *לפני* שינוי, לצורך שחזור עתידי (כולל קפיצה לאחור מספר צעדים)."""
-    stack = load_undo_stack()
-    stack.append({
-        "snapshot": pre_change_data,
-        "action_name": action_name,
-        "log_entry_id": log_entry_id,
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
-    })
-    save_undo_stack(stack)
-
-
-def list_undo_history():
-    """רשימת נקודות שחזור זמינות, מהאחרונה לישנה ביותר - עבור תצוגת 'היסטוריה כמו בכרום'."""
-    stack = load_undo_stack()
-    out = []
-    for i, entry in enumerate(reversed(stack)):
-        out.append({
-            "steps_back": i + 1,
-            "action_name": entry.get("action_name", ""),
-            "timestamp": entry.get("timestamp", ""),
-        })
-    return out
-
-
-def jump_to_undo_step(steps_back):
-    """קופץ אחורה N צעדים בבת אחת - משחזר את המצב מנקודת ההיסטוריה הרלוונטית
-    ומסיר אותה ואת כל מה שאחריה מהמחסנית (כמו history back בדפדפן)."""
-    stack = load_undo_stack()
-    if steps_back < 1 or steps_back > len(stack):
         return None
-    target_index = len(stack) - steps_back
-    snapshot_entry = stack[target_index]
-    stack = stack[:target_index]
-    save_undo_stack(stack)
-    return snapshot_entry["snapshot"]
+    if not stack:
+        return None
+    snapshot = stack.pop()
+    with open(UNDO_STACK_FILE, "w", encoding="utf-8") as f:
+        json.dump(stack, f, ensure_ascii=False)
+    return snapshot
 
 
 def mutate(action_name, details, mutator_fn):
-    """עוטף כל שינוי: שומר snapshot לפני, מפעיל את השינוי, שומר + רושם ללוג + דוחף להיסטוריית Undo."""
+    """עוטף כל שינוי: שומר snapshot לפני, מפעיל את השינוי, שומר + רושם ללוג."""
     data = load_data()
     pre_snapshot = json.loads(json.dumps(data))
     result = mutator_fn(data)
+    push_undo_snapshot(pre_snapshot)
     save_data(data, log_action=True, action_name=action_name, action_details=details)
-    log_entries = read_action_log(limit=1)
-    log_id = log_entries[0]["id"] if log_entries else None
-    push_undo_snapshot(pre_snapshot, action_name, log_id)
     return result if result is not None else data
 
 
@@ -272,7 +230,8 @@ def get_audio_files():
 
 def get_audio_output_devices():
     """רשימת התקני פלט שמע אמיתית. המקור הראשי הוא audio_devices.json שנכתב ע"י
-    main.py. אם main.py לא רץ עדיין, ננסה sounddevice אם מותקן, ואם לא - רשימת ברירת מחדל."""
+    main.py (שכבר משתמש ב-pygame לזיהוי התקנים בפועל, בלי תלות נוספת). אם main.py
+    לא רץ עדיין (הקובץ לא קיים), ננסה sounddevice אם מותקן, ואם לא - רשימת ברירת מחדל."""
     if os.path.exists(AUDIO_DEVICES_FILE):
         try:
             with open(AUDIO_DEVICES_FILE, "r", encoding="utf-8") as f:
@@ -303,6 +262,7 @@ def get_audio_output_devices():
 # ============================================================
 def parse_import_excel(file_stream):
     df_import = pd.read_excel(file_stream)
+    # שורת תיאור פורמט משנית (Text / HH:MM:SS / ...) - מדלגים עליה אם קיימת
     if len(df_import) and (
         str(df_import.iloc[0].get('תיאור הארוע')) == 'Text' or
         'HH:MM:SS' in str(df_import.iloc[0].get('שעת התחלה', ''))
@@ -323,7 +283,6 @@ def parse_import_excel(file_stream):
             "type": str(row.get('סוג ארוע', 'Bell')),
             "volume": int(row.get('עוצמת שמע', 85)),
             "enabled": bool(int(row.get('פעיל', 1))),
-            "loop": False, "fade_in_ms": 0, "fade_out_ms": 0,
             "uid": uuid.uuid4().hex[:12]
         }
         for d_idx, d_col in enumerate(day_cols):
@@ -397,11 +356,6 @@ def api_audio_devices():
     return jsonify(get_audio_output_devices())
 
 
-@app.route("/api/themes", methods=["GET"])
-def api_themes():
-    return jsonify(THEME_PRESETS)
-
-
 # ============================================================
 # API: הרשאות
 # ============================================================
@@ -449,7 +403,7 @@ def api_add_event():
         data["weekly_schedule"][day].append(event)
         data["weekly_schedule"][day].sort(key=lambda x: x["time"])
 
-    data = mutate("add_event", f"{DAY_HEB[day]}: {event.get('label')} בשעה {event['time']}", do)
+    data = mutate("add_event", f"{day}: {event.get('label')}", do)
     return jsonify(data)
 
 
@@ -473,39 +427,7 @@ def api_update_event():
         data["weekly_schedule"][day] = events
 
     try:
-        data = mutate("edit_event", f"{DAY_HEB[day]}: {event.get('label')} עודכן", do)
-    except IndexError:
-        return jsonify({"error": "אינדקס לא תקין"}), 404
-    return jsonify(data)
-
-
-@app.route("/api/event/quick", methods=["PATCH"])
-def api_quick_update_event():
-    """עדכון מהיר בשדה בודד (פעיל/עוצמה/שעה) ישירות מהקובייה - שמירה אוטומטית, ללא מודל."""
-    guard = require_editor()
-    if guard:
-        return guard
-    body = request.get_json(force=True)
-    day, index, fields = body.get("day"), body.get("index"), body.get("fields", {})
-    if day not in DAY_ORDER or index is None or not fields:
-        return jsonify({"error": "בקשה לא תקינה"}), 400
-
-    def do(data):
-        events = data["weekly_schedule"].get(day, [])
-        if index < 0 or index >= len(events):
-            raise IndexError("אינדקס לא תקין")
-        ev = events[index]
-        if "enabled" in fields:
-            ev["enabled"] = bool(fields["enabled"])
-        if "volume" in fields:
-            ev["volume"] = max(0, min(100, int(fields["volume"])))
-        if "time" in fields:
-            ev["time"] = migrate_time(fields["time"])
-        events.sort(key=lambda x: x["time"])
-        data["weekly_schedule"][day] = events
-
-    try:
-        data = mutate("quick_edit_event", f"{DAY_HEB[day]}: עדכון מהיר ({', '.join(fields.keys())})", do)
+        data = mutate("edit_event", f"{day}: {event.get('label')}", do)
     except IndexError:
         return jsonify({"error": "אינדקס לא תקין"}), 404
     return jsonify(data)
@@ -532,63 +454,9 @@ def api_delete_event():
         data["weekly_schedule"][day] = events
 
     try:
-        data = mutate("delete_event", f"{DAY_HEB[day]}: {label_holder.get('label', '')} נמחק", do)
+        data = mutate("delete_event", f"{day}", do)
     except IndexError:
         return jsonify({"error": "אינדקס לא תקין"}), 404
-    return jsonify(data)
-
-
-@app.route("/api/event/duplicate", methods=["POST"])
-def api_duplicate_event():
-    """שכפול קוביה בודדת - לאותו יום (ברירת מחדל) או ליום אחר שנבחר."""
-    guard = require_editor()
-    if guard:
-        return guard
-    body = request.get_json(force=True)
-    day, index = body.get("day"), body.get("index")
-    target_day = body.get("target_day", day)
-    if day not in DAY_ORDER or target_day not in DAY_ORDER or index is None:
-        return jsonify({"error": "בקשה לא תקינה"}), 400
-
-    def do(data):
-        events = data["weekly_schedule"].get(day, [])
-        if index < 0 or index >= len(events):
-            raise IndexError("אינדקס לא תקין")
-        clone = copy.deepcopy(events[index])
-        clone["uid"] = uuid.uuid4().hex[:12]
-        clone["label"] = clone.get("label", "") + " (עותק)"
-        data["weekly_schedule"][target_day].append(clone)
-        data["weekly_schedule"][target_day].sort(key=lambda x: x["time"])
-
-    try:
-        data = mutate("duplicate_event", f"שוכפל מ-{DAY_HEB[day]} אל {DAY_HEB[target_day]}", do)
-    except IndexError:
-        return jsonify({"error": "אינדקס לא תקין"}), 404
-    return jsonify(data)
-
-
-@app.route("/api/day/duplicate", methods=["POST"])
-def api_duplicate_day():
-    """שכפול יום שלם אל יום יעד (מחליף את כל האירועים של יום היעד)."""
-    guard = require_editor()
-    if guard:
-        return guard
-    body = request.get_json(force=True)
-    source_day, target_day = body.get("source_day"), body.get("target_day")
-    if source_day not in DAY_ORDER or target_day not in DAY_ORDER:
-        return jsonify({"error": "בקשה לא תקינה"}), 400
-
-    def do(data):
-        source_events = data["weekly_schedule"].get(source_day, [])
-        cloned = []
-        for ev in source_events:
-            c = copy.deepcopy(ev)
-            c["uid"] = uuid.uuid4().hex[:12]
-            cloned.append(c)
-        cloned.sort(key=lambda x: x["time"])
-        data["weekly_schedule"][target_day] = cloned
-
-    data = mutate("duplicate_day", f"יום {DAY_HEB[source_day]} שוכפל אל יום {DAY_HEB[target_day]}", do)
     return jsonify(data)
 
 
@@ -627,7 +495,7 @@ def api_set_system():
 
 
 # ============================================================
-# API: הגדרות (מוסד, שפה, מראה/ערכת נושא, התקן שמע, רישיון, הרשאות, הצגת אירועים לא פעילים)
+# API: הגדרות (מוסד, שפה, מראה, התקן שמע, רישיון, הרשאות)
 # ============================================================
 @app.route("/api/settings", methods=["POST"])
 def api_set_settings():
@@ -643,8 +511,6 @@ def api_set_settings():
             data["institution_info"]["audio_device"] = body["audio_device"]
         if "appearance" in body:
             data["appearance"].update(body["appearance"])
-        if "show_disabled_events" in body:
-            data["show_disabled_events"] = bool(body["show_disabled_events"])
         if "new_edit_password" in body and body["new_edit_password"] is not None:
             pw = body["new_edit_password"]
             data["permissions"]["edit_password_hash"] = (
@@ -693,31 +559,22 @@ def api_export():
 
 
 # ============================================================
-# API: לוג פעולות + Undo (כולל קפיצה לאחור בהיסטוריה, כמו בכרום)
+# API: לוג פעולות + Undo
 # ============================================================
 @app.route("/api/log", methods=["GET"])
 def api_log():
     return jsonify(read_action_log())
 
 
-@app.route("/api/undo/history", methods=["GET"])
-def api_undo_history():
-    return jsonify(list_undo_history())
-
-
 @app.route("/api/undo", methods=["POST"])
 def api_undo():
-    """צעד אחד אחורה (התנהגות ברירת מחדל - שקולה ל-jump עם steps_back=1)."""
     guard = require_editor()
     if guard:
         return guard
-    body = request.get_json(silent=True) or {}
-    steps_back = int(body.get("steps_back", 1))
-    snapshot = jump_to_undo_step(steps_back)
+    snapshot = pop_undo_snapshot()
     if snapshot is None:
         return jsonify({"error": "אין פעולות לשחזור"}), 400
-    save_data(snapshot, log_action=True, action_name="undo",
-              action_details=f"שוחזר מצב קודם ({steps_back} צעדים אחורה)")
+    save_data(snapshot, log_action=True, action_name="undo", action_details="שוחזר מצב קודם")
     return jsonify(snapshot)
 
 
