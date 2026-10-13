@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>התקנת מערכת הצלצולים - Windows 7</title>
+<style>
+  body { font-family: Arial, "Segoe UI", sans-serif; background: #eef1f6; color: #222; margin: 0; padding: 24px 16px; line-height: 1.6; }
+  .page { max-width: 760px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 24px 28px; border: 1px solid #dde3ea; }
+  h1 { color: #1e3c72; font-size: 26px; margin: 0 0 4px; }
+  .sub { color: #666; margin: 0 0 20px; }
+  h2 { color: #1e3c72; font-size: 19px; margin: 28px 0 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
+  .step { margin: 14px 0; padding: 12px 16px; background: #f6f8fb; border-right: 4px solid #2a5298; border-radius: 6px; }
+  .step b.n { display: inline-block; background: #1e3c72; color: #fff; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; margin-left: 8px; }
+  .warn { background: #fff4e5; border-right: 4px solid #e08a00; padding: 10px 14px; border-radius: 6px; margin: 12px 0; }
+  .ok { background: #e9f7ee; border-right: 4px solid #1f9d3a; padding: 10px 14px; border-radius: 6px; margin: 12px 0; }
+  code { display: inline-block; direction: ltr; background: #eef1f5; padding: 1px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  td, th { border: 1px solid #dde3ea; padding: 6px 10px; text-align: right; vertical-align: top; }
+  th { background: #f0f3f7; }
+  ul { margin: 6px 0; padding-right: 22px; }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>התקנת מערכת הצלצולים במחשב Windows 7</h1>
+<p class="sub">זמן משוער: 10 דקות. אין צורך באינטרנט במחשב הצלצולים (חוץ מהורדת Python, שאפשר לעשות במחשב אחר).</p>
+
+<h2>לפני שמתחילים: לבדוק את המחשב</h2>
+<p>לחיצה ימנית על <b>מחשב</b> (Computer) בתפריט התחל ← <b>מאפיינים</b> (Properties). לבדוק שני דברים:</p>
+<table>
+  <tr><th>מה לבדוק</th><th>מה צריך להופיע</th></tr>
+  <tr><td>Service Pack</td><td><code>Service Pack 1</code> (בלי זה Python לא יותקן)</td></tr>
+  <tr><td>סוג מערכת (System type)</td><td><code>64-bit</code> או <code>32-bit</code> &ndash; קובע איזה קובץ Python להוריד בשלב 1</td></tr>
+</table>
+
+<h2>ההתקנה</h2>
+
+<div class="step"><b class="n">1</b><b>התקנת Python 3.8.10</b> (פעם אחת בלבד)
+<ul>
+  <li>להוריד (אפשר במחשב אחר ולהעביר בדיסק און קי) מהכתובת:<br><code>https://www.python.org/downloads/release/python-3810/</code></li>
+  <li>בתחתית הדף, בטבלת Files:<br>
+      במחשב <code>64-bit</code>: השורה <code>Windows installer (64-bit)</code>, הקובץ <code>python-3.8.10-amd64.exe</code><br>
+      במחשב <code>32-bit</code>: השורה <code>Windows installer (32-bit)</code>, הקובץ <code>python-3.8.10.exe</code></li>
+  <li>להפעיל את הקובץ. <b>במסך הראשון לסמן ✓ את <code>Add Python 3.8 to PATH</code></b>, ואז <code>Install Now</code>.</li>
+</ul>
+<div class="warn">חשוב: דווקא <b>3.8.10</b>. גרסאות Python חדשות יותר לא עובדות ב-Windows 7.</div>
+</div>
+
+<div class="step"><b class="n">2</b><b>העתקת התיקייה</b>
+<ul>
+  <li>לחלץ את קובץ ה-zip ולהעתיק את התיקייה <code>SchoolBell</code> אל <code>C:\SchoolBell</code>.</li>
+  <li>מומלץ נתיב בלי עברית ובלי רווחים, כמו <code>C:\SchoolBell</code>.</li>
+</ul>
+</div>
+
+<div class="step"><b class="n">3</b><b>העתקת הלוח וקבצי השמע מהמחשב שלך</b>
+<ul>
+  <li>מהתיקייה <code>D:\Projects\SchoolBellSystem</code> להעתיק אל <code>C:\SchoolBell</code>:<br>
+      את הקובץ <code>schedule.json</code> ואת התיקייה <code>audio</code> (להחליף את התיקייה הריקה).</li>
+</ul>
+<div class="warn">קבצי שמע שנבחרו ב-Browse <b>מחוץ</b> לתיקייה <code>audio</code> נשמרים עם הנתיב המלא שלהם (למשל <code>D:\Music\...</code>).
+במחשב הצלצולים הנתיב הזה לא קיים, והאירוע לא יתנגן. הכי פשוט: להעתיק את הקבצים לתיקייה <code>audio</code> ולבחור אותם מחדש בממשק.
+אם שוכחים את <code>schedule.json</code>, המערכת עולה עם לוח ריק.</div>
+</div>
+
+<div class="step"><b class="n">4</b><b>הפעלת ההתקנה</b>
+<ul>
+  <li>לחיצה כפולה על <code>install.bat</code> בתוך <code>C:\SchoolBell</code>.</li>
+  <li>ההתקנה: מתקינה את הספריות מהתיקייה <code>wheels</code> (בלי אינטרנט), מבטלת מצב שינה במחשב,
+      יוצרת שני קיצורי דרך בשולחן העבודה (הפעלה ועצירה), ומגדירה הפעלה אוטומטית כשה-Windows עולה. בסוף היא מפעילה את המערכת.</li>
+  <li>אם Windows שואל על חומת האש (Firewall) ל-<code>python</code>: לאשר ל<b>רשת פרטית</b>. זה נדרש רק אם רוצים לנהל את המערכת ממחשב אחר.</li>
+</ul>
+</div>
+
+<div class="step"><b class="n">5</b><b>בדיקה</b>
+<ul>
+  <li>נפתח חלון הניהול עם השעון והלוח. בשורת המשימות יש שני חלונות ממוזערים (Bell Engine ו-Bell Web Server) &ndash; <b>לא לסגור אותם</b>.</li>
+  <li>להוסיף אירוע בדיקה לעוד דקה-שתיים ולוודא שהוא נשמע ברמקולים. בהגדרות ← שמע ומראה אפשר לבחור את התקן השמע.</li>
+</ul>
+</div>
+
+<div class="ok"><b>מכאן:</b> המערכת עולה לבד בכל הפעלה של המחשב. קיצור הדרך <code>School Bell System</code> מפעיל אותה ידנית,
+ו-<code>School Bell System - STOP</code> עוצר אותה וסוגר גם את חלון הניהול.<br>
+<b>סגירת חלון הניהול (X) במחשב הצלצולים עוצרת את המערכת</b> אחרי כמה שניות, כמו STOP. הדפדפן ישאל קודם "לצאת מהאתר?" &ndash; כך אפשר לבטל סגירה בטעות.
+רענון החלון (F5) לא עוצר. ניהול מטלפון או ממחשב אחר לא עוצר כלום.</div>
+
+<h2>דפדפן לחלון הניהול</h2>
+<ul>
+  <li>Chrome או Edge (גרסה 109, האחרונה ל-Windows 7, מתאימה). אם אחד מהם מותקן, החלון נפתח בו אוטומטית.</li>
+  <li><b>Internet Explorer לא יכול להציג את הממשק.</b> אם אין דפדפן אחר במחשב הצלצולים, אפשר לנהל ממחשב אחר או מטלפון באותה רשת:
+      <code>http://כתובת-המחשב:8500</code> (את הכתובת רואים ב-<code>ipconfig</code>, בשורה IPv4 Address).</li>
+  <li>הצלצולים עצמם לא תלויים בדפדפן בכלל.</li>
+</ul>
+
+<h2>אם משהו לא עובד</h2>
+<table>
+  <tr><th>מה קורה</th><th>מה עושים</th></tr>
+  <tr><td>התקנת Python נכשלת</td><td>חסרים עדכוני Windows 7: Service Pack 1, ולפעמים גם KB2533623 ו-KB2999226. להתקין אותם (Windows Update) ולנסות שוב.</td></tr>
+  <tr><td><code>install.bat</code> אומר ש-Python לא נמצא</td><td>להתקין שוב את Python 3.8.10 ולסמן <code>Add Python 3.8 to PATH</code>.</td></tr>
+  <tr><td>אין צלצול</td><td>לפתוח את <code>C:\SchoolBell\logs\app.log</code>: כל ניגון וכל שגיאה (למשל "קובץ שמע לא נמצא") רשומים שם.</td></tr>
+  <tr><td>פס אדום בראש חלון הניהול</td><td>רץ שרת ישן. להפעיל את קיצור הדרך <code>School Bell System</code> (הוא עוצר עותקים ישנים ומפעיל מחדש).</td></tr>
+</table>
+<div class="warn">מומלץ לוודא ששעון המחשב מדויק (לחיצה על השעון ← שנה הגדרות תאריך ושעה ← שעון אינטרנט ← סנכרון). הצלצולים מדויקים בדיוק כמו שעון המחשב.</div>
+</div>
+</body>
+</html>

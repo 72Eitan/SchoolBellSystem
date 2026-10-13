@@ -1,0 +1,17 @@
+# Et Ratzon control center
+control_center/data/
+# connection key of this bell PC
+cloud_config.json
+# upload package for PythonAnywhere (built from control_center)
+control_center_upload.zip
+# remote updates: built packages (developer PC) and staging/backups (bell PC)
+updates_out/
+updates/
+
+# browser profile of the management window (cookies, cache - private, large)
+.bell_window/
+# Python cache, Office temp files
+__pycache__/
+*.pyc
+~$*
+~WRL*.tmp

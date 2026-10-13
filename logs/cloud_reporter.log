@@ -1,0 +1,34 @@
+2026-10-12 10:20:04,043 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 10:20:08,303 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 10:22:11,263 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 10:29:55,991 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 10:49:03,733 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 10:55:46,989 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 10:58:59,493 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 11:01:39,429 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 14:10:52,313 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-12 14:13:21,466 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 14:54:34,668 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 15:29:52,583 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 17:08:50,785 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-12 17:14:04,931 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-12 17:15:06,300 - INFO - החיבור למרכז הבקרה חזר
+2026-10-12 17:19:08,454 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 03:02:50,260 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-13 05:56:32,794 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-13 08:55:38,016 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 08:57:18,293 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-13 08:57:18,426 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 09:06:34,519 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 09:40:11,738 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 09:41:20,479 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:12:06,654 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:16:19,633 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:33:14,482 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:34:08,489 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:38:51,494 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:55:33,612 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 11:59:31,103 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-13 12:12:33,526 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 12:14:15,660 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 12:16:19,613 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.

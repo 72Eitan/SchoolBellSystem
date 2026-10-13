@@ -1,0 +1,4 @@
+# Only needed later, for the AI agent and the Telegram bot (not used on the bell PC yet)
+python-telegram-bot>=20.0
+google-generativeai>=0.4.0
+anthropic>=0.18.0

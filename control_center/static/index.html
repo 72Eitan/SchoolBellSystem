@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>מרכז בקרה</title>
+<style>
+:root {
+  --bg: #f1f3f8;
+  --panel: #ffffff;
+  --ink: #1b2236;
+  --ink-2: #4a5470;
+  --ink-3: #8790a8;
+  --line: #e2e6ef;
+  --line-2: #eef1f6;
+  --brand: #1e3c72;
+  --brand-2: #2c5aa8;
+  --brand-soft: #e8eef9;
+  --crit: #c93a3a;   --crit-soft: #fbeaea;
+  --warn: #b7791f;   --warn-soft: #fdf3e1;
+  --ok: #24875a;     --ok-soft: #e5f4ec;
+  --info: #2c6cb0;   --info-soft: #e7f0fa;
+  --idle: #9aa2b5;   --idle-soft: #f0f2f6;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(20,30,60,.06), 0 2px 8px rgba(20,30,60,.05);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: 'Rubik', 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+  font-size: 14px; color: var(--ink); background: var(--bg); direction: rtl;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+.num, .mono { font-variant-numeric: tabular-nums; }
+.mono { font-family: Consolas, 'Courier New', monospace; letter-spacing: .02em; }
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.muted { color: var(--ink-3); }
+.hidden { display: none !important; }
+
+/* ---------- מבנה ---------- */
+.app { display: grid; grid-template-columns: 212px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
+.topbar {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 0 20px;
+  background: var(--brand); color: #fff;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; }
+.brand svg { flex: none; }
+.brand small { font-weight: 400; opacity: .7; font-size: 13px; }
+.topbar .spacer { flex: 1; }
+.topbar .refresh { font-size: 12px; opacity: .75; }
+.topbar .user { font-size: 13px; opacity: .9; }
+.topbar button { background: rgba(255,255,255,.12); border: 0; color: #fff; padding: 6px 12px; border-radius: 7px; cursor: pointer; }
+.topbar button:hover { background: rgba(255,255,255,.22); }
+
+.nav { background: var(--panel); border-left: 1px solid var(--line); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; }
+.nav a {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: var(--ink-2);
+  text-decoration: none; cursor: pointer; font-weight: 500;
+}
+.nav a:hover { background: var(--line-2); }
+.nav a.active { background: var(--brand-soft); color: var(--brand); }
+.nav a .badge { margin-inline-start: auto; }
+.nav .sep { height: 1px; background: var(--line); margin: 10px 4px; }
+.nav .foot { margin-top: auto; font-size: 11px; color: var(--ink-3); padding: 0 12px; }
+
+main { overflow: auto; padding: 22px 26px 40px; }
+h1 { font-size: 20px; margin: 0 0 4px; font-weight: 600; }
+.page-head { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 18px; }
+.page-head .sub { color: var(--ink-3); font-size: 13px; }
+.page-head .actions { margin-inline-start: auto; display: flex; gap: 8px; }
+
+.panel { background: var(--panel); border-radius: var(--radius); box-shadow: var(--shadow); }
+.panel-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 10px; font-weight: 600; }
+.panel-h .muted { font-weight: 400; font-size: 12px; }
+.panel-h .end { margin-inline-start: auto; }
+.panel-b { padding: 0 16px 16px; }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--crit); color: #fff;
+}
+
+/* ---------- כפתורים ושדות ---------- */
+.btn {
+  border: 1px solid var(--line); background: var(--panel); padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { border-color: #c8cfdd; background: #fafbfd; }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-2); }
+.btn.small { padding: 4px 10px; font-size: 13px; }
+.btn.danger { color: var(--crit); }
+.btn:disabled { opacity: .5; cursor: default; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 12px; color: var(--ink-2); font-weight: 500; }
+.field input, .field select, .field textarea, .input {
+  border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; background: #fff; width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus, .input:focus { outline: 2px solid var(--brand-soft); border-color: var(--brand-2); }
+.field textarea { min-height: 70px; resize: vertical; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.span2 { grid-column: span 2; }
+.span3 { grid-column: 1 / -1; }
+
+/* ---------- סטטוס ---------- */
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.info { background: var(--info); box-shadow: 0 0 0 3px var(--info-soft); }
+.h-critical .dot, .dot.critical { background: var(--crit); box-shadow: 0 0 0 3px var(--crit-soft); }
+.h-warning .dot, .dot.warning { background: var(--warn); box-shadow: 0 0 0 3px var(--warn-soft); }
+.h-ok .dot, .dot.ok { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.h-idle .dot, .h-never .dot, .h-archived .dot, .dot.idle { background: var(--idle); box-shadow: 0 0 0 3px var(--idle-soft); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.pill.critical { background: var(--crit-soft); color: var(--crit); }
+.pill.warning { background: var(--warn-soft); color: var(--warn); }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.info { background: var(--info-soft); color: var(--info); }
+.pill.idle { background: var(--idle-soft); color: var(--ink-2); }
+
+/* ---------- סקירה ---------- */
+.kpis { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
+.kpi { padding: 14px 16px; cursor: pointer; border: 1px solid transparent; transition: border-color .15s; }
+.kpi:hover { border-color: var(--line); }
+.kpi .k-label { font-size: 12px; color: var(--ink-2); font-weight: 500; }
+.kpi .k-value { font-size: 28px; font-weight: 600; margin-top: 4px; line-height: 1.1; }
+.kpi .k-value small { font-size: 15px; color: var(--ink-3); font-weight: 400; }
+.kpi .k-foot { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+.kpi.critical .k-value { color: var(--crit); }
+.kpi.warning .k-value { color: var(--warn); }
+.kpi.zero .k-value { color: var(--ink-3); }
+.overview-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+.alert-list { list-style: none; margin: 0; padding: 0; }
+.alert-list li {
+  display: grid; grid-template-columns: 10px minmax(0,1fr) auto; gap: 12px; align-items: center;
+  padding: 10px 16px; border-top: 1px solid var(--line-2); cursor: pointer;
+}
+.alert-list li:hover { background: #fafbfd; }
+.alert-list .a-who { font-weight: 500; }
+.alert-list .a-what { color: var(--ink-2); font-size: 13px; }
+.alert-list .a-when { font-size: 12px; color: var(--ink-3); }
+.empty { padding: 26px 16px; text-align: center; color: var(--ink-3); }
+.empty.good { color: var(--ok); }
+
+.bars { display: flex; align-items: flex-end; gap: 3px; height: 90px; direction: ltr; }
+.bars .bar { flex: 1; background: var(--brand-2); border-radius: 2px 2px 0 0; min-height: 2px; position: relative; opacity: .85; }
+.bars .bar:hover { opacity: 1; }
+.bars-axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-3); margin-top: 6px; direction: ltr; }
+.hbar { display: grid; grid-template-columns: 110px 1fr 34px; gap: 10px; align-items: center; margin: 7px 0; font-size: 13px; }
+.hbar .track { height: 8px; background: var(--line-2); border-radius: 4px; overflow: hidden; }
+.hbar .fill { height: 100%; background: var(--brand-2); border-radius: 4px; }
+.hbar .fill.old { background: var(--warn); }
+.hbar .n { text-align: left; color: var(--ink-2); }
+
+/* ---------- טבלת לקוחות ---------- */
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 16px; padding: 5px 12px; cursor: pointer;
+  font-size: 13px; display: inline-flex; gap: 6px; align-items: center;
+}
+.chip .c { color: var(--ink-3); font-size: 12px; }
+.chip.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.chip.active .c { color: rgba(255,255,255,.75); }
+.toolbar .search { width: 240px; margin-inline-start: auto; }
+.toolbar select.input { width: auto; }
+table.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  text-align: right; font-size: 12px; font-weight: 500; color: var(--ink-3); padding: 10px 12px;
+  border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; background: var(--panel);
+  cursor: pointer; user-select: none;
+}
+.tbl th.sorted::after { content: " ▾"; }
+.tbl th.sorted.asc::after { content: " ▴"; }
+.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--line-2); vertical-align: middle; }
+.tbl tbody tr { cursor: pointer; }
+.tbl tbody tr:hover { background: #fafbfd; }
+.tbl tbody tr.sel { background: var(--brand-soft); }
+.tbl .name { font-weight: 500; }
+.tbl .code { font-size: 11px; color: var(--ink-3); }
+.tbl .alert-txt { font-size: 12px; color: var(--ink-2); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tbl-wrap { overflow: auto; max-height: calc(100vh - 220px); border-radius: var(--radius); }
+
+/* ---------- מגירת לקוח ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(15,22,40,.25); z-index: 20; }
+.drawer {
+  position: fixed; top: 0; bottom: 0; left: 0; width: min(620px, 100vw); background: var(--bg); z-index: 21;
+  display: flex; flex-direction: column; visibility: hidden;
+  transform: translateX(-100%); transition: transform .2s ease, visibility 0s .2s;
+}
+.drawer.open { transform: translateX(0); visibility: visible; box-shadow: 8px 0 30px rgba(15,22,40,.18); transition: transform .2s ease; }
+.drawer-h { background: var(--panel); padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: flex-start; }
+.drawer-h h2 { margin: 0; font-size: 18px; font-weight: 600; }
+.drawer-h .meta { font-size: 13px; color: var(--ink-3); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.drawer-h .close { margin-inline-start: auto; border: 0; background: none; font-size: 22px; cursor: pointer; color: var(--ink-3); line-height: 1; padding: 2px 6px; }
+.drawer-b { overflow: auto; padding: 16px 20px 30px; display: flex; flex-direction: column; gap: 14px; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-2); border-radius: 8px; overflow: hidden; }
+.fact { background: var(--panel); padding: 10px 12px; }
+.fact .f-l { font-size: 11px; color: var(--ink-3); }
+.fact .f-v { font-weight: 500; margin-top: 2px; }
+.fact .f-v.bad { color: var(--crit); }
+.fact .f-v.warnc { color: var(--warn); }
+.fact .f-v.good { color: var(--ok); }
+.avail { display: grid; grid-template-columns: 36px repeat(24, 1fr); gap: 2px; direction: ltr; font-size: 10px; color: var(--ink-3); align-items: center; }
+.avail .cell { height: 12px; border-radius: 2px; background: var(--line); }
+.avail .cell.on { background: var(--ok); opacity: .8; }
+.avail .lbl { text-align: right; padding-right: 4px; }
+.keybox { background: #0f1830; color: #dfe7ff; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; white-space: pre; overflow: auto; direction: ltr; text-align: left; }
+.notice { padding: 10px 12px; border-radius: 8px; font-size: 13px; }
+.notice.warn { background: var(--warn-soft); color: #7a5212; }
+.notice.info { background: var(--info-soft); color: #1d4f85; }
+
+/* ---------- משוב ---------- */
+.fb { padding: 14px 16px; border-top: 1px solid var(--line-2); display: grid; grid-template-columns: minmax(0,1fr) 180px; gap: 14px; }
+.fb:first-child { border-top: 0; }
+.fb .fb-h { display: flex; gap: 8px; align-items: center; font-size: 13px; flex-wrap: wrap; }
+.fb .fb-h b { font-weight: 600; cursor: pointer; }
+.fb .fb-h b:hover { text-decoration: underline; }
+.fb .fb-t { margin: 8px 0 0; line-height: 1.55; }
+.fb .stars { color: #e3a008; letter-spacing: 1px; }
+.fb .side { display: flex; flex-direction: column; gap: 6px; }
+
+/* ---------- חלונות ---------- */
+.modal-bg { position: fixed; inset: 0; background: rgba(15,22,40,.35); z-index: 30; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal { background: var(--panel); border-radius: 12px; width: min(620px, 100%); max-height: 90vh; overflow: auto; box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+.modal-h { padding: 16px 20px; font-weight: 600; font-size: 16px; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+.modal-h .x { margin-inline-start: auto; border: 0; background: none; font-size: 22px; cursor: pointer; color: var(--ink-3); }
+.modal-b { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.modal-f { padding: 12px 20px 18px; display: flex; gap: 8px; justify-content: flex-start; }
+
+.auth { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, #1e3c72, #2c5aa8 60%, #3d6cc0); }
+.auth .card { background: #fff; border-radius: 14px; padding: 30px 28px; width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,.25); display: flex; flex-direction: column; gap: 14px; }
+.auth h2 { margin: 0; font-size: 20px; }
+.auth .err { color: var(--crit); font-size: 13px; min-height: 18px; }
+
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: #1b2236; color: #fff; padding: 10px 18px; border-radius: 8px; z-index: 50; font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.toast.err { background: var(--crit); }
+
+@media (max-width: 1250px) { .kpis { grid-template-columns: repeat(3, 1fr); } .overview-grid { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 56px auto 1fr; }
+  .nav { flex-direction: row; overflow-x: auto; border: 0; border-bottom: 1px solid var(--line); padding: 6px; }
+  .nav .sep, .nav .foot { display: none; }
+  .nav a { white-space: nowrap; }
+  main { padding: 16px; }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .toolbar .search { width: 100%; }
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .topbar .refresh, .brand small { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- התחברות / הגדרה ראשונה -->
+<div id="auth" class="auth hidden">
+  <form class="card" id="auth-form" autocomplete="on">
+    <h2 id="auth-title">כניסה</h2>
+    <p id="auth-note" class="muted hidden" style="margin:0">זו הפעלה ראשונה. צור את חשבון היוצר: יש לו הרשאה מלאה לכל הלקוחות.</p>
+    <div class="field hidden" id="auth-name-wrap"><label>שם לתצוגה</label><input id="auth-display"></div>
+    <div class="field"><label>שם משתמש</label><input id="auth-user" autocomplete="username" required></div>
+    <div class="field"><label>סיסמה</label><input id="auth-pass" type="password" autocomplete="current-password" required></div>
+    <div class="err" id="auth-err"></div>
+    <button class="btn primary" type="submit" id="auth-btn" style="justify-content:center">כניסה</button>
+  </form>
+</div>
+
+<div id="app" class="app hidden">
+  <header class="topbar">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="#fff" stroke-width="3"/><path d="M20 10v10l6 4" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M13 27q7 6 14 0" stroke="#f5c542" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
+      <span>עת רצון</span><small>מרכז בקרה</small>
+    </div>
+    <div class="spacer"></div>
+    <span class="refresh" id="refresh-at"></span>
+    <span class="user" id="user-label"></span>
+    <button id="logout">יציאה</button>
+  </header>
+
+  <nav class="nav" id="nav">
+    <a data-page="overview" class="active">סקירה</a>
+    <a data-page="customers">לקוחות</a>
+    <a data-page="feedback" data-owner>משוב <span class="badge hidden" id="fb-badge"></span></a>
+    <div class="sep"></div>
+    <a data-page="org" data-owner>רשתות ומשתמשים</a>
+    <a data-page="updates" data-owner>עדכוני תוכנה</a>
+    <a data-page="audit" data-owner>יומן פעולות</a>
+    <div class="foot" id="ver"></div>
+  </nav>
+
+  <main id="main">
+    <!-- סקירה -->
+    <section id="page-overview">
+      <div class="page-head">
+        <div><h1>סקירה</h1><div class="sub" id="ov-sub"></div></div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="overview-grid">
+        <div class="panel">
+          <div class="panel-h">דורש טיפול <span class="muted" id="alerts-count"></span>
+            <button class="btn small end" data-goto="customers" data-filter="issues">כל הלקוחות עם תקלות</button></div>
+          <ul class="alert-list" id="alerts"></ul>
+        </div>
+        <div class="stack">
+          <div class="panel">
+            <div class="panel-h">מחשבים שדיווחו <span class="muted">· 24 שעות, לפי שעה</span></div>
+            <div class="panel-b"><div class="bars" id="bars"></div><div class="bars-axis" id="bars-axis"></div></div>
+          </div>
+          <div class="panel">
+            <div class="panel-h">גרסאות מותקנות</div>
+            <div class="panel-b" id="versions"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-h">לפי מגזר</div>
+            <div class="panel-b" id="sectors"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- לקוחות -->
+    <section id="page-customers" class="hidden">
+      <div class="page-head">
+        <div><h1>לקוחות</h1><div class="sub" id="cu-sub"></div></div>
+        <div class="actions"><button class="btn primary" id="add-customer" data-owner>+ לקוח חדש</button></div>
+      </div>
+      <div class="toolbar">
+        <div class="chips" id="chips"></div>
+        <select class="input" id="net-filter"></select>
+        <input class="input search" id="search" placeholder="חיפוש: שם, עיר, קוד, איש קשר">
+      </div>
+      <div class="panel tbl-wrap">
+        <table class="tbl" id="cu-table">
+          <thead><tr>
+            <th data-sort="health">מצב</th>
+            <th data-sort="name">מוסד</th>
+            <th data-sort="city">עיר</th>
+            <th data-sort="network_name">רשת</th>
+            <th data-sort="last_seen">דיווח אחרון</th>
+            <th>הערה</th>
+            <th data-sort="license_expires">רישיון עד</th>
+            <th data-sort="payment_status">תשלום</th>
+          </tr></thead>
+          <tbody id="cu-body"></tbody>
+        </table>
+        <div class="empty hidden" id="cu-empty">אין לקוחות שמתאימים לסינון</div>
+      </div>
+    </section>
+
+    <!-- משוב -->
+    <section id="page-feedback" class="hidden">
+      <div class="page-head"><div><h1>משוב מהלקוחות</h1><div class="sub">נשלח מתוך התוכנה בבית הספר</div></div></div>
+      <div class="panel" id="fb-list"></div>
+    </section>
+
+    <!-- רשתות ומשתמשים -->
+    <section id="page-org" class="hidden">
+      <div class="page-head"><div><h1>רשתות ומשתמשים</h1>
+        <div class="sub">מנהל רשת רואה רק את בתי הספר של הרשת שלו. משתמש בית ספר רואה רק את עצמו. שניהם בצפייה בלבד.</div></div></div>
+      <div class="overview-grid">
+        <div class="panel">
+          <div class="panel-h">משתמשים <button class="btn small end" id="add-user">+ משתמש</button></div>
+          <table class="tbl"><thead><tr><th>שם משתמש</th><th>תפקיד</th><th>שיוך</th><th>נוצר</th></tr></thead><tbody id="users-body"></tbody></table>
+        </div>
+        <div class="panel">
+          <div class="panel-h">רשתות <button class="btn small end" id="add-network">+ רשת</button></div>
+          <table class="tbl"><thead><tr><th>שם</th><th>בתי ספר</th><th>איש קשר</th></tr></thead><tbody id="nets-body"></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- יומן -->
+    <!-- עדכוני תוכנה -->
+    <section id="page-updates" class="hidden">
+      <div class="page-head"><div><h1>עדכוני תוכנה</h1>
+        <div class="sub">גרסה חדשה נבנית ונחתמת במחשב שלך (build_update.bat), מועלית לכאן, ונשלחת לבתי ספר נבחרים.
+          כל מחשב מתקין אותה רק אחרי הצלצול האחרון של היום, ואם היא לא עולה תקין - חוזר לבד לגרסה הקודמת.</div></div></div>
+      <div class="overview-grid" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)">
+        <div class="stack" id="releases"></div>
+        <form class="panel" id="upload-form">
+          <div class="panel-h">העלאת גרסה חדשה</div>
+          <div class="panel-b" style="display:flex;flex-direction:column;gap:12px">
+            <div class="field"><label>החבילה (etratzon-update-....zip)</label><input type="file" name="package" accept=".zip" required></div>
+            <div class="field"><label>החתימה (etratzon-update-....sig.json)</label><input type="file" name="signature" accept=".json" required></div>
+            <div class="field"><label>מה חדש (לא חובה)</label><textarea name="notes" placeholder="יוצג כאן וביומן"></textarea></div>
+            <button class="btn primary" type="submit" style="justify-content:center">העלאה ובדיקת חתימה</button>
+            <div class="muted" style="font-size:12px" id="key-info"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="page-audit" class="hidden">
+      <div class="page-head"><div><h1>יומן פעולות</h1><div class="sub">כל שינוי שנעשה במרכז הבקרה</div></div>
+        <div class="actions"><a class="btn" href="/api/backup/download" download>הורדת גיבוי של כל הנתונים</a></div></div>
+      <div class="panel tbl-wrap">
+        <table class="tbl"><thead><tr><th>מתי</th><th>מי</th><th>לקוח</th><th>פעולה</th><th>פרטים</th></tr></thead><tbody id="audit-body"></tbody></table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim hidden" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+<div id="modal-root"></div>
+
+<script>
+"use strict";
+// ======================================================================= עזרים
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+async function api(path, opts = {}) {
+  const res = await fetch(path, {
+    method: opts.method || "GET",
+    headers: opts.body ? { "Content-Type": "application/json" } : {},
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+    credentials: "same-origin",
+  });
+  let data = {};
+  try { data = await res.json(); } catch (e) { /* ignore */ }
+  if (res.status === 401 && path !== "/api/login") { showAuth(false); throw new Error("נדרשת התחברות"); }
+  if (!res.ok || data.ok === false) throw new Error(data.error || ("שגיאה " + res.status));
+  return data;
+}
+
+let toastTimer;
+function toast(msg, isErr) {
+  let t = $(".toast"); if (!t) { t = document.createElement("div"); document.body.appendChild(t); }
+  t.className = "toast" + (isErr ? " err" : ""); t.textContent = msg;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), 3200);
+}
+
+const fmtDate = s => s ? new Date(s).toLocaleDateString("he-IL", { day: "2-digit", month: "2-digit", year: "2-digit" }) : "—";
+const fmtDateTime = s => s ? new Date(s).toLocaleString("he-IL", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "—";
+function ago(s) {
+  if (!s) return "מעולם לא";
+  const sec = Math.max(0, (Date.now() - new Date(s).getTime()) / 1000);
+  if (sec < 60) return "עכשיו";
+  if (sec < 3600) return "לפני " + Math.round(sec / 60) + " דק'";
+  if (sec < 86400) return "לפני " + Math.round(sec / 3600) + " שע'";
+  return "לפני " + Math.round(sec / 86400) + " ימים";
+}
+function daysUntil(d) { if (!d) return null; return Math.round((new Date(d + "T00:00:00") - new Date(new Date().toDateString())) / 86400000); }
+
+const HEALTH = {
+  critical: ["critical", "תקלה"], warning: ["warning", "אזהרה"], ok: ["ok", "תקין"],
+  idle: ["idle", "לא מחובר"], never: ["idle", "לא דיווח"], archived: ["idle", "ארכיון"], pending: ["info", "ממתין לאישור"],
+};
+const HEALTH_ORDER = { critical: 0, warning: 1, pending: 2, never: 3, idle: 4, ok: 5, archived: 6 };
+const ROLE_LABEL = { owner: "יוצר", network_admin: "מנהל רשת", school_admin: "בית ספר" };
+const FB_CAT = { bug: "תקלה", feature: "בקשה", general: "כללי" };
+
+// ======================================================================= מצב
+const state = { me: null, meta: null, page: "overview", overview: null, customers: [], networks: [],
+  filter: "all", net: "", q: "", sort: "health", asc: true, openId: null };
+
+// ======================================================================= התחברות
+function showAuth(setup, setupInBrowser = true) {
+  if (setup && !setupInBrowser) {
+    $("#app").classList.add("hidden"); $("#auth").classList.remove("hidden");
+    $("#auth-form").innerHTML = `<h2>עוד לא נוצר חשבון יוצר</h2>
+      <p style="margin:0;line-height:1.6">באתר ציבורי יוצרים את החשבון מהמסוף בשרת, כדי שאף אחד אחר לא יקדים אותך:</p>
+      <div class="keybox">cd ~/control_center
+python3 server.py --create-owner admin</div>
+      <p class="muted" style="margin:0">במקום admin אפשר לבחור שם משתמש אחר באנגלית. אחר כך מרעננים את הדף ונכנסים.</p>`;
+    return;
+  }
+  $("#app").classList.add("hidden"); $("#auth").classList.remove("hidden");
+  $("#auth-title").textContent = setup ? "הגדרה ראשונה" : "כניסה";
+  $("#auth-btn").textContent = setup ? "יצירת חשבון וכניסה" : "כניסה";
+  $("#auth-note").classList.toggle("hidden", !setup);
+  $("#auth-name-wrap").classList.toggle("hidden", !setup);
+  $("#auth-pass").autocomplete = setup ? "new-password" : "current-password";
+  $("#auth-form").dataset.setup = setup ? "1" : "";
+  setTimeout(() => $("#auth-user").focus(), 50);
+}
+$("#auth-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("#auth-err").textContent = "";
+  const body = { username: $("#auth-user").value.trim(), password: $("#auth-pass").value, display_name: $("#auth-display").value.trim() };
+  try {
+    await api($("#auth-form").dataset.setup ? "/api/setup" : "/api/login", { method: "POST", body });
+    $("#auth-pass").value = "";
+    boot();
+  } catch (err) { $("#auth-err").textContent = err.message; }
+});
+$("#logout").addEventListener("click", async () => { await api("/api/logout", { method: "POST" }).catch(() => {}); location.reload(); });
+
+async function boot() {
+  const me = await api("/api/me");
+  if (!me.user) return showAuth(me.needs_setup, me.setup_in_browser !== false);
+  state.me = me.user;
+  $("#auth").classList.add("hidden"); $("#app").classList.remove("hidden");
+  $("#user-label").textContent = (me.user.display_name || me.user.username) + " · " + ROLE_LABEL[me.user.role];
+  const owner = me.user.role === "owner";
+  $$("[data-owner]").forEach(el => el.classList.toggle("hidden", !owner));
+  const [meta, ver] = await Promise.all([api("/api/meta"), api("/api/version")]);
+  state.meta = meta; $("#ver").textContent = "גרסה " + ver.version;
+  await refreshAll();
+  const hash = location.hash.slice(1);
+  go(["overview", "customers", "feedback", "org", "updates", "audit"].includes(hash) ? hash : "overview");
+  setInterval(() => refreshAll().catch(() => {}), 30000);
+}
+
+async function refreshAll() {
+  const [ov, cu, nets] = await Promise.all([api("/api/overview"), api("/api/customers"), api("/api/networks")]);
+  state.overview = ov; state.customers = cu.customers; state.networks = nets.networks;
+  $("#refresh-at").textContent = "עודכן " + new Date().toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const b = $("#fb-badge"); b.textContent = ov.feedback_new; b.classList.toggle("hidden", !ov.feedback_new);
+  renderOverview(); renderCustomers();
+  if (state.page === "feedback") loadFeedback();
+  if (state.openId && !$("#drawer").contains(document.activeElement)) openCustomer(state.openId, true);
+}
+
+// ======================================================================= ניווט
+function go(page, opts = {}) {
+  state.page = page; history.replaceState(null, "", "#" + page);
+  $$("#nav a").forEach(a => a.classList.toggle("active", a.dataset.page === page));
+  $$("main > section").forEach(s => s.classList.toggle("hidden", s.id !== "page-" + page));
+  if (opts.filter) { state.filter = opts.filter; renderCustomers(); }
+  if (page === "feedback") loadFeedback();
+  if (page === "org") loadOrg();
+  if (page === "audit") loadAudit();
+  if (page === "updates") loadReleases();
+  $("#main").scrollTop = 0;
+}
+$("#nav").addEventListener("click", e => { const a = e.target.closest("a[data-page]"); if (a) go(a.dataset.page); });
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]"); if (g) go(g.dataset.goto, { filter: g.dataset.filter });
+});
+
+// ======================================================================= סקירה
+function renderOverview() {
+  const ov = state.overview; if (!ov) return;
+  const c = ov.counts;
+  $("#ov-sub").textContent = c.total + " לקוחות פעילים";
+  const tile = (label, value, foot, cls, filter) =>
+    `<div class="panel kpi ${cls || ""}" data-goto="customers" data-filter="${filter}">
+       <div class="k-label">${label}</div><div class="k-value num">${value}</div><div class="k-foot">${foot}</div></div>`;
+  $("#kpis").innerHTML =
+    tile("מחוברים עכשיו", `${c.online}<small> / ${c.total}</small>`, c.never ? c.never + " עוד לא דיווחו" : "דיווחו ב-3 הדקות האחרונות", "", "offline") +
+    tile("תקלות קריטיות", c.critical, "צלצולים בסיכון", c.critical ? "critical" : "zero", "critical") +
+    tile("אזהרות", c.warning, "לבדוק כשיש זמן", c.warning ? "warning" : "zero", "warning") +
+    tile("רישיונות לטיפול", c.license_soon, "פג או יפוג תוך 30 יום", c.license_soon ? "warning" : "zero", "license") +
+    tile("ממתינים לאישור", c.pending, "נרשמו מהתקנה", c.pending ? "" : "zero", "pending") +
+    tile("הכנסה חודשית", "₪" + Math.round(c.mrr).toLocaleString("he-IL"), c.overdue ? c.overdue + " בפיגור תשלום" : "אין פיגורים", "", "overdue");
+
+  // תקלה אחת לכל מוסד (החמורה ביותר), ועוד כמה יש
+  const groups = [];
+  const byCust = {};
+  ov.alerts.forEach(a => {
+    if (!byCust[a.customer_id]) { byCust[a.customer_id] = { first: a, more: [] }; groups.push(byCust[a.customer_id]); }
+    else byCust[a.customer_id].more.push(a.text);
+  });
+  $("#alerts-count").textContent = groups.length ? "· " + groups.length + " מוסדות" : "";
+  $("#alerts").innerHTML = groups.length ? groups.map(({ first: a, more }) => `
+    <li data-cid="${a.customer_id}">
+      <span class="dot ${a.level}"></span>
+      <div><div class="a-who">${esc(a.customer)}</div><div class="a-what">${esc(a.text)}${more.length
+        ? ` <span class="muted" title="${esc(more.join("\n"))}">· ועוד ${more.length}</span>` : ""}</div></div>
+      <span class="a-when">${ago(a.last_seen)}</span>
+    </li>`).join("") : `<li class="empty good" style="display:block">הכל תקין. אין תקלות פתוחות.</li>`;
+
+  const max = Math.max(1, ...ov.hours.map(h => h.reporting), c.total);
+  $("#bars").innerHTML = ov.hours.map(h => {
+    const t = new Date(h.hour);
+    return `<div class="bar" style="height:${Math.max(2, h.reporting / max * 100)}%"
+      title="${t.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" })} · ${h.reporting} מחשבים"></div>`;
+  }).join("");
+  const hh = i => new Date(ov.hours[i].hour).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+  $("#bars-axis").innerHTML = `<span>${hh(0)}</span><span>${hh(12)}</span><span>עכשיו</span>`;
+
+  const hbars = (obj, oldFn) => {
+    const entries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+    const m = Math.max(1, ...entries.map(e => e[1]));
+    return entries.length ? entries.map(([k, n]) => `<div class="hbar"><span class="${oldFn ? "mono" : ""}" title="${esc(k)}">${esc(k)}</span>
+      <div class="track"><div class="fill ${oldFn && oldFn(k) ? "old" : ""}" style="width:${n / m * 100}%"></div></div>
+      <span class="n num">${n}</span></div>`).join("") : `<div class="muted">אין נתונים</div>`;
+  };
+  $("#versions").innerHTML = hbars(ov.versions, v => v !== ov.latest_version) +
+    `<div class="muted" style="font-size:12px;margin-top:8px">עדכנית: <span class="mono">${esc(ov.latest_version)}</span> · בכתום: גרסאות ישנות</div>`;
+  $("#sectors").innerHTML = hbars(ov.sectors);
+}
+$("#alerts").addEventListener("click", e => { const li = e.target.closest("li[data-cid]"); if (li) openCustomer(+li.dataset.cid); });
+
+// ======================================================================= לקוחות
+const FILTERS = [
+  ["all", "הכל", () => true],
+  ["issues", "עם תקלות", c => c.health === "critical" || c.health === "warning"],
+  ["critical", "קריטי", c => c.health === "critical"],
+  ["warning", "אזהרה", c => c.health === "warning"],
+  ["offline", "לא מחוברים", c => c.connectivity !== "online"],
+  ["license", "רישיון", c => c.alerts.some(a => a.kind === "license")],
+  ["overdue", "תשלום באיחור", c => c.payment_status === "overdue"],
+  ["pending", "ממתינים", c => c.status === "pending"],
+];
+
+function filteredCustomers() {
+  const f = FILTERS.find(x => x[0] === state.filter) || FILTERS[0];
+  const q = state.q.trim().toLowerCase();
+  let list = state.customers.filter(f[2]);
+  if (state.net) list = list.filter(c => String(c.network_id || "none") === state.net);
+  if (q) list = list.filter(c => [c.name, c.city, c.code, c.contact_name, c.phone, c.email, c.network_name]
+    .some(v => String(v || "").toLowerCase().includes(q)));
+  const k = state.sort, dir = state.asc ? 1 : -1;
+  list.sort((a, b) => {
+    let x = a[k], y = b[k];
+    if (k === "health") { x = HEALTH_ORDER[a.health]; y = HEALTH_ORDER[b.health]; }
+    if (k === "last_seen") { x = a.last_seen || ""; y = b.last_seen || ""; }
+    if (x == null || x === "") return 1; if (y == null || y === "") return -1;
+    return (x > y ? 1 : x < y ? -1 : a.name.localeCompare(b.name, "he")) * dir;
+  });
+  return list;
+}
+
+function renderCustomers() {
+  if (!state.meta) return;
+  $("#chips").innerHTML = FILTERS.map(([id, label, fn]) => {
+    const n = state.customers.filter(fn).length;
+    if (id !== "all" && id !== state.filter && !n) return "";
+    return `<button class="chip ${state.filter === id ? "active" : ""}" data-f="${id}">${label} <span class="c num">${n}</span></button>`;
+  }).join("");
+  const nf = $("#net-filter");
+  const cur = state.net;
+  nf.innerHTML = `<option value="">כל הרשתות</option><option value="none">ללא רשת</option>` +
+    state.networks.map(n => `<option value="${n.id}">${esc(n.name)}</option>`).join("");
+  nf.value = cur;
+
+  const list = filteredCustomers();
+  $("#cu-sub").textContent = `${list.length} מתוך ${state.customers.length}`;
+  $$("#cu-table th").forEach(th => { th.classList.toggle("sorted", th.dataset.sort === state.sort); th.classList.toggle("asc", th.dataset.sort === state.sort && !state.asc); });
+  $("#cu-empty").classList.toggle("hidden", list.length > 0);
+  $("#cu-body").innerHTML = list.map(c => {
+    const [cls, label] = HEALTH[c.health] || HEALTH.idle;
+    const top = c.alerts.find(a => a.level !== "info") || c.alerts[0];
+    const d = daysUntil(c.license_expires);
+    const licCls = d != null && d < 0 ? "critical" : d != null && d <= 30 ? "warning" : "";
+    const pay = state.meta.payment_statuses[c.payment_status] || "—";
+    return `<tr data-cid="${c.id}" class="${state.openId === c.id ? "sel" : ""}">
+      <td><span class="pill ${cls}"><span class="dot ${cls}"></span>${label}</span></td>
+      <td><div class="name">${esc(c.name)}</div><div class="code"><span class="mono">${esc(c.code)}</span>${c.status === "pending" ? " · ממתין לאישור" : ""}</div></td>
+      <td>${esc(c.city || "—")}</td>
+      <td>${esc(c.network_name || "—")}</td>
+      <td class="${c.connectivity === "online" ? "" : "muted"}">${ago(c.last_seen)}</td>
+      <td><div class="alert-txt" title="${esc(top ? top.text : "")}">${top ? esc(top.text) : `<span class="muted">${c.pc && c.pc.next_event ? "הבא: " + esc(c.pc.next_event.time) + " " + esc(c.pc.next_event.label || "") : ""}</span>`}</div></td>
+      <td class="num">${licCls ? `<span class="pill ${licCls}">${fmtDate(c.license_expires)}</span>` : fmtDate(c.license_expires)}</td>
+      <td>${c.payment_status === "overdue" ? `<span class="pill warning">${pay}</span>` : pay}</td>
+    </tr>`;
+  }).join("");
+}
+$("#chips").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { state.filter = b.dataset.f; renderCustomers(); } });
+$("#net-filter").addEventListener("change", e => { state.net = e.target.value; renderCustomers(); });
+$("#search").addEventListener("input", e => { state.q = e.target.value; renderCustomers(); });
+$("#cu-table thead").addEventListener("click", e => {
+  const th = e.target.closest("th[data-sort]"); if (!th) return;
+  if (state.sort === th.dataset.sort) state.asc = !state.asc; else { state.sort = th.dataset.sort; state.asc = true; }
+  renderCustomers();
+});
+$("#cu-body").addEventListener("click", e => { const tr = e.target.closest("tr[data-cid]"); if (tr) openCustomer(+tr.dataset.cid); });
+
+// ======================================================================= מגירת לקוח
+function closeDrawer() {
+  state.openId = null; $("#drawer").classList.remove("open"); $("#scrim").classList.add("hidden");
+  $("#drawer").setAttribute("aria-hidden", "true"); renderCustomers();
+}
+$("#scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") { if ($("#modal-root").firstChild) closeModal(); else if (state.openId) closeDrawer(); } });
+
+function opt(map, val) { return Object.entries(map).map(([k, v]) => `<option value="${k}" ${k === val ? "selected" : ""}>${esc(v)}</option>`).join(""); }
+function optList(list, val) { return `<option value=""></option>` + list.map(v => `<option ${v === val ? "selected" : ""}>${esc(v)}</option>`).join(""); }
+
+async function openCustomer(id, silent) {
+  let c;
+  try { c = (await api("/api/customers/" + id)).customer; } catch (err) { if (!silent) toast(err.message, true); return; }
+  const dr = $("#drawer");
+  const formDirty = silent && dr.querySelector("form[data-dirty='1']");
+  if (formDirty) return;    // לא דורסים טופס שהמשתמש באמצע עריכתו
+  state.openId = id;
+  const prevScroll = silent && $(".drawer-b", dr) ? $(".drawer-b", dr).scrollTop : 0;
+  const owner = state.me.role === "owner";
+  const p = c.payload || {};
+  const [hcls, hlabel] = HEALTH[c.health] || HEALTH.idle;
+  const yes = (v, good, bad) => v === true ? `<span class="f-v good">${good}</span>` : v === false ? `<span class="f-v bad">${bad}</span>` : `<span class="f-v muted">—</span>`;
+  const drift = p.clock_drift_s;
+  const driftCls = typeof drift === "number" ? (Math.abs(drift) > 5 ? "bad" : Math.abs(drift) > 2 ? "warnc" : "good") : "";
+  const sys = p.system_status === "disabled" ? (p.disabled_scope === "day" ? "מושבת להיום" : "מושבת") : p.system_status === "enabled" ? "פעיל" : "—";
+
+  // רצועת זמינות: 7 שורות (ימים) × 24 שעות, לפי שעון המחשב שצופה
+  const hours = c.availability.hours, end = new Date(c.availability.end);
+  const cells = []; const start = new Date(end.getTime() - (hours.length - 1) * 3600000);
+  const byDay = {};
+  hours.forEach((v, i) => {
+    const t = new Date(start.getTime() + i * 3600000);
+    const key = t.toDateString();
+    (byDay[key] = byDay[key] || { d: t, h: {} }).h[t.getHours()] = v;
+  });
+  const days = Object.values(byDay).slice(-7);
+  const avail = days.map(day => `<span class="lbl">${day.d.toLocaleDateString("he-IL", { weekday: "short" })}</span>` +
+    Array.from({ length: 24 }, (_, h) => {
+      const v = day.h[h];
+      return `<span class="cell ${v ? "on" : ""}" style="${v === undefined ? "opacity:.25" : ""}" title="${h}:00"></span>`;
+    }).join("")).join("");
+  const pct = hours.length ? Math.round(hours.reduce((a, b) => a + b, 0) / hours.length * 100) : 0;
+
+  const field = (name, label, type = "text", extra = "") =>
+    `<div class="field ${extra}"><label>${label}</label><input name="${name}" type="${type}" value="${esc(c[name] ?? "")}" ${owner ? "" : "disabled"}></div>`;
+  const select = (name, label, html) => `<div class="field"><label>${label}</label><select name="${name}" ${owner ? "" : "disabled"}>${html}</select></div>`;
+
+  dr.innerHTML = `
+    <div class="drawer-h">
+      <div>
+        <h2>${esc(c.name)}</h2>
+        <div class="meta"><span class="pill ${hcls}"><span class="dot ${hcls}"></span>${hlabel}</span>
+          <span class="mono">${esc(c.code)}</span><span>· ${esc(c.city || "")}</span>
+          <span>· דיווח ${ago(c.last_seen)}</span></div>
+      </div>
+      <button class="close" aria-label="סגירה" id="dr-close">×</button>
+    </div>
+    <div class="drawer-b">
+      ${c.status === "pending" && owner ? `<div class="notice info">הלקוח נרשם מתוך ההתקנה וממתין לאישורך.
+         <button class="btn small primary" id="approve" style="margin-inline-start:8px">אישור והפעלה</button></div>` : ""}
+      ${c.alerts.length ? `<div class="panel"><ul class="alert-list">${c.alerts.map(a =>
+        `<li style="cursor:default"><span class="dot ${a.level === "info" ? "idle" : a.level}"></span><div class="a-what" style="color:var(--ink)">${esc(a.text)}</div><span></span></li>`).join("")}</ul></div>` : ""}
+
+      <div class="panel">
+        <div class="panel-h">מחשב הצלצולים <span class="muted">· לפי הדיווח האחרון</span></div>
+        <div class="panel-b">
+          <div class="facts">
+            <div class="fact"><div class="f-l">מנוע השמעה</div>${yes(p.engine_alive, "רץ", "לא רץ")}</div>
+            <div class="fact"><div class="f-l">מצב מערכת</div><div class="f-v ${p.system_status === "disabled" ? "warnc" : ""}">${sys}</div></div>
+            <div class="fact"><div class="f-l">רישיון במחשב</div>${yes(p.license_valid, "תקף", "לא תקף")}</div>
+            <div class="fact"><div class="f-l">האירוע הבא</div><div class="f-v">${p.next_event ? `<span class="num">${esc(p.next_event.time)}</span> ${esc(p.next_event.label || "")}` : "—"}</div></div>
+            <div class="fact"><div class="f-l">אירועים היום / בשבוע</div><div class="f-v num">${p.events_today ?? "—"} / ${p.events_week ?? "—"}</div></div>
+            <div class="fact"><div class="f-l">סטיית שעון</div><div class="f-v num ${driftCls}">${typeof drift === "number" ? (drift > 0 ? "+" : "") + drift + " שנ'" : "—"}</div></div>
+            <div class="fact"><div class="f-l">גרסה</div><div class="f-v mono" style="font-size:12px">${esc(p.version || "—")}</div>
+              ${c.update ? `<div style="font-size:11px;margin-top:3px" class="${["failed", "rolled_back"].includes(c.update.status) ? "f-v bad" : "muted"}">עדכון ${esc(c.update.version)}: ${esc(c.update.status_label)}</div>` : ""}</div>
+            <div class="fact"><div class="f-l">מערכת הפעלה</div><div class="f-v">${esc(p.os || "—")}</div></div>
+            <div class="fact"><div class="f-l">התקן שמע</div><div class="f-v" style="font-size:12px">${esc(p.audio_device || "ברירת מחדל")}</div></div>
+          </div>
+          <div style="margin-top:14px;font-size:12px;color:var(--ink-2);display:flex">דיווחים ב-7 הימים האחרונים <span class="muted" style="margin-inline-start:auto">${pct}% מהשעות</span></div>
+          <div class="avail" style="margin-top:8px">${avail}</div>
+        </div>
+      </div>
+
+      <form class="panel" id="cu-form">
+        <div class="panel-h">פרטי לקוח ${owner ? `<button class="btn small primary end" type="submit" id="cu-save" disabled>שמירה</button>` : ""}</div>
+        <div class="panel-b grid2">
+          ${field("name", "שם המוסד", "text", "span2")}
+          ${select("sector", "מגזר", optList(state.meta.sectors, c.sector))}
+          ${select("institution_type", "סוג מוסד", optList(state.meta.institution_types, c.institution_type))}
+          ${field("city", "עיר")}${field("address", "כתובת")}
+          ${field("contact_name", "איש קשר")}${field("phone", "טלפון", "tel")}
+          ${field("email", "דוא\"ל", "email", "span2")}
+          ${select("network_id", "רשת", `<option value="">ללא רשת</option>` + state.networks.map(n => `<option value="${n.id}" ${n.id === c.network_id ? "selected" : ""}>${esc(n.name)}</option>`).join(""))}
+          ${select("status", "סטטוס לקוח", opt(state.meta.customer_statuses, c.status))}
+        </div>
+        <div class="panel-h" style="padding-top:4px">רישיון ותשלום</div>
+        <div class="panel-b grid3">
+          ${select("license_status", "רישיון", opt(state.meta.license_statuses, c.license_status))}
+          ${field("license_expires", "בתוקף עד", "date")}
+          ${select("plan", "מסלול", opt({ basic: "בסיסי", pro: "מורחב" }, c.plan))}
+          ${select("payment_status", "תשלום", opt(state.meta.payment_statuses, c.payment_status))}
+          ${field("monthly_price", "מחיר חודשי (₪)", "number")}
+          <div></div>
+          <div class="field span3"><label>הערות</label><textarea name="notes" ${owner ? "" : "disabled"}>${esc(c.notes || "")}</textarea></div>
+        </div>
+        <div class="panel-b"><div class="notice warn" style="font-size:12px">בשלב זה הרישיון והתשלום כאן הם לניהול ומעקב בלבד. המחשב בבית הספר מקבל את המצב בכל דיווח, אבל עדיין לא חוסם לפיו.</div></div>
+      </form>
+
+      ${owner ? `<div class="panel"><div class="panel-h">חיבור המחשב <span class="muted">· קוד לקוח ומפתח</span></div>
+        <div class="panel-b" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span>קוד לקוח: <b class="mono">${esc(c.code)}</b></span>
+          ${c.machine_id ? `<span class="muted">· מחשב: <span class="mono">${esc(c.machine_id)}</span></span>` : ""}
+          <button class="btn small" id="rotate" style="margin-inline-start:auto">הנפקת מפתח חדש</button>
+        </div></div>` : ""}
+
+      ${owner && c.feedback && c.feedback.length ? `<div class="panel"><div class="panel-h">משוב מהלקוח</div>
+        ${c.feedback.map(f => `<div class="fb" style="grid-template-columns:1fr"><div class="fb-h"><span class="pill ${f.status === "new" ? "info" : "idle"}">${state.meta.feedback_statuses[f.status]}</span>
+          <span class="muted">${FB_CAT[f.category] || esc(f.category)} · ${fmtDateTime(f.created_at)}</span></div><p class="fb-t">${esc(f.text)}</p></div>`).join("")}</div>` : ""}
+
+      ${owner && c.audit && c.audit.length ? `<div class="panel"><div class="panel-h">היסטוריית שינויים</div>
+        <table class="tbl"><tbody>${c.audit.map(a => `<tr style="cursor:default"><td class="muted num" style="white-space:nowrap">${fmtDateTime(a.at)}</td><td>${esc(a.username || "")}</td><td style="font-size:12px">${esc(a.details)}</td></tr>`).join("")}</tbody></table></div>` : ""}
+    </div>`;
+
+  if (prevScroll) $(".drawer-b", dr).scrollTop = prevScroll;
+  dr.classList.add("open"); dr.setAttribute("aria-hidden", "false"); $("#scrim").classList.remove("hidden");
+  renderCustomers();
+  $("#dr-close").onclick = closeDrawer;
+  const form = $("#cu-form");
+  form.addEventListener("input", () => { form.dataset.dirty = "1"; const s = $("#cu-save"); if (s) s.disabled = false; });
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const body = Object.fromEntries(new FormData(form).entries());
+    try {
+      await api("/api/customers/" + id, { method: "PATCH", body });
+      form.dataset.dirty = ""; toast("נשמר"); await refreshAll(); openCustomer(id, true);
+    } catch (err) { toast(err.message, true); }
+  });
+  const ap = $("#approve");
+  if (ap) ap.onclick = async () => {
+    try { await api("/api/customers/" + id, { method: "PATCH", body: { status: "active" } }); toast("הלקוח אושר"); await refreshAll(); openCustomer(id, true); }
+    catch (err) { toast(err.message, true); }
+  };
+  const rot = $("#rotate");
+  if (rot) rot.onclick = () => confirmModal("הנפקת מפתח חדש",
+    "המפתח הנוכחי יבוטל מיד, והמחשב בבית הספר יפסיק לדווח עד שיוזן בו המפתח החדש (בקובץ cloud_config.json). להמשיך?",
+    "הנפקה", async () => {
+      const r = await api("/api/customers/" + id + "/rotate-key", { method: "POST" });
+      showKeyModal(c.name, r);
+    });
+}
+
+// ======================================================================= חלונות
+function closeModal() { $("#modal-root").innerHTML = ""; }
+function modal(title, bodyHtml, footHtml) {
+  $("#modal-root").innerHTML = `<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-h">${title}<button class="x" aria-label="סגירה">×</button></div>
+    <div class="modal-b">${bodyHtml}</div><div class="modal-f">${footHtml || ""}</div></div></div>`;
+  const bg = $(".modal-bg");
+  bg.addEventListener("mousedown", e => { if (e.target === bg) closeModal(); });
+  $(".modal .x").onclick = closeModal;
+  const first = $(".modal input, .modal select"); if (first) setTimeout(() => first.focus(), 30);
+  return $(".modal");
+}
+function confirmModal(title, text, okLabel, fn) {
+  const m = modal(title, `<p style="margin:0;line-height:1.6">${esc(text)}</p>`,
+    `<button class="btn primary" id="m-ok">${okLabel}</button><button class="btn" id="m-cancel">ביטול</button>`);
+  $("#m-cancel", m).onclick = closeModal;
+  $("#m-ok", m).onclick = async () => { try { await fn(); } catch (err) { toast(err.message, true); closeModal(); } };
+}
+function showKeyModal(name, r) {
+  const m = modal("פרטי חיבור · " + esc(name), `
+    ${/localhost|127\.0\.0\.1/.test(r.config) ? `<div class="notice warn">כתובת השרת בקובץ היא localhost, ומחשב בבית ספר אחר לא יגיע אליה. כשמרכז הבקרה יעלה לשרת בענן, הפעל אותו עם <span class="mono">--public-url</span> והכתובת תתעדכן כאן.</div>` : ""}
+    <div class="notice warn">המפתח מוצג <b>פעם אחת בלבד</b>. שמור את הקובץ למטה בתיקיית המערכת במחשב הצלצולים בשם <span class="mono">cloud_config.json</span>.</div>
+    <div>קוד לקוח: <b class="mono">${esc(r.code)}</b></div>
+    <div class="keybox" id="cfg">${esc(r.config)}</div>`,
+    `<button class="btn primary" id="m-copy">העתקה</button><button class="btn" id="m-dl">הורדת cloud_config.json</button><button class="btn" id="m-close">סגירה</button>`);
+  $("#m-copy", m).onclick = () => { navigator.clipboard.writeText(r.config).then(() => toast("הועתק"), () => toast("ההעתקה נכשלה. סמן והעתק ידנית", true)); };
+  $("#m-dl", m).onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([r.config], { type: "application/json" }));
+    a.download = "cloud_config.json"; a.click(); URL.revokeObjectURL(a.href);
+  };
+  $("#m-close", m).onclick = closeModal;
+}
+
+$("#add-customer").addEventListener("click", () => {
+  const meta = state.meta;
+  const m = modal("לקוח חדש", `
+    <div class="grid2">
+      <div class="field span2"><label>שם המוסד *</label><input name="name" required></div>
+      <div class="field"><label>מגזר</label><select name="sector">${optList(meta.sectors, "")}</select></div>
+      <div class="field"><label>סוג מוסד</label><select name="institution_type">${optList(meta.institution_types, "")}</select></div>
+      <div class="field"><label>עיר</label><input name="city"></div>
+      <div class="field"><label>רשת</label><select name="network_id"><option value="">ללא רשת</option>${state.networks.map(n => `<option value="${n.id}">${esc(n.name)}</option>`).join("")}</select></div>
+      <div class="field"><label>איש קשר</label><input name="contact_name"></div>
+      <div class="field"><label>טלפון</label><input name="phone" type="tel"></div>
+      <div class="field span2"><label>דוא"ל</label><input name="email" type="email"></div>
+      <div class="field"><label>רישיון</label><select name="license_status">${opt(meta.license_statuses, "trial")}</select></div>
+      <div class="field"><label>בתוקף עד</label><input name="license_expires" type="date"></div>
+      <div class="field"><label>מחיר חודשי (₪)</label><input name="monthly_price" type="number" value="99"></div>
+      <div class="field"><label>תשלום</label><select name="payment_status">${opt(meta.payment_statuses, "pending")}</select></div>
+    </div>
+    <div class="muted" style="font-size:12px">קוד הלקוח ומפתח החיבור נוצרים אוטומטית בשמירה.</div>`,
+    `<button class="btn primary" id="m-ok">יצירה</button><button class="btn" id="m-cancel">ביטול</button>`);
+  $("#m-cancel", m).onclick = closeModal;
+  $("#m-ok", m).onclick = async () => {
+    const body = {}; $$("input, select", m).forEach(el => body[el.name] = el.value);
+    if (!body.name.trim()) return toast("שם המוסד חובה", true);
+    try { const r = await api("/api/customers", { method: "POST", body }); await refreshAll(); showKeyModal(body.name, r); }
+    catch (err) { toast(err.message, true); }
+  };
+});
+
+// ======================================================================= משוב
+async function loadFeedback() {
+  const { feedback } = await api("/api/feedback");
+  const meta = state.meta;
+  $("#fb-list").innerHTML = feedback.length ? feedback.map(f => `
+    <div class="fb" data-fid="${f.id}">
+      <div>
+        <div class="fb-h"><b data-cid="${f.customer_id}">${esc(f.customer)}</b>
+          <span class="pill ${f.category === "bug" ? "critical" : f.category === "feature" ? "info" : "idle"}">${FB_CAT[f.category] || esc(f.category)}</span>
+          ${f.rating ? `<span class="stars" title="${f.rating} מתוך 5">${"★".repeat(f.rating)}${"☆".repeat(5 - f.rating)}</span>` : ""}
+          <span class="muted">${fmtDateTime(f.created_at)}${f.contact ? " · " + esc(f.contact) : ""}</span></div>
+        <p class="fb-t">${esc(f.text)}</p>
+      </div>
+      <div class="side">
+        <select class="input fb-status">${opt(meta.feedback_statuses, f.status)}</select>
+        <textarea class="input fb-note" placeholder="הערה פנימית" rows="2">${esc(f.owner_note || "")}</textarea>
+      </div>
+    </div>`).join("") : `<div class="empty">עוד לא התקבל משוב</div>`;
+}
+$("#fb-list").addEventListener("change", async e => {
+  const row = e.target.closest("[data-fid]"); if (!row) return;
+  try {
+    await api("/api/feedback/" + row.dataset.fid, { method: "PATCH", body: { status: $(".fb-status", row).value, owner_note: $(".fb-note", row).value } });
+    toast("נשמר"); refreshAll();
+  } catch (err) { toast(err.message, true); }
+});
+$("#fb-list").addEventListener("click", e => { const b = e.target.closest("b[data-cid]"); if (b) openCustomer(+b.dataset.cid); });
+
+// ======================================================================= רשתות ומשתמשים
+async function loadOrg() {
+  const [{ users }, { networks }] = await Promise.all([api("/api/users"), api("/api/networks")]);
+  state.networks = networks;
+  $("#users-body").innerHTML = users.map(u => `<tr style="cursor:default"><td><b>${esc(u.username)}</b><div class="muted" style="font-size:12px">${esc(u.display_name || "")}</div></td>
+    <td>${ROLE_LABEL[u.role]}</td><td>${esc(u.network_name || u.customer_name || "הכל")}</td><td class="muted">${fmtDate(u.created_at)}</td></tr>`).join("");
+  $("#nets-body").innerHTML = networks.length ? networks.map(n => `<tr style="cursor:default"><td><b>${esc(n.name)}</b></td><td class="num">${n.customers}</td><td>${esc(n.contact_name || "—")}</td></tr>`).join("")
+    : `<tr><td colspan="3" class="empty">אין רשתות</td></tr>`;
+}
+$("#add-network").addEventListener("click", () => {
+  const m = modal("רשת חדשה", `<div class="grid2">
+      <div class="field span2"><label>שם הרשת *</label><input name="name"></div>
+      <div class="field"><label>איש קשר</label><input name="contact_name"></div>
+      <div class="field"><label>טלפון</label><input name="phone"></div>
+      <div class="field span2"><label>דוא"ל</label><input name="email"></div></div>`,
+    `<button class="btn primary" id="m-ok">יצירה</button><button class="btn" id="m-cancel">ביטול</button>`);
+  $("#m-cancel", m).onclick = closeModal;
+  $("#m-ok", m).onclick = async () => {
+    const body = {}; $$("input", m).forEach(el => body[el.name] = el.value);
+    try { await api("/api/networks", { method: "POST", body }); closeModal(); toast("הרשת נוצרה"); loadOrg(); refreshAll(); } catch (err) { toast(err.message, true); }
+  };
+});
+$("#add-user").addEventListener("click", () => {
+  const m = modal("משתמש חדש", `<div class="grid2">
+      <div class="field"><label>שם משתמש *</label><input name="username" autocomplete="off"></div>
+      <div class="field"><label>שם לתצוגה</label><input name="display_name"></div>
+      <div class="field"><label>סיסמה * (לפחות 8 תווים)</label><input name="password" type="password" autocomplete="new-password"></div>
+      <div class="field"><label>תפקיד</label><select name="role">${opt({ network_admin: "מנהל רשת (צפייה ברשת שלו)", school_admin: "בית ספר (צפייה בעצמו)", owner: "יוצר (הרשאה מלאה)" }, "network_admin")}</select></div>
+      <div class="field span2" id="u-net"><label>רשת</label><select name="network_id"><option value=""></option>${state.networks.map(n => `<option value="${n.id}">${esc(n.name)}</option>`).join("")}</select></div>
+      <div class="field span2 hidden" id="u-cust"><label>בית ספר</label><select name="customer_id"><option value=""></option>${state.customers.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select></div>
+    </div>
+    <div class="notice info" style="font-size:12px">דשבורד מותאם למנהלי רשת ולבתי ספר ייבנה בשלב הבא. כבר עכשיו הם יכולים להיכנס ולראות רק את מה ששייך להם.</div>`,
+    `<button class="btn primary" id="m-ok">יצירה</button><button class="btn" id="m-cancel">ביטול</button>`);
+  const role = $("select[name=role]", m);
+  const sync = () => { $("#u-net").classList.toggle("hidden", role.value !== "network_admin"); $("#u-cust").classList.toggle("hidden", role.value !== "school_admin"); };
+  role.onchange = sync; sync();
+  $("#m-cancel", m).onclick = closeModal;
+  $("#m-ok", m).onclick = async () => {
+    const body = {}; $$("input, select", m).forEach(el => body[el.name] = el.value);
+    try { await api("/api/users", { method: "POST", body }); closeModal(); toast("המשתמש נוצר"); loadOrg(); } catch (err) { toast(err.message, true); }
+  };
+});
+
+// ======================================================================= עדכוני תוכנה
+const RO_CLS = { pending: "idle", downloading: "info", downloaded: "info", installing: "warning", installed: "ok",
+  failed: "critical", rolled_back: "critical", cancelled: "idle" };
+let releasesCache = [];
+
+async function loadReleases() {
+  const d = await api("/api/releases");
+  releasesCache = d.releases;
+  $("#key-info").textContent = d.public_key ? "מפתח החתימה הרשום: " + d.public_key.slice(0, 16) + "…  (כל גרסה חייבת להיות חתומה בו)"
+    : "המפתח של הגרסה הראשונה שתועלה יירשם, וכל גרסה אחריה חייבת להיות חתומה באותו מפתח.";
+  $("#releases").innerHTML = d.releases.length ? d.releases.map(r => {
+    const chips = Object.entries(r.counts).map(([s, n]) => `<span class="pill ${RO_CLS[s] || "idle"}">${esc(d.statuses[s] || s)} ${n}</span>`).join(" ");
+    return `<div class="panel" data-rid="${r.id}">
+      <div class="panel-h"><span class="mono">${esc(r.version)}</span>
+        ${r.status === "withdrawn" ? `<span class="pill idle">בוטלה</span>` : ""}
+        <span class="muted">· ${fmtDateTime(r.created_at)} · ${(r.size / 1024).toFixed(0)}KB</span>
+        <span class="end" style="display:flex;gap:6px">
+          ${r.status === "active" ? `<button class="btn small primary" data-act="send">שליחה לבתי ספר</button>
+          <button class="btn small danger" data-act="withdraw">ביטול הגרסה</button>` : ""}</span></div>
+      <div class="panel-b">
+        ${r.notes ? `<p style="margin:0 0 10px;line-height:1.55">${esc(r.notes)}</p>` : ""}
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${chips || `<span class="muted">עוד לא נשלחה לאף בית ספר</span>`}</div>
+        ${r.targets.length ? `<table class="tbl" style="margin-top:10px"><tbody>${r.targets.map(t => `
+          <tr style="cursor:default"><td><b>${esc(t.name)}</b><div class="muted mono" style="font-size:11px;white-space:nowrap">${esc(t.code)}</div></td>
+            <td><span class="pill ${RO_CLS[t.status] || "idle"}">${esc(t.status_label)}</span></td>
+            <td style="font-size:12px;max-width:260px">${esc(t.message || "")}</td>
+            <td class="muted num" style="white-space:nowrap">${fmtDateTime(t.updated_at)}</td>
+            <td>${["pending", "downloading", "downloaded"].includes(t.status) && r.status === "active"
+              ? `<button class="btn small" data-act="cancel" data-cid="${t.customer_id}">ביטול</button>` : ""}</td></tr>`).join("")}</tbody></table>` : ""}
+      </div></div>`;
+  }).join("") : `<div class="panel"><div class="empty">עוד לא הועלתה אף גרסה.<br>במחשב שלך: build_update.bat keygen (פעם אחת), ואז build_update.bat</div></div>`;
+}
+
+$("#upload-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#upload-form button[type=submit]"); btn.disabled = true;
+  try {
+    const res = await fetch("/api/releases", { method: "POST", body: new FormData(e.target), credentials: "same-origin" });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok || d.ok === false) throw new Error(d.error || "ההעלאה נכשלה");
+    toast("גרסה " + d.version + " הועלתה (" + d.files + " קבצים). עכשיו בוחרים בתי ספר.");
+    e.target.reset(); await loadReleases();
+  } catch (err) { toast(err.message, true); }
+  btn.disabled = false;
+});
+
+$("#releases").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const rid = +b.closest("[data-rid]").dataset.rid;
+  const rel = releasesCache.find(r => r.id === rid);
+  if (b.dataset.act === "withdraw") {
+    return confirmModal("ביטול גרסה " + rel.version, "הגרסה לא תוצע יותר. מחשבים שעוד לא התקינו אותה לא יתקינו. מחשב שכבר מתקין ממשיך (וחוזר לאחור אם תיכשל).",
+      "ביטול הגרסה", async () => { await api("/api/releases/" + rid + "/withdraw", { method: "POST" }); closeModal(); toast("הגרסה בוטלה"); loadReleases(); });
+  }
+  if (b.dataset.act === "cancel") {
+    try { await api("/api/releases/" + rid + "/targets/" + b.dataset.cid, { method: "DELETE" }); toast("בוטל"); loadReleases(); }
+    catch (err) { toast(err.message, true); }
+    return;
+  }
+  // בחירת בתי ספר
+  const already = new Set(rel.targets.filter(t => !["failed", "rolled_back", "cancelled"].includes(t.status)).map(t => t.customer_id));
+  const list = state.customers.filter(c => c.status !== "archived");
+  const m = modal("שליחת גרסה " + esc(rel.version), `
+    <div class="notice info" style="font-size:12.5px">ההמלצה: קודם לבית ספר אחד או שניים, ואחרי יום טוב - לכולם.
+      כל מחשב יתקין אחרי הצלצול האחרון של היום שלו.</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="input" id="t-q" placeholder="סינון" style="flex:1">
+      <button class="btn small" id="t-all" type="button">בחירת הכל</button><button class="btn small" id="t-none" type="button">ניקוי</button></div>
+    <div style="max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:8px" id="t-list">
+      ${list.map(c => {
+        const on = already.has(c.id);
+        return `<label style="display:flex;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2);${on ? "opacity:.55" : "cursor:pointer"}" data-name="${esc((c.name + " " + (c.city || "") + " " + c.code).toLowerCase())}">
+          <input type="checkbox" value="${c.id}" ${on ? "disabled checked" : ""}>
+          <span class="dot ${(HEALTH[c.health] || HEALTH.idle)[0]}"></span>
+          <span style="flex:1"><b>${esc(c.name)}</b> <span class="muted" style="font-size:12px">${esc(c.city || "")}</span></span>
+          <span class="mono muted" style="font-size:11px">${esc(c.pc && c.pc.version || "לא דיווח")}</span>
+          ${on ? `<span class="muted" style="font-size:11px">כבר נשלח</span>` : ""}</label>`;
+      }).join("")}
+    </div>`, `<button class="btn primary" id="m-ok">שליחה</button><button class="btn" id="m-cancel">ביטול</button>`);
+  const boxes = () => $$("#t-list input:not(:disabled)", m);
+  $("#t-q", m).oninput = ev => { const q = ev.target.value.trim().toLowerCase();
+    $$("#t-list label", m).forEach(l => l.style.display = !q || l.dataset.name.includes(q) ? "flex" : "none"); };
+  $("#t-all", m).onclick = () => boxes().filter(x => x.closest("label").style.display !== "none").forEach(x => x.checked = true);
+  $("#t-none", m).onclick = () => boxes().forEach(x => x.checked = false);
+  $("#m-cancel", m).onclick = closeModal;
+  $("#m-ok", m).onclick = async () => {
+    const ids = boxes().filter(x => x.checked).map(x => +x.value);
+    if (!ids.length) return toast("לא נבחרו בתי ספר", true);
+    try { const r = await api("/api/releases/" + rid + "/targets", { method: "POST", body: { customer_ids: ids } });
+      closeModal(); toast("נשלח ל-" + r.added + " בתי ספר"); loadReleases(); refreshAll(); }
+    catch (err) { toast(err.message, true); }
+  };
+});
+
+// ======================================================================= יומן
+const AUDIT_LABEL = { release_upload: "גרסה הועלתה", release_target: "גרסה נשלחה", release_cancel: "עדכון בוטל",
+  release_withdraw: "גרסה בוטלה", update_installed: "עדכון הותקן", update_failed: "עדכון נכשל", update_rolled_back: "עדכון חזר לאחור",
+  customer_create: "לקוח נוצר", customer_update: "עדכון לקוח", rotate_key: "מפתח חדש", network_create: "רשת נוצרה",
+  user_create: "משתמש נוצר", feedback_status: "משוב", agent_register: "רישום מהתקנה", setup: "הגדרה ראשונה" };
+async function loadAudit() {
+  const { audit } = await api("/api/audit");
+  $("#audit-body").innerHTML = audit.map(a => `<tr ${a.customer_id ? `data-cid="${a.customer_id}"` : `style="cursor:default"`}>
+    <td class="num muted" style="white-space:nowrap">${fmtDateTime(a.at)}</td><td>${esc(a.username || "")}</td><td>${esc(a.customer || "—")}</td>
+    <td>${AUDIT_LABEL[a.action] || esc(a.action)}</td><td style="font-size:12px">${esc(a.details)}</td></tr>`).join("");
+}
+$("#audit-body").addEventListener("click", e => { const tr = e.target.closest("tr[data-cid]"); if (tr) openCustomer(+tr.dataset.cid); });
+
+boot().catch(err => toast(err.message, true));
+</script>
+</body>
+</html>

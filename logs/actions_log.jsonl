@@ -1,0 +1,349 @@
+{"id": "fbe155ac99", "timestamp": "2026-09-24T16:29:26", "action": "update_settings", "details": "", "user_role": "system"}
+{"id": "53446e8651", "timestamp": "2026-09-24T16:29:39", "action": "update_settings", "details": "", "user_role": "system"}
+{"id": "57ba9b8e09", "timestamp": "2026-09-24T16:31:41", "action": "add_event", "details": "חמישי: !!! - ב ד י ק ה - !!! בשעה 17:32:00", "user_role": "system"}
+{"id": "74339b8830", "timestamp": "2026-09-24T16:32:40", "action": "edit_event", "details": "חמישי: !!! - ב ד י ק ה - !!! עודכן", "user_role": "system"}
+{"id": "cbb780eef3", "timestamp": "2026-09-24T16:48:29", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "10736b2ea3", "timestamp": "2026-09-24T16:49:42", "action": "edit_event", "details": "רביעי: שעת 0 עודכן", "user_role": "system"}
+{"id": "e786d87160", "timestamp": "2026-09-24T16:50:12", "action": "quick_edit_event", "details": "רביעי: עדכון מהיר (time)", "user_role": "system"}
+{"id": "305077305b", "timestamp": "2026-09-24T16:50:17", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "system"}
+{"id": "494e419949", "timestamp": "2026-09-24T16:51:14", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (skip_date)", "user_role": "system"}
+{"id": "351488db6d", "timestamp": "2026-09-24T16:51:18", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (skip_date)", "user_role": "system"}
+{"id": "a64a77f994", "timestamp": "2026-09-24T16:51:20", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (enabled, skip_date)", "user_role": "system"}
+{"id": "e104d1bc6e", "timestamp": "2026-09-24T16:51:23", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (enabled, skip_date)", "user_role": "system"}
+{"id": "ea031f9126", "timestamp": "2026-09-24T16:51:30", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (skip_date)", "user_role": "system"}
+{"id": "80b8ba9a47", "timestamp": "2026-09-24T16:52:34", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"id": "98943acd0b", "timestamp": "2026-09-24T16:52:37", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "2e23b3fec1", "timestamp": "2026-09-24T16:53:47", "action": "edit_event", "details": "חמישי: !!! - ב ד י ק ה - !!! עודכן", "user_role": "system"}
+{"id": "2523650cad", "timestamp": "2026-09-24T17:11:47", "action": "edit_event", "details": "חמישי: !!! - ב ד י ק ה - !!! עודכן", "user_role": "system"}
+{"id": "402120a6c4", "timestamp": "2026-09-24T17:11:51", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "066d46e5ae", "timestamp": "2026-09-24T17:11:52", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "e62056a9cd", "timestamp": "2026-09-24T17:11:53", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "53875a40c1", "timestamp": "2026-09-24T17:12:18", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"id": "60f6fbb65d", "timestamp": "2026-09-24T17:12:19", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "ff1e2d2753", "timestamp": "2026-09-24T17:13:25", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "7e53fb4023", "timestamp": "2026-09-24T17:13:26", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "b1d671e984", "timestamp": "2026-09-24T17:14:21", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (skip_date)", "user_role": "system"}
+{"id": "f25043f34a", "timestamp": "2026-09-24T17:14:26", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "a937393b52", "timestamp": "2026-09-24T17:14:27", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "7ecae8a4d0", "timestamp": "2026-09-24T17:15:06", "action": "edit_event", "details": "שלישי: שעת 0 עודכן", "user_role": "system"}
+{"id": "4cf5adf197", "timestamp": "2026-09-24T17:15:15", "action": "edit_event", "details": "שני: שעת 0 עודכן", "user_role": "system"}
+{"id": "aa17c0f8ca", "timestamp": "2026-09-24T17:17:13", "action": "edit_event", "details": "חמישי: שעת 0 עודכן", "user_role": "system"}
+{"id": "493be7c6c7", "timestamp": "2026-09-24T17:17:26", "action": "quick_edit_event", "details": "שישי: עדכון מהיר (time)", "user_role": "system"}
+{"id": "a052964a8c", "timestamp": "2026-09-24T17:17:34", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "system"}
+{"id": "9497f7a7e7", "timestamp": "2026-09-24T17:25:14", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (enabled, skip_date)", "user_role": "system"}
+{"id": "0ac5713121", "timestamp": "2026-09-24T17:25:40", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "854d8a0a63", "timestamp": "2026-09-24T17:25:43", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "1597aa8c1f", "timestamp": "2026-09-24T17:25:44", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "06175345cf", "timestamp": "2026-09-24T17:25:47", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "eb084aeae2", "timestamp": "2026-09-24T17:25:49", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "cac1a827f6", "timestamp": "2026-09-24T17:25:50", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"id": "e4b4b72c45", "timestamp": "2026-09-24T17:25:52", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "7c77200001", "timestamp": "2026-09-24T17:29:11", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (skip_date)", "user_role": "system"}
+{"id": "fc2f5646d6", "timestamp": "2026-09-24T17:29:15", "action": "quick_edit_event", "details": "חמישי: עדכון מהיר (enabled, skip_date)", "user_role": "system"}
+{"id": "d53eec258e", "timestamp": "2026-09-24T17:29:18", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "5c4792781e", "timestamp": "2026-09-24T17:29:21", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "44867a9c94", "timestamp": "2026-09-24T17:29:31", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "1e3e3fc353", "timestamp": "2026-09-29T17:20:24", "action": "quick_edit_event", "details": "רביעי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "b93baf18de", "timestamp": "2026-09-29T17:25:21", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "f5c2998404", "timestamp": "2026-09-29T17:32:06", "action": "add_event", "details": "שלישי: שלישי - בדיקה - שלישי בשעה 17:32:30", "user_role": "system"}
+{"id": "98da846434", "timestamp": "2026-09-29T17:32:19", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "system"}
+{"id": "458df9034a", "timestamp": "2026-09-29T17:33:34", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "4e3320e725", "timestamp": "2026-09-29T17:34:50", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "93f13b82cf", "timestamp": "2026-09-29T17:35:05", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (volume)", "user_role": "system"}
+{"id": "b364123f37", "timestamp": "2026-09-29T17:35:27", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "system"}
+{"id": "d80a019be1", "timestamp": "2026-09-29T17:37:36", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "system"}
+{"id": "38d5530e59", "timestamp": "2026-09-29T17:40:23", "action": "edit_event", "details": "שלישי: שלישי - בדיקה - שלישי עודכן", "user_role": "system"}
+{"id": "f836969928", "timestamp": "2026-09-29T17:41:41", "action": "edit_event", "details": "רביעי: שעת 0 עודכן", "user_role": "system"}
+{"id": "66e4b83e2b", "timestamp": "2026-09-29T17:41:49", "action": "edit_event", "details": "רביעי: שעת 0 עודכן", "user_role": "system"}
+{"id": "ee57bf5675", "timestamp": "2026-09-29T17:42:15", "action": "duplicate_day", "details": "יום שישי שוכפל אל יום שבת", "user_role": "system"}
+{"id": "9f7cc88006", "timestamp": "2026-09-29T17:42:29", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "a3657fb75a", "timestamp": "2026-09-29T17:42:39", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "081da6fefe", "timestamp": "2026-09-29T17:42:42", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "9cd4114a3f", "timestamp": "2026-09-29T17:42:45", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "e25aef6094", "timestamp": "2026-09-29T17:42:49", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "b58a4047ea", "timestamp": "2026-09-29T17:42:52", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "e061a541a9", "timestamp": "2026-09-29T17:42:56", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "85db6aee08", "timestamp": "2026-09-29T17:42:59", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "eb7ee7f7e0", "timestamp": "2026-09-29T17:43:04", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "2c4b37af43", "timestamp": "2026-09-29T17:43:07", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "c48ada3f54", "timestamp": "2026-09-29T17:43:11", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "7cd6519a29", "timestamp": "2026-09-29T17:43:14", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "5c06c1a616", "timestamp": "2026-09-29T17:43:19", "action": "edit_event", "details": "שבת: תזכורת 2 דק' עודכן", "user_role": "system"}
+{"id": "87df699b99", "timestamp": "2026-09-29T17:43:24", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "17b90a0b21", "timestamp": "2026-09-29T17:43:32", "action": "duplicate_event", "details": "שוכפל מ-שבת אל שבת", "user_role": "system"}
+{"id": "4178cdffa3", "timestamp": "2026-09-29T17:43:44", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "8538c35b32", "timestamp": "2026-09-29T17:43:48", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "481a26638e", "timestamp": "2026-09-29T17:43:50", "action": "edit_event", "details": "שבת: תפילת מנחה עודכן", "user_role": "system"}
+{"id": "03b3b1ded7", "timestamp": "2026-09-29T17:43:54", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "f1993d0a47", "timestamp": "2026-09-29T17:43:57", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "442efc8062", "timestamp": "2026-09-29T17:44:00", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "2330165b33", "timestamp": "2026-09-29T17:44:03", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "8c3856faef", "timestamp": "2026-09-29T17:44:06", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "36e135bbf2", "timestamp": "2026-09-29T17:44:10", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "d7d7d17c0c", "timestamp": "2026-09-29T17:44:12", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "552f50302b", "timestamp": "2026-09-29T17:44:15", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "system"}
+{"id": "f215b0614b", "timestamp": "2026-09-29T17:48:37", "action": "edit_event", "details": "חמישי: שעת 0 עודכן", "user_role": "system"}
+{"id": "c973861c70", "timestamp": "2026-09-29T17:48:45", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "system"}
+{"id": "ffbce64572", "timestamp": "2026-09-29T17:50:04", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "249a5c798c", "timestamp": "2026-09-29T17:50:08", "action": "system_status", "details": "indefinite", "user_role": "system"}
+{"id": "acae9e14c4", "timestamp": "2026-09-29T17:50:18", "action": "system_status", "details": "enabled", "user_role": "system"}
+{"id": "fa295d9b4d", "timestamp": "2026-09-29T23:57:55", "action": "system_status", "details": "today", "user_role": "system"}
+{"id": "d0e35b9d1a", "timestamp": "2026-10-01T18:00:28", "action": "system_status_auto", "details": "ההשבתה להיום בלבד (2026-09-29) הסתיימה - המערכת חזרה לפעולה אוטומטית", "user_role": "system"}
+{"id": "fdb2bc649f", "timestamp": "2026-10-01T18:00:53", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "c8c9b37b2d", "timestamp": "2026-10-03T21:44:01", "action": "system_status_auto", "details": "ההשבתה להיום בלבד (2026-10-01) הסתיימה - המערכת חזרה לפעולה אוטומטית", "user_role": "viewer"}
+{"id": "32431b5535", "timestamp": "2026-10-05T09:04:34", "action": "edit_event", "details": "חמישי: שעת 0 עודכן", "user_role": "viewer"}
+{"id": "b722736d93", "timestamp": "2026-10-05T09:05:00", "action": "edit_event", "details": "חמישי: תזכורת 2 דק' עודכן", "user_role": "viewer"}
+{"id": "bd7431c7d2", "timestamp": "2026-10-05T09:06:31", "action": "quick_edit_event", "details": "שישי: עדכון מהיר (enabled, skip_date)", "user_role": "viewer"}
+{"id": "3f49e67c19", "timestamp": "2026-10-05T09:06:35", "action": "quick_edit_event", "details": "שישי: עדכון מהיר (enabled, skip_date)", "user_role": "viewer"}
+{"id": "19ff0f71c9", "timestamp": "2026-10-05T09:06:47", "action": "quick_edit_event", "details": "שישי: עדכון מהיר (enabled, skip_date)", "user_role": "viewer"}
+{"id": "ec02a6dd78", "timestamp": "2026-10-05T09:24:43", "action": "quick_edit_event", "details": "שני: עדכון מהיר (enabled, skip_date)", "user_role": "viewer"}
+{"id": "5dfc57a560", "timestamp": "2026-10-05T09:25:04", "action": "quick_edit_event", "details": "שני: עדכון מהיר (enabled, skip_date)", "user_role": "viewer"}
+{"id": "c79b6b4caf", "timestamp": "2026-10-05T09:25:46", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "ca746857fb", "timestamp": "2026-10-05T09:38:27", "action": "quick_edit_events", "details": "תרגיל - כניסה למרחב מוגן 10:05:00: enabled, skip_date בימים ראשון, שלישי, רביעי, חמישי, שישי", "user_role": "viewer"}
+{"id": "6a4f44d58e", "timestamp": "2026-10-05T09:38:43", "action": "quick_edit_events", "details": "שירים בהפסקה 10:25:00: enabled, skip_date בימים ראשון, שלישי, רביעי, חמישי, שישי", "user_role": "viewer"}
+{"id": "3f4d437a6d", "timestamp": "2026-10-05T09:39:03", "action": "quick_edit_events", "details": "שירים בהפסקה 12:15:00: enabled, skip_date בימים ראשון, שני, שלישי, רביעי, חמישי, שישי", "user_role": "viewer"}
+{"id": "7a2987ceac", "timestamp": "2026-10-05T09:39:18", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "fcd1c8c039", "timestamp": "2026-10-05T09:39:23", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "ad3a277a9e", "timestamp": "2026-10-05T11:40:30", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "c0962097c4", "timestamp": "2026-10-05T11:45:04", "action": "edit_event", "details": "שלישי: שעת 0 עודכן", "user_role": "viewer"}
+{"id": "7381f01c06", "timestamp": "2026-10-05T12:55:39", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "8870c5b8ce", "timestamp": "2026-10-05T13:09:54", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "536436af0d", "timestamp": "2026-10-05T13:09:57", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "66bd3c4574", "timestamp": "2026-10-05T13:10:00", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "fcb0a20154", "timestamp": "2026-10-05T15:25:51", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "1760d58b36", "timestamp": "2026-10-05T15:25:53", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "9c1b39cbb8", "timestamp": "2026-10-05T15:51:46", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "378b834c9f", "timestamp": "2026-10-05T15:52:02", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "0ce82110ae", "timestamp": "2026-10-05T15:52:20", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "35c5b7aad3", "timestamp": "2026-10-06T09:18:51", "action": "add_event", "details": "שלישי: בדיקה !!!! בשעה 09:19:00", "user_role": "viewer"}
+{"id": "efc497074a", "timestamp": "2026-10-06T09:19:42", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "8e58c1782b", "timestamp": "2026-10-06T09:19:57", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "299e432c84", "timestamp": "2026-10-06T09:20:03", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "754f5ffd52", "timestamp": "2026-10-06T09:20:10", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "b0ed81b6dd", "timestamp": "2026-10-06T09:20:27", "action": "update_settings", "details": "", "user_role": "viewer"}
+{"id": "bc2a64f5f6", "timestamp": "2026-10-06T09:20:36", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "f25793dd40", "timestamp": "2026-10-06T09:23:03", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "c2367ad2a8", "timestamp": "2026-10-06T09:24:04", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "b9d8cc58f7", "timestamp": "2026-10-06T09:24:07", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "7f9ed3c861", "timestamp": "2026-10-06T09:24:09", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "1902cbe6e1", "timestamp": "2026-10-06T09:24:11", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "8c85ca93b0", "timestamp": "2026-10-06T09:25:13", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "f1a03fa2b4", "timestamp": "2026-10-06T09:25:32", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "9d5a9924c7", "timestamp": "2026-10-06T09:25:34", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "febc0e23f2", "timestamp": "2026-10-06T09:25:36", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "2ca042bb83", "timestamp": "2026-10-06T09:25:38", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "894b63c00c", "timestamp": "2026-10-06T09:25:41", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "24f4d4ad01", "timestamp": "2026-10-06T09:25:42", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "17c6a2e42e", "timestamp": "2026-10-06T09:25:47", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "6b4bc5c547", "timestamp": "2026-10-06T09:25:48", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "079326ec8f", "timestamp": "2026-10-06T09:25:50", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "023df22786", "timestamp": "2026-10-06T09:25:51", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "9c10bbe845", "timestamp": "2026-10-06T09:26:04", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "5877da9aef", "timestamp": "2026-10-06T09:26:06", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "614707b618", "timestamp": "2026-10-06T09:54:15", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "2ce3b4fb6c", "timestamp": "2026-10-06T09:54:16", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "0c7f7c2e4a", "timestamp": "2026-10-06T12:30:56", "action": "add_event", "details": "שבת: פרשת בראשית בשעה 08:00:00", "user_role": "viewer"}
+{"id": "f178e00a0e", "timestamp": "2026-10-06T12:31:05", "action": "edit_event", "details": "שבת: פרשת בראשית עודכן", "user_role": "viewer"}
+{"id": "bd9f19c1c3", "timestamp": "2026-10-06T12:34:03", "action": "edit_event", "details": "שבת: פרשת בראשית עודכן", "user_role": "viewer"}
+{"id": "45b8678d0b", "timestamp": "2026-10-06T12:39:08", "action": "add_event", "details": "שבת: שבת שלום בשעה 08:00:00", "user_role": "viewer"}
+{"id": "3f620997cf", "timestamp": "2026-10-06T13:06:34", "action": "add_event", "details": "שבת: פרשת בראשית בשעה 08:00:00", "user_role": "viewer"}
+{"id": "f5586bfe98", "timestamp": "2026-10-06T13:10:19", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "6e5a7f291f", "timestamp": "2026-10-06T13:10:22", "action": "quick_edit_events", "details": "שבת שלום 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "bf696cbb7d", "timestamp": "2026-10-06T13:10:24", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "12dbf110cc", "timestamp": "2026-10-06T16:49:37", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "8a4b0afec3", "timestamp": "2026-10-06T16:49:43", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "0030ecf75f", "timestamp": "2026-10-06T16:49:47", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "ffc74c735e", "timestamp": "2026-10-06T16:52:32", "action": "add_event", "details": "שבת: פרשת בראשית בשעה 08:00:00", "user_role": "viewer"}
+{"id": "b8f3cda4f2", "timestamp": "2026-10-06T16:53:18", "action": "edit_event", "details": "שבת: פרשת בראשית עודכן", "user_role": "viewer"}
+{"id": "bad43a6761", "timestamp": "2026-10-06T16:54:16", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "32cb8a0760", "timestamp": "2026-10-06T16:56:38", "action": "edit_event", "details": "שלישי: שלישי - בדיקה - שלישי עודכן", "user_role": "viewer"}
+{"id": "7ed9f39d79", "timestamp": "2026-10-06T16:57:29", "action": "edit_event", "details": "שלישי: שלישי - בדיקה - שלישי עודכן", "user_role": "viewer"}
+{"id": "70666686dc", "timestamp": "2026-10-06T16:57:39", "action": "edit_event", "details": "שלישי: שלישי - בדיקה - שלישי עודכן", "user_role": "viewer"}
+{"id": "1ce022bd7c", "timestamp": "2026-10-06T16:58:22", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "89b6490b98", "timestamp": "2026-10-06T16:58:41", "action": "quick_edit_event", "details": "שלישי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "891857e1ff", "timestamp": "2026-10-06T16:59:54", "action": "edit_event", "details": "שבת: פרשת בראשית עודכן", "user_role": "viewer"}
+{"id": "fda8a7fbf3", "timestamp": "2026-10-06T17:00:11", "action": "edit_event", "details": "שבת: פרשת בראשית עודכן", "user_role": "viewer"}
+{"id": "dfbceeb25f", "timestamp": "2026-10-06T17:02:06", "action": "add_event", "details": "שלישי: הודעה בשעה 08:00:00", "user_role": "viewer"}
+{"id": "6d45da59b9", "timestamp": "2026-10-06T17:02:30", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "fad777962b", "timestamp": "2026-10-06T17:02:51", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "2d1c58626e", "timestamp": "2026-10-06T17:03:17", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "beab293a6a", "timestamp": "2026-10-06T17:03:22", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "a801b2b745", "timestamp": "2026-10-06T17:03:32", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "9d67e00229", "timestamp": "2026-10-06T17:04:32", "action": "edit_event", "details": "רביעי: שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 עודכן", "user_role": "viewer"}
+{"id": "53613e982b", "timestamp": "2026-10-06T17:04:42", "action": "edit_event", "details": "רביעי: שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 עודכן", "user_role": "viewer"}
+{"id": "78d42a990a", "timestamp": "2026-10-06T17:04:47", "action": "edit_event", "details": "רביעי: שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 שיעור 1 עודכן", "user_role": "viewer"}
+{"id": "16a97e01b1", "timestamp": "2026-10-06T17:04:51", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "d4663ebb41", "timestamp": "2026-10-06T17:05:00", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "5381fa48ce", "timestamp": "2026-10-06T17:05:06", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "fb75a4a10e", "timestamp": "2026-10-06T17:05:13", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "479dd43831", "timestamp": "2026-10-06T17:11:11", "action": "edit_event", "details": "שלישי: שלישי - בדיקה - שלישי עודכן", "user_role": "viewer"}
+{"id": "7f7d02821a", "timestamp": "2026-10-06T17:17:36", "action": "edit_event", "details": "ראשון, שני, שלישי, רביעי, חמישי, שישי: שעת ראשונה עודכן", "user_role": "viewer"}
+{"id": "841d4cf252", "timestamp": "2026-10-06T17:17:44", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "c17e4a5e4f", "timestamp": "2026-10-07T09:27:50", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "e6606c832f", "timestamp": "2026-10-07T09:27:54", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "0236f9e8a7", "timestamp": "2026-10-07T09:28:04", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "c6aeee50d0", "timestamp": "2026-10-07T09:28:06", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "ac8511885f", "timestamp": "2026-10-07T09:28:10", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "e4c2a007c6", "timestamp": "2026-10-07T09:28:17", "action": "system_status", "details": "indefinite", "user_role": "viewer"}
+{"id": "25d840ab97", "timestamp": "2026-10-07T09:28:22", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "a05f48235e", "timestamp": "2026-10-07T09:31:49", "action": "edit_event", "details": "שלישי, רביעי: הודעה עודכן", "user_role": "viewer"}
+{"id": "277c40630b", "timestamp": "2026-10-07T09:32:36", "action": "duplicate_event", "details": "שוכפל מ-רביעי אל רביעי", "user_role": "viewer"}
+{"id": "2f36c91aed", "timestamp": "2026-10-07T09:33:51", "action": "edit_event", "details": "רביעי: הודעה 2 עודכן", "user_role": "viewer"}
+{"id": "3a81e90c1b", "timestamp": "2026-10-07T09:34:25", "action": "edit_event", "details": "רביעי: הודעה 2 עודכן", "user_role": "viewer"}
+{"id": "87d5fd918c", "timestamp": "2026-10-07T11:25:45", "action": "edit_event", "details": "ראשון, שני, שלישי, רביעי, חמישי, שישי: שיעור 4 מעבר עודכן", "user_role": "viewer"}
+{"id": "36c71f3572", "timestamp": "2026-10-07T11:30:25", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "10f7dad267", "timestamp": "2026-10-07T11:30:38", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "633cc5cb3e", "timestamp": "2026-10-07T11:30:40", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "875d797356", "timestamp": "2026-10-07T11:30:45", "action": "quick_edit_events", "details": "פרשת בראשית 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "7e2ed6fa79", "timestamp": "2026-10-07T11:30:47", "action": "quick_edit_events", "details": "שבת שלום 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "bbeab86155", "timestamp": "2026-10-07T11:30:55", "action": "quick_edit_events", "details": "שבת שלום 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "2e4298872b", "timestamp": "2026-10-07T11:31:00", "action": "quick_edit_events", "details": "שבת שלום 08:00:00: enabled, skip_date בימים שבת", "user_role": "viewer"}
+{"id": "0366368ce3", "timestamp": "2026-10-07T11:31:03", "action": "quick_edit_events", "details": "שבת שלום 08:00:00: skip_date בימים שבת", "user_role": "viewer"}
+{"id": "41c0438db5", "timestamp": "2026-10-07T11:32:00", "action": "quick_edit_events", "details": "הודעה 09:00:00: enabled, skip_date בימים רביעי", "user_role": "viewer"}
+{"id": "7af7f1d570", "timestamp": "2026-10-07T11:32:03", "action": "quick_edit_events", "details": "הודעה 2 08:58:00: enabled, skip_date בימים רביעי", "user_role": "viewer"}
+{"id": "1471aea2d7", "timestamp": "2026-10-07T11:32:17", "action": "quick_edit_events", "details": "הודעה 2 08:58:00: enabled, skip_date בימים רביעי", "user_role": "viewer"}
+{"id": "96f6dc56a1", "timestamp": "2026-10-07T11:32:20", "action": "quick_edit_events", "details": "הודעה 09:00:00: enabled, skip_date בימים רביעי", "user_role": "viewer"}
+{"id": "b2f94df816", "timestamp": "2026-10-07T11:49:37", "action": "edit_event", "details": "ראשון, שני, שלישי, רביעי, חמישי, שישי: שיעור 3 עודכן", "user_role": "viewer"}
+{"id": "ebb2dd1af1", "timestamp": "2026-10-07T11:50:10", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "viewer"}
+{"id": "37371a2390", "timestamp": "2026-10-07T11:50:33", "action": "quick_edit_event", "details": "שבת: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "b0b0d338ab", "timestamp": "2026-10-07T11:50:42", "action": "delete_event", "details": "שבת:  נמחק", "user_role": "viewer"}
+{"id": "44b8e24a3a", "timestamp": "2026-10-07T14:22:57", "action": "add_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! בשעה 14:23:00", "user_role": "viewer"}
+{"id": "60cb68a227", "timestamp": "2026-10-07T14:36:31", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "e117675943", "timestamp": "2026-10-07T14:38:34", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "a57e6210c8", "timestamp": "2026-10-07T14:38:36", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "5deccdbb20", "timestamp": "2026-10-07T14:42:03", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "54ca839999", "timestamp": "2026-10-07T14:42:06", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "4b20413d47", "timestamp": "2026-10-07T14:42:09", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "d8036b0a39", "timestamp": "2026-10-07T14:42:24", "action": "edit_event", "details": "ראשון, שני, שלישי, רביעי, חמישי, שישי: שיעור 8 מעבר עודכן", "user_role": "viewer"}
+{"id": "18d52cb785", "timestamp": "2026-10-07T14:42:27", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "a923f94d40", "timestamp": "2026-10-07T14:42:29", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "3fcbc0cd44", "timestamp": "2026-10-07T14:42:43", "action": "system_status", "details": "today", "user_role": "viewer"}
+{"id": "f512bddc54", "timestamp": "2026-10-07T14:42:45", "action": "system_status", "details": "enabled", "user_role": "viewer"}
+{"id": "216392f7d0", "timestamp": "2026-10-07T14:44:40", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "acad2e1195", "timestamp": "2026-10-07T14:45:03", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "f202653bc9", "timestamp": "2026-10-07T14:45:17", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "9c9d86eda8", "timestamp": "2026-10-07T14:45:26", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "8c1cfc1199", "timestamp": "2026-10-07T14:45:45", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "e914108a0f", "timestamp": "2026-10-07T14:45:58", "action": "quick_edit_event", "details": "רביעי: עדכון מהיר (time)", "user_role": "viewer"}
+{"id": "a2f9fee8dc", "timestamp": "2026-10-07T14:46:31", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "09db409c1d", "timestamp": "2026-10-07T14:46:44", "action": "quick_edit_event", "details": "רביעי: עדכון מהיר (volume)", "user_role": "viewer"}
+{"id": "235c8b4711", "timestamp": "2026-10-07T14:46:47", "action": "quick_edit_event", "details": "רביעי: עדכון מהיר (volume)", "user_role": "viewer"}
+{"id": "5a977bbe4f", "timestamp": "2026-10-07T14:46:53", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "af7a19acbe", "timestamp": "2026-10-07T14:47:05", "action": "edit_event", "details": "רביעי: !!!  בדיקת מוסיקה  !!!! עודכן", "user_role": "viewer"}
+{"id": "d60ce22ce4", "timestamp": "2026-10-07T14:55:16", "action": "edit_event", "details": "ראשון, שני, שלישי, רביעי, חמישי, שישי: שיעור 8 מעבר עודכן", "user_role": "viewer"}
+{"id": "fb6cd447e8", "timestamp": "2026-10-07T15:07:07", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "11c0177d61", "timestamp": "2026-10-07T15:07:52", "action": "quick_edit_event", "details": "הגברת עוצמה (60%→84%), רביעי, 14:20 · שיעור 6", "user_role": "viewer"}
+{"id": "9c29b9ad8c", "timestamp": "2026-10-07T15:08:00", "action": "quick_edit_event", "details": "הגברת עוצמה (84%→85%), רביעי, 14:20 · שיעור 6", "user_role": "viewer"}
+{"id": "d043784b48", "timestamp": "2026-10-07T15:09:20", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 15:40 · הפסקה", "user_role": "viewer"}
+{"id": "124e167a2d", "timestamp": "2026-10-07T15:09:26", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 15:40 · הפסקה", "user_role": "viewer"}
+{"id": "d2d12e0808", "timestamp": "2026-10-07T15:09:36", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 15:40 · הפסקה", "user_role": "viewer"}
+{"id": "5358e97279", "timestamp": "2026-10-07T15:10:28", "action": "edit_event", "details": "שינוי שעה (14:46→15:10:35), עדכון משך, רביעי, 15:10:35 · !!!  בדיקת מוסיקה  !!!!", "user_role": "viewer"}
+{"id": "d6078a473f", "timestamp": "2026-10-07T15:11:17", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "viewer"}
+{"id": "7fb905c0eb", "timestamp": "2026-10-07T15:11:21", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "viewer"}
+{"id": "10d7cac020", "timestamp": "2026-10-07T15:11:26", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "viewer"}
+{"id": "e9628f8823", "timestamp": "2026-10-07T15:11:33", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "viewer"}
+{"id": "87d6331faa", "timestamp": "2026-10-07T15:11:50", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "viewer"}
+{"id": "56fd98a855", "timestamp": "2026-10-07T15:13:26", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "viewer"}
+{"id": "a13eeba94c", "timestamp": "2026-10-07T15:13:30", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "viewer"}
+{"id": "7697870be1", "timestamp": "2026-10-07T15:13:55", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "viewer"}
+{"id": "f9cce4fbe8", "timestamp": "2026-10-07T15:14:03", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "viewer"}
+{"id": "d9a4108875", "timestamp": "2026-10-07T15:14:42", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 15:50 · שיעור 9", "user_role": "viewer"}
+{"id": "debc039859", "timestamp": "2026-10-07T15:20:18", "action": "quick_edit_event", "details": "הגברת עוצמה (85%→100%), רביעי, 15:40 · הפסקה", "user_role": "viewer"}
+{"id": "bf45e55059", "timestamp": "2026-10-07T15:20:25", "action": "quick_edit_event", "details": "הנמכת עוצמה (100%→92%), רביעי, 15:40 · הפסקה", "user_role": "viewer"}
+{"id": "1a112ea46a", "timestamp": "2026-10-07T15:32:49", "action": "quick_edit_event", "details": "שינוי שעה (08:00→08:58), שבת, 08:00 · פרשת בראשית", "user_role": "viewer"}
+{"id": "1593fa6ffd", "timestamp": "2026-10-07T15:32:58", "action": "delete_event", "details": "מחיקת אירוע, שבת, 08:58 · פרשת בראשית", "user_role": "viewer"}
+{"id": "07580f744d", "timestamp": "2026-10-07T15:33:06", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "cf5f7e9988", "timestamp": "2026-10-07T15:33:14", "action": "delete_event", "details": "מחיקת אירוע, שבת, 08:58 · פרשת בראשית", "user_role": "viewer"}
+{"id": "3b2242dc34", "timestamp": "2026-10-07T15:33:22", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "6006f94462", "timestamp": "2026-10-07T15:33:46", "action": "delete_event", "details": "מחיקת אירוע, שבת, 08:58 · פרשת בראשית", "user_role": "viewer"}
+{"id": "bb2bb609d4", "timestamp": "2026-10-07T15:33:49", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "10fbe26b61", "timestamp": "2026-10-07T15:34:14", "action": "duplicate_event", "details": "שכפול אירוע, ראשון, 07:30 · שעת 0 → שבת", "user_role": "viewer"}
+{"id": "988140fd60", "timestamp": "2026-10-07T15:34:21", "action": "delete_event", "details": "מחיקת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "bc78d20cab", "timestamp": "2026-10-07T15:34:24", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "viewer"}
+{"id": "5b417d6950", "timestamp": "2026-10-07T15:34:56", "action": "quick_edit_events", "details": "השבתת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "eea6417210", "timestamp": "2026-10-07T15:35:01", "action": "quick_edit_events", "details": "הפעלת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "053cbb219f", "timestamp": "2026-10-07T15:35:33", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 07:58 · תפילה", "user_role": "viewer"}
+{"id": "443db3e413", "timestamp": "2026-10-07T15:36:57", "action": "quick_edit_events", "details": "השבתת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "b9f42554a6", "timestamp": "2026-10-07T15:37:00", "action": "quick_edit_events", "details": "הפעלת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "f4874daddc", "timestamp": "2026-10-07T15:37:59", "action": "quick_edit_events", "details": "השבתת אירוע, שבת, 07:30 · שעת 0 (עותק)", "user_role": "viewer"}
+{"id": "ef5a43f745", "timestamp": "2026-10-07T16:31:54", "action": "update_settings", "details": "עדכון הגדרות: התקן שמע, מראה", "user_role": "viewer"}
+{"id": "e2893563a1", "timestamp": "2026-10-07T16:32:04", "action": "update_settings", "details": "עדכון הגדרות: התקן שמע, מראה", "user_role": "viewer"}
+{"id": "1e6f525620", "timestamp": "2026-10-07T16:32:08", "action": "update_settings", "details": "עדכון הגדרות: התקן שמע, מראה", "user_role": "viewer"}
+{"id": "caadeb084c", "timestamp": "2026-10-07T16:32:14", "action": "update_settings", "details": "עדכון הגדרות: התקן שמע, מראה", "user_role": "viewer"}
+{"id": "b94c86ca85", "timestamp": "2026-10-07T16:33:36", "action": "schedule_save", "details": "נשמר לוח בשם 'לוח ישן'", "user_role": "viewer"}
+{"id": "50559e31f6", "timestamp": "2026-10-07T16:33:50", "action": "schedule_save", "details": "נשמר לוח בשם 'לוח ישן 2'", "user_role": "viewer"}
+{"id": "9298fff6ab", "timestamp": "2026-10-07T16:34:49", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "viewer"}
+{"id": "fb283285d1", "timestamp": "2026-10-07T16:35:26", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "ff8d365472", "timestamp": "2026-10-07T16:35:40", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "157f3813e8", "timestamp": "2026-10-07T16:35:43", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "439bc014f5", "timestamp": "2026-10-07T16:35:45", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "43de42d2da", "timestamp": "2026-10-07T16:35:50", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "15ee1f0e95", "timestamp": "2026-10-07T16:35:53", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד, סיסמת עריכה", "user_role": "editor"}
+{"id": "738bc99858", "timestamp": "2026-10-07T16:37:03", "action": "schedule_save", "details": "עודכן לוח בשם 'לוח ישן 2'", "user_role": "editor"}
+{"id": "e06dd9bf23", "timestamp": "2026-10-07T16:57:36", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "b076561801", "timestamp": "2026-10-07T16:57:38", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "bcfabcd291", "timestamp": "2026-10-07T17:04:12", "action": "edit_event", "details": "עדכון תוכן ההודעה, שבת, 08:00 · פרשת בראשית", "user_role": "editor"}
+{"id": "13e0224e7e", "timestamp": "2026-10-07T17:04:30", "action": "edit_event", "details": "עריכת אירוע, שבת, 08:00 · פרשת בראשית", "user_role": "editor"}
+{"id": "eeb7868560", "timestamp": "2026-10-07T17:05:33", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "0e8d3ec86c", "timestamp": "2026-10-07T17:07:13", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "841a0e3ca2", "timestamp": "2026-10-07T17:07:20", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "editor"}
+{"id": "578c4bfebd", "timestamp": "2026-10-07T17:07:24", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "2665d8f237", "timestamp": "2026-10-07T17:07:40", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "11bca45789", "timestamp": "2026-10-07T17:07:50", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "editor"}
+{"id": "7637264d70", "timestamp": "2026-10-07T17:07:58", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "ab272bfb35", "timestamp": "2026-10-07T17:08:11", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "editor"}
+{"id": "d890385dcf", "timestamp": "2026-10-07T17:08:14", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "279a167e67", "timestamp": "2026-10-07T17:08:17", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "be738f8cdc", "timestamp": "2026-10-07T17:09:17", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "a96815e477", "timestamp": "2026-10-07T17:09:21", "action": "system_status", "details": "השבתה עד הפעלה ידנית (אדום)", "user_role": "editor"}
+{"id": "722fd6d38f", "timestamp": "2026-10-07T17:09:24", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "5a26a8ee3e", "timestamp": "2026-10-07T17:12:25", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-08/10", "user_role": "editor"}
+{"id": "b06e10f18c", "timestamp": "2026-10-08T10:01:49", "action": "system_status_auto", "details": "ההשבתה להיום בלבד (2026-10-07) הסתיימה - המערכת חזרה לפעולה אוטומטית", "user_role": "system"}
+{"id": "9856aa4565", "timestamp": "2026-10-08T15:01:53", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-09/10", "user_role": "editor"}
+{"id": "06b8b9679f", "timestamp": "2026-10-08T15:01:54", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "45d27ee727", "timestamp": "2026-10-08T15:02:32", "action": "edit_event", "details": "שינוי שעה (17:10→15:02:35), עדכון משך, חמישי, 15:02:35 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "04caf4b9b8", "timestamp": "2026-10-08T15:03:21", "action": "edit_event", "details": "שינוי שעה (15:02:35→15:02:20), עדכון סוג, חמישי, 15:02:20 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "1e9bd0af13", "timestamp": "2026-10-08T15:03:52", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "7c7864f846", "timestamp": "2026-10-08T15:05:12", "action": "edit_event", "details": "השבתת אירוע, חמישי, 15:02:20 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "951a14e5f1", "timestamp": "2026-10-08T15:05:58", "action": "edit_event", "details": "שינוי שעה (15:02:20→15:06), החלפת קובץ שמע (Tune 4.mp3), חמישי, 15:06 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "6db50dc069", "timestamp": "2026-10-08T15:06:01", "action": "quick_edit_events", "details": "הפעלת אירוע, חמישי, 15:06 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "585e78d269", "timestamp": "2026-10-08T15:06:56", "action": "edit_event", "details": "עדכון משך, חמישי, 15:06 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "a52726a405", "timestamp": "2026-10-08T15:07:04", "action": "edit_event", "details": "השבתת אירוע, חמישי, 15:06 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "d72e8183f4", "timestamp": "2026-10-08T15:07:11", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-09/10", "user_role": "editor"}
+{"id": "f9e510139e", "timestamp": "2026-10-08T15:07:13", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "8e32cb8d8a", "timestamp": "2026-10-08T15:07:17", "action": "quick_edit_events", "details": "הפעלת אירוע, חמישי, 15:06 · !!! - ב ד י ק ה - !!!", "user_role": "editor"}
+{"id": "6bfbc7d1d2", "timestamp": "2026-10-10T22:26:39", "action": "edit_event", "details": "עריכת אירוע, רביעי, 08:58 · הודעה 2", "user_role": "editor"}
+{"id": "9a79495ff6", "timestamp": "2026-10-11T10:42:31", "action": "quick_edit_events", "details": "השבתת אירוע, רביעי, 08:58 · הודעה 2", "user_role": "editor"}
+{"id": "adde2da0ba", "timestamp": "2026-10-11T10:42:32", "action": "quick_edit_events", "details": "הפעלת אירוע, רביעי, 08:58 · הודעה 2", "user_role": "editor"}
+{"id": "ca6597ea19", "timestamp": "2026-10-11T10:43:21", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 10:43 · תזכורת 2 דק'", "user_role": "editor"}
+{"id": "8bb50674f7", "timestamp": "2026-10-11T15:03:29", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-12/10", "user_role": "editor"}
+{"id": "ebfa98db4b", "timestamp": "2026-10-11T15:03:42", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "efdf0faf3e", "timestamp": "2026-10-12T10:21:25", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "f6b587e7ec", "timestamp": "2026-10-12T10:23:06", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "676e848e4c", "timestamp": "2026-10-12T10:35:08", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "7d7ca62096", "timestamp": "2026-10-12T10:49:39", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "0d47527bad", "timestamp": "2026-10-12T10:56:55", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "f7e5477b11", "timestamp": "2026-10-12T14:54:21", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "980d7efcd5", "timestamp": "2026-10-12T14:55:41", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "111a059d4e", "timestamp": "2026-10-12T17:08:26", "action": "system_stop", "details": "חלון הניהול הראשי נסגר - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "7f1dd28d9a", "timestamp": "2026-10-12T17:18:54", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "d74cf9cf02", "timestamp": "2026-10-12T17:24:25", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-13/10", "user_role": "editor"}
+{"id": "4bff9fdfe7", "timestamp": "2026-10-12T17:25:14", "action": "add_event", "details": "הוספת אירוע, שני, 17:25:18 · אירוע חדש", "user_role": "editor"}
+{"id": "78cdba3405", "timestamp": "2026-10-12T17:25:16", "action": "system_status", "details": "הפעלת המערכת (ירוק)", "user_role": "editor"}
+{"id": "f5671e89b2", "timestamp": "2026-10-12T17:25:21", "action": "system_status", "details": "השבתה להיום בלבד (צהוב), חוזר ב-13/10", "user_role": "editor"}
+{"id": "8b94d0a4d9", "timestamp": "2026-10-13T00:00:52", "action": "system_status_auto", "details": "ההשבתה להיום בלבד (2026-10-12) הסתיימה - המערכת חזרה לפעולה אוטומטית", "user_role": "editor"}
+{"id": "b856972a32", "timestamp": "2026-10-13T00:00:52", "action": "system_status_auto", "details": "ההשבתה להיום בלבד (2026-10-12) הסתיימה - המערכת חזרה לפעולה אוטומטית", "user_role": "editor"}
+{"id": "d1fc492664", "timestamp": "2026-10-13T08:55:09", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "60ec005b39", "timestamp": "2026-10-13T08:56:45", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "db7956539d", "timestamp": "2026-10-13T08:57:25", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "2413b37f8b", "timestamp": "2026-10-13T09:06:39", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "4cbb7dbfe9", "timestamp": "2026-10-13T11:12:22", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "5e0e6316dc", "timestamp": "2026-10-13T11:17:49", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "48746ae343", "timestamp": "2026-10-13T11:33:55", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "a2409fee82", "timestamp": "2026-10-13T11:38:33", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "238eeaee2a", "timestamp": "2026-10-13T11:40:27", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "0cea4f3837", "timestamp": "2026-10-13T11:57:26", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "c9358f215d", "timestamp": "2026-10-13T12:13:06", "action": "update_settings", "details": "עדכון הגדרות: סיסמת עריכה", "user_role": "editor"}
+{"id": "a3312c233a", "timestamp": "2026-10-13T12:13:54", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "3105d323ed", "timestamp": "2026-10-13T12:14:29", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "5e249a716b", "timestamp": "2026-10-13T12:17:01", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
