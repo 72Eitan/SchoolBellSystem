@@ -358,3 +358,4 @@
 {"id": "d0cfe9f287", "timestamp": "2026-10-19T12:00:53", "action": "edit_event", "details": "הגברת עוצמה (85%→100%), ראשון, שני, שלישי, רביעי, חמישי, שישי, 11:30 · שיעור 4 מעבר", "user_role": "editor"}
 {"id": "a5ae2c60bb", "timestamp": "2026-10-19T12:00:57", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "editor"}
 {"id": "e2eeef635c", "timestamp": "2026-10-19T12:01:17", "action": "edit_event", "details": "הגברת עוצמה (85%→100%), ראשון, שני, שלישי, רביעי, חמישי, שישי, 12:15 · הפסקה", "user_role": "editor"}
+{"id": "a739096f2b", "timestamp": "2026-10-25T19:16:39", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
