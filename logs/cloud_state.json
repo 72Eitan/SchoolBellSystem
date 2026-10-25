@@ -1,5 +1,5 @@
 {
-  "last_ok": "2026-10-13T03:01:49",
+  "last_ok": "2026-10-25T18:46:33",
   "license": {
     "customer_status": "active",
     "expires": null,
@@ -7,5 +7,5 @@
     "status_label": "ניסיון"
   },
   "latest_version": "2026.10.05-3",
-  "server_time_utc": "2026-10-13T00:01:49Z"
+  "server_time_utc": "2026-10-25T16:46:32Z"
 }

@@ -108,6 +108,10 @@ def build(notes):
     files = collect_files()
     if "src/update_public_key.txt" not in files:
         raise SystemExit("המפתח הציבורי לא נכלל בחבילה")
+    if "src/license_public_key.txt" not in files:
+        print("שים לב: src/license_public_key.txt (מפתח האימות של רישיונות) לא קיים ולכן לא בחבילה.")
+        print("        הוא נוצר לבד אחרי דיווח אחד של המחשב הזה למרכז הבקרה. בלעדיו בית ספר בלי אינטרנט")
+        print("        לא יוכל להפעיל קוד הפעלה ידני.")
     os.makedirs(OUT_DIR, exist_ok=True)
     zip_path = os.path.join(OUT_DIR, "etratzon-update-%s.zip" % version)
     if os.path.exists(zip_path):

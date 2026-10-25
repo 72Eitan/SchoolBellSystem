@@ -38,7 +38,7 @@ BACKUP_ROOT = os.path.join(cr.UPDATES_DIR, "backup")
 HEALTH_TIMEOUT = int(os.environ.get("BELL_UPDATER_HEALTH_TIMEOUT", "150"))   # שניות לחכות שהמערכת תעלה (מחשב איטי / Windows 7)
 HEALTH_STABLE = 25            # ואחרי שעלתה - לוודא שהמנוע לא נפל מיד
 PROTECTED_FILES = {"schedule.json", "cloud_config.json", "saved_schedules.json", "audio_devices.json",
-                   "test_sound_state.json"}
+                   "test_sound_state.json", "license.json"}
 PROTECTED_DIRS = ("logs/", "audio/", "updates/", ".git/", ".1 versions/", "control_center/", ".bell_window/")
 KEEP_BACKUPS = 5
 

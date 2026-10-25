@@ -2,6 +2,8 @@
 control_center/data/
 # connection key of this bell PC
 cloud_config.json
+# signed license of this bell PC (received from the control center)
+license.json
 # upload package for PythonAnywhere (built from control_center)
 control_center_upload.zip
 # remote updates: built packages (developer PC) and staging/backups (bell PC)

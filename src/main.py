@@ -46,7 +46,6 @@ console.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)
 logging.getLogger().addHandler(console)
 
 DAY_ORDER = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-VALID_LICENSE_VALUE = "פעיל בתוקף"  # עקבי עם web_server.py
 
 # כמה שניות "חלון תפיסה" אחרי הזמן המתוכנן עדיין ייחשב "עכשיו" (סופג עיכובים קלים בלולאה)
 CATCH_UP_WINDOW_SECONDS = 4
@@ -132,10 +131,27 @@ def is_system_disabled(data, today_iso):
     return False
 
 
-def is_license_valid(data):
-    """המערכת מוגבלת רישיון: אם הרישיון לא תקף, לא מתבצעת השמעה בכלל -
-    בלי קשר למצב system_status. עדיין ניתן להיכנס לממשק ולעדכן רישיון."""
-    return data.get("institution_info", {}).get("license_status") == VALID_LICENSE_VALUE
+LICENSE_CHECK_EVERY_SECONDS = 10
+_license = {"checked": 0.0, "blocked": False, "message": ""}
+
+
+def is_license_valid(data=None):
+    """המערכת מוגבלת רישיון: אם הרישיון חסום, לא מתבצעת השמעה בכלל - בלי קשר למצב system_status.
+    הרישיון הוא טוקן חתום ממרכז הבקרה (license.json, נבדק ב-license_check.py) - לא שדה בהגדרות.
+    נבדק פעם ב-10 שנ'. כל תקלה בבדיקה עצמה = ממשיכים לצלצל (לא משתיקים בית ספר בגלל באג)."""
+    now = time.monotonic()
+    if now - _license["checked"] >= LICENSE_CHECK_EVERY_SECONDS or _license["checked"] == 0.0:
+        _license["checked"] = now
+        try:
+            import license_check
+            st = license_check.current_state()
+            _license["blocked"] = bool(st.get("blocked"))
+            _license["message"] = st.get("message", "")
+        except Exception as e:
+            _license["blocked"] = False
+            _license["message"] = ""
+            logging.error(f"בדיקת הרישיון נכשלה ({e}) - ממשיכים לפעול.")
+    return not _license["blocked"]
 
 
 # ============================================================
@@ -745,7 +761,7 @@ def main():
                     logging.warning("הרישיון אינו תקף - כל השמעה פעילה נעצרה מידית.")
                     write_test_state(False)
                 if tick_counter - last_status_log_tick >= STATUS_LOG_THROTTLE_TICKS:
-                    logging.warning("הרישיון אינו תקף - ההשמעה מושבתת. יש לעדכן רישיון תקף בהגדרות המערכת.")
+                    logging.warning(f"הרישיון אינו תקף - ההשמעה מושבתת. {_license['message']}")
                     last_status_log_tick = tick_counter
                 was_blocked_last_tick = True
                 time.sleep(POLL_INTERVAL_SECONDS)

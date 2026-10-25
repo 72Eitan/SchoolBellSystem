@@ -32,3 +32,22 @@
 2026-10-13 12:12:33,526 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
 2026-10-13 12:14:15,660 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
 2026-10-13 12:16:19,613 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 12:38:03,572 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-13 15:00:43,342 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-13 18:01:35,594 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-13 21:02:34,945 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-14 13:12:50,744 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-14 16:40:45,755 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-14 17:05:08,084 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [WinError 10053] An established connection was aborted by the software in your host machine>)
+2026-10-14 19:59:07,202 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-15 09:48:35,163 - INFO - מדווח למרכז הבקרה https://etratzon.pythonanywhere.com כל 60 שניות
+2026-10-18 13:47:43,088 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-18 13:48:44,600 - INFO - החיבור למרכז הבקרה חזר
+2026-10-18 16:58:21,418 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-19 08:59:42,594 - INFO - החיבור למרכז הבקרה חזר
+2026-10-19 09:41:41,325 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-19 09:42:42,816 - INFO - החיבור למרכז הבקרה חזר
+2026-10-19 11:34:18,008 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-19 11:35:19,425 - INFO - החיבור למרכז הבקרה חזר
+2026-10-20 12:24:23,883 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-20 12:25:25,215 - INFO - החיבור למרכז הבקרה חזר

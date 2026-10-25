@@ -18,6 +18,7 @@ control_center/server.py  -  מרכז הבקרה של "עת רצון" (דשבו�
 """
 
 import argparse
+import base64
 import hashlib
 import io
 import json
@@ -36,7 +37,7 @@ from flask import Flask, g, send_file, has_request_context, jsonify, request, se
 import ed25519_pure as ed
 from werkzeug.security import check_password_hash, generate_password_hash
 
-APP_VERSION = "2026.10.05-cc1"
+APP_VERSION = "2026.10.13-cc2"
 PORT = 8600
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -46,6 +47,11 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 DEMO_FILE = os.path.join(DATA_DIR, "demo_clients.json")
 RELEASES_DIR = os.path.join(DATA_DIR, "releases")
 PINNED_KEY_FILE = os.path.join(DATA_DIR, "update_public_key.txt")   # המפתח הציבורי של העדכון הראשון; כל עדכון חייב להתאים
+# מפתח החתימה על רישיונות. נוצר אוטומטית בהפעלה הראשונה ונשאר רק כאן (המחשבים מקבלים רק את הציבורי).
+# אסור למחוק אותו: מפתח חדש = כל המחשבים שכבר קיבלו את הישן יסרבו לרישיונות חדשים.
+LICENSE_KEY_FILE = os.path.join(DATA_DIR, "license_signing.key")
+LICENSE_SIGN_CONTEXT = b"etratzon-license\n"     # זהה ל-src/license_check.py
+TRIAL_DAYS = 30
 # מצבי עדכון אצל לקוח (מה מחשב הצלצולים מדווח)
 ROLLOUT_STATUSES = {
     "pending": "ממתין למחשב", "downloading": "מוריד", "downloaded": "הורד, ממתין לסוף היום",
@@ -220,8 +226,64 @@ def _close_db(exc):
 def init_db():
     conn = connect()
     conn.executescript(SCHEMA)
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(customers)")}
+    for col in ("license_token", "license_basis"):
+        if col not in cols:
+            conn.execute("ALTER TABLE customers ADD COLUMN %s TEXT" % col)
+    # ניסיון בלי תאריך סיום = 30 יום מיום היצירה (כך זה גם מוצג בדשבורד)
+    conn.execute("UPDATE customers SET license_expires = date(created_at, '+%d day') "
+                 "WHERE license_status='trial' AND (license_expires IS NULL OR license_expires='')" % TRIAL_DAYS)
     conn.commit()
     conn.close()
+
+
+# ------------------------------------------------------------------ רישיון חתום
+
+def license_secret():
+    os.makedirs(DATA_DIR, exist_ok=True)
+    if not os.path.exists(LICENSE_KEY_FILE):
+        with open(LICENSE_KEY_FILE, "w") as f:
+            f.write(secrets.token_hex(32))
+    with open(LICENSE_KEY_FILE) as f:
+        return bytes.fromhex(f.read().strip())
+
+
+_pub_cache = {}
+
+
+def license_public_hex():
+    sec = license_secret()
+    if sec not in _pub_cache:
+        _pub_cache[sec] = ed.secret_to_public(sec).hex()
+    return _pub_cache[sec]
+
+
+def license_payload(c):
+    """מה נכנס לרישיון שהמחשב מקבל. בלי שדות מיותרים - הקוד הידני צריך להיות קצר ככל האפשר."""
+    status = c["license_status"] if c["license_status"] in LICENSE_STATUSES else "trial"
+    exp = c["license_expires"] or ""
+    if status == "trial" and not exp:
+        exp = ((parse_iso(c["created_at"]) or utcnow()) + timedelta(days=TRIAL_DAYS)).strftime("%Y-%m-%d")
+    p = {"c": c["code"], "s": status, "e": exp}
+    if c["payment_status"] == "overdue":
+        p["p"] = "overdue"
+    return p
+
+
+def license_token(conn, c):
+    """הטוקן החתום של הלקוח. נחתם מחדש רק כשהרישיון משתנה (חתימה ב-Python רגיל עולה זמן מעבד,
+    ובמסלול החינמי של PythonAnywhere יש 100 שניות מעבד ביום)."""
+    p = license_payload(c)
+    basis = json.dumps(p, sort_keys=True)
+    if c["license_token"] and c["license_basis"] == basis:
+        return c["license_token"]
+    p["i"] = iso(utcnow())
+    raw = json.dumps(p, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    sig = ed.sign(license_secret(), LICENSE_SIGN_CONTEXT + raw)
+    b64 = lambda b: base64.urlsafe_b64encode(b).decode("ascii").rstrip("=")
+    token = "ER1.%s.%s" % (b64(raw), b64(sig))
+    conn.execute("UPDATE customers SET license_token=?, license_basis=? WHERE id=?", (token, basis, c["id"]))
+    return token
 
 
 def load_secret_key():
@@ -336,7 +398,18 @@ def compute_health(c, now=None, update_info=None):
     if p and connectivity == "online":
         if p.get("engine_alive") is False:
             add("critical", "engine", "מנוע ההשמעה (main.py) לא רץ - הצלצולים לא יישמעו")
-        if p.get("license_valid") is False:
+        lic = p.get("license") if isinstance(p.get("license"), dict) else None
+        if lic:
+            st_l = lic.get("state")
+            if st_l == "blocked":
+                add("critical", "license_pc", "הצלצולים חסומים במחשב בגלל הרישיון")
+            elif st_l == "grace":
+                add("critical", "license_pc", "המחשב בתקופת חסד - הצלצולים ייחסמו ב-%s" % fmt_day(lic.get("block_date")))
+            elif st_l == "no_license":
+                add("warning", "license_pc", "אין רישיון חתום במחשב (עוד לא קיבל)")
+            elif lic.get("token_error"):
+                add("warning", "license_pc", "הרישיון במחשב נדחה: %s" % lic.get("token_error"))
+        elif p.get("license_valid") is False:
             add("critical", "license_pc", "הרישיון במחשב לא תקף - ההשמעה חסומה")
         st = p.get("system_status")
         if st == "disabled":
@@ -397,6 +470,13 @@ def compute_health(c, now=None, update_info=None):
     return {"health": health, "connectivity": connectivity, "alerts": alerts, "payload": p}
 
 
+def fmt_day(s):
+    try:
+        return datetime.strptime(str(s)[:10], "%Y-%m-%d").strftime("%d/%m/%Y")
+    except (TypeError, ValueError):
+        return str(s or "")
+
+
 def human_minutes(mins):
     if mins < 60:
         return "%d דק'" % mins
@@ -426,7 +506,7 @@ def latest_version():
 
 
 def customer_public(c, health=None, update_info=None):
-    d = {k: c[k] for k in c.keys() if k not in ("api_key_hash", "last_payload")}
+    d = {k: c[k] for k in c.keys() if k not in ("api_key_hash", "last_payload", "license_token", "license_basis")}
     d["update"] = (update_info or {}).get(c["id"])
     h = health or compute_health(c)
     d.update({"health": h["health"], "connectivity": h["connectivity"], "alerts": h["alerts"]})
@@ -435,6 +515,7 @@ def customer_public(c, health=None, update_info=None):
         "version": p.get("version"), "next_event": p.get("next_event"),
         "events_today": p.get("events_today"), "system_status": p.get("system_status"),
         "engine_alive": p.get("engine_alive"), "os": p.get("os"),
+        "license": p.get("license") if isinstance(p.get("license"), dict) else None,
     }
     return d
 
@@ -671,6 +752,9 @@ def api_create_customer():
         code = new_customer_code(conn)
         api_key = secrets.token_urlsafe(24)
         fields.setdefault("status", "active")
+        fields.setdefault("license_status", "trial")
+        if fields["license_status"] == "trial" and not fields.get("license_expires"):
+            fields["license_expires"] = (utcnow() + timedelta(days=TRIAL_DAYS)).strftime("%Y-%m-%d")
         cols = ["code", "api_key_hash", "created_at"] + list(fields.keys())
         vals = [code, hash_key(api_key), iso(utcnow())] + list(fields.values())
         cur = conn.execute("INSERT INTO customers(%s) VALUES (%s)" % (",".join(cols), ",".join("?" * len(cols))), vals)
@@ -729,6 +813,14 @@ def api_update_customer(cid):
         return api_error(str(e))
     if not fields:
         return jsonify({"ok": True})
+    today = utcnow().strftime("%Y-%m-%d")
+    new_status = fields.get("license_status", old["license_status"])
+    new_exp = fields.get("license_expires", old["license_expires"])
+    if new_status == "expired" and (not new_exp or new_exp >= today):
+        # "פג תוקף" = היום האחרון בתוקף היה אתמול; 7 ימי החסד מתחילים היום
+        fields["license_expires"] = (utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
+    elif new_status == "trial" and not new_exp:
+        fields["license_expires"] = (utcnow() + timedelta(days=TRIAL_DAYS)).strftime("%Y-%m-%d")
     changes = ["%s: %s → %s" % (FIELD_LABELS.get(k, k), old[k] if old[k] not in (None, "") else "—", v if v not in (None, "") else "—")
                for k, v in fields.items() if str(old[k] if old[k] is not None else "") != str(v if v is not None else "")]
     conn.execute("UPDATE customers SET %s WHERE id=?" % ",".join("%s=?" % k for k in fields),
@@ -751,6 +843,22 @@ def api_rotate_key(cid):
     audit(conn, "rotate_key", "הונפק מפתח חיבור חדש (הישן בוטל)", cid)
     conn.commit()
     return jsonify({"ok": True, "code": c["code"], "api_key": api_key, "config": client_config_text(c["code"], api_key)})
+
+
+@app.route("/api/customers/<int:cid>/activation-code", methods=["POST"])
+@login_required(roles=("owner",))
+def api_activation_code(cid):
+    """קוד הפעלה ידני למחשב שלא מגיע למרכז הבקרה. זה אותו רישיון חתום שהמחשב מקבל בדיווח."""
+    conn = db()
+    c = conn.execute("SELECT * FROM customers WHERE id=?", (cid,)).fetchone()
+    if not c:
+        return api_error("לא נמצא", 404)
+    token = license_token(conn, c)
+    p = license_payload(c)
+    audit(conn, "activation_code", "הונפק קוד הפעלה ידני (רישיון %s%s)" % (
+        LICENSE_STATUSES.get(p["s"], p["s"]), " עד " + p["e"] if p["e"] else " ללא הגבלה"), cid)
+    conn.commit()
+    return jsonify({"ok": True, "code": c["code"], "activation_code": token, "license": p})
 
 
 # ------------------------------------------------------------------ רשתות ומשתמשים (תשתית לשלב 2)
@@ -1060,7 +1168,9 @@ def api_agent_register():
             (code, hash_key(api_key), "pending", name[:120], info.get("country") or "ישראל", info.get("city", ""),
              info.get("address", ""), info.get("contact", ""), info.get("phone", ""), info.get("email", ""),
              (body.get("machine_id") or "")[:80], "trial", iso(utcnow())))
-        audit(conn, "agent_register", "נרשם מהתקנה: %s" % name, cur.lastrowid, username="(מחשב)")
+        conn.execute("UPDATE customers SET license_expires=? WHERE id=?",
+                     ((utcnow() + timedelta(days=TRIAL_DAYS)).strftime("%Y-%m-%d"), cur.lastrowid))
+        audit(conn, "agent_register", "נרשם מהתקנה: %s (ניסיון %d יום)" % (name, TRIAL_DAYS), cur.lastrowid, username="(מחשב)")
         conn.commit()
     return jsonify({"ok": True, "customer_code": code, "api_key": api_key})
 
@@ -1086,8 +1196,10 @@ def api_agent_heartbeat():
     if random.random() < 0.01:   # ניקוי היסטוריה ישנה מדי פעם
         conn.execute("DELETE FROM heartbeats WHERE received_at < ?", (iso(now - timedelta(days=HEARTBEAT_KEEP_DAYS)),))
     offer = update_offer(conn, c, payload.get("version"))
+    token = license_token(conn, c)
     conn.commit()
     return jsonify({"ok": True, "server_time_utc": iso(now), "license": license_reply(c),
+                    "license_token": token, "license_public_key": license_public_hex(),
                     "latest_version": latest_version(), "update": offer})
 
 

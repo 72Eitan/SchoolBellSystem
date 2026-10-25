@@ -66,7 +66,7 @@ THEME_PRESETS = {
 }
 
 # גרסת השרת - הממשק (index.html) משווה אליה ומציג אזהרה אם רץ שרת ישן יותר
-SERVER_VERSION = "2026.10.13-4"
+SERVER_VERSION = "2026.10.13-5"
 SERVER_PORT = 8500
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
@@ -321,7 +321,7 @@ ACTION_TITLES = {
     "quick_edit_events": "עדכון אירוע", "delete_event": "מחיקת אירוע", "duplicate_event": "שכפול אירוע",
     "duplicate_day": "שכפול יום", "replace_audio_all": "החלפת קובץ שמע", "system_status": "מצב מערכת",
     "update_settings": "עדכון הגדרות", "import_excel": "ייבוא Excel", "schedule_save": "שמירת לוח",
-    "schedule_load": "טעינת לוח", "undo": "ביטול פעולה",
+    "schedule_load": "טעינת לוח", "undo": "ביטול פעולה", "license_activate": "הפעלת רישיון",
 }
 FIELD_NAMES = {"label": "תיאור", "type": "סוג", "duration_seconds": "משך", "loop": "השמעה חוזרת",
                "fade_in_s": "Fade In", "fade_out_s": "Fade Out", "shuffle": "השמעה אקראית",
@@ -619,7 +619,46 @@ def index():
 # ============================================================
 @app.route("/api/schedule", methods=["GET"])
 def api_get_schedule():
-    return jsonify(load_data())
+    data = load_data()
+    data["license"] = license_state_public()
+    return jsonify(data)
+
+
+# ============================================================
+# API: רישיון (טוקן חתום ממרכז הבקרה - license_check.py)
+# ============================================================
+def license_state_public():
+    try:
+        import license_check
+        st = license_check.current_state()
+        st["customer_code"] = st.get("customer_code") or license_check.configured_customer_code()
+        st["has_public_key"] = bool(license_check.public_key())
+        return st
+    except Exception as e:
+        return {"state": "error", "blocked": False, "level": "warning", "message": "בדיקת הרישיון נכשלה: %s" % e}
+
+
+@app.route("/api/license", methods=["GET"])
+def api_license():
+    return jsonify(license_state_public())
+
+
+@app.route("/api/license/activate", methods=["POST"])
+def api_license_activate():
+    """קוד הפעלה ידני מהספק - למחשב שלא מגיע למרכז הבקרה."""
+    guard = require_editor()
+    if guard:
+        return guard
+    body = request.get_json(force=True, silent=True) or {}
+    import license_check
+    ok, msg, _ = license_check.install_token(body.get("code") or "", "manual")
+    if not ok:
+        logging.warning(f"קוד הפעלה נדחה: {msg}")
+        return jsonify({"ok": False, "error": msg}), 400
+    st = license_state_public()
+    append_action_log("license_activate", "הוזן קוד הפעלה: " + st.get("message", ""))
+    logging.info(f"קוד הפעלה הותקן: {st.get('message', '')}")
+    return jsonify({"ok": True, "license": st})
 
 
 @app.route("/api/audio-files", methods=["GET"])
@@ -1037,7 +1076,7 @@ def api_test_sound():
     if not engine_running():
         return jsonify({"error": "מנוע ההשמעה לא פועל - אין מי שינגן. הפעילו את המערכת (start_all.bat)."}), 409
     data = load_data()
-    if data.get("institution_info", {}).get("license_status") != VALID_LICENSE_VALUE:
+    if license_state_public().get("blocked"):
         return jsonify({"error": "הרישיון לא בתוקף - המערכת לא משמיעה צלילים."}), 409
     try:
         volume = max(0, min(100, int(body.get("volume", 85))))
@@ -1192,7 +1231,10 @@ def api_set_settings():
 
     def do(data):
         if "institution_info" in body:
-            data["institution_info"].update(body["institution_info"])
+            inst = dict(body["institution_info"] or {})
+            for k in ("license_status", "payment_status", "license_key"):   # הרישיון מגיע רק ממרכז הבקרה (חתום)
+                inst.pop(k, None)
+            data["institution_info"].update(inst)
         if "audio_device" in body:
             data["institution_info"]["audio_device"] = body["audio_device"]
         if "appearance" in body:
@@ -1521,5 +1563,11 @@ if __name__ == "__main__":
         print(msg)
         sys.exit(1)
     load_data()
+    try:
+        import license_check
+        if license_check.ensure_first_run():
+            logging.info("license.json נוצר - מתחילים 30 יום ניסיון עד שיתקבל רישיון ממרכז הבקרה")
+    except Exception as e:
+        logging.error(f"license.json: {e}")
     logging.info(f"=== שרת הניהול מופעל (גרסה {SERVER_VERSION}) ===")
     app.run(host="0.0.0.0", port=SERVER_PORT, debug=False)

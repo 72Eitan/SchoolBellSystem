@@ -33,17 +33,18 @@
                 "shuffle": true
             },
             {
-                "enabled": true,
-                "time": "08:53:00",
-                "label": "תזכורת 2 דק'",
-                "type": "Bell",
                 "audio": "bell_standard.mp3",
-                "volume": 100,
                 "duration_seconds": 10,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "label": "תזכורת 2 דק'",
                 "loop": false,
+                "time": "08:53:00",
+                "type": "Bell",
                 "uid": "0b73c0d14213",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": true,
@@ -140,17 +141,19 @@
                 "volume": 85
             },
             {
-                "enabled": true,
-                "time": "12:15:00",
-                "label": "הפסקה",
-                "type": "Bell",
                 "audio": "bell_standard.mp3",
-                "volume": 85,
                 "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "id": "12",
+                "label": "הפסקה",
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "ac1488633787",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": false,
@@ -332,18 +335,18 @@
                 "shuffle": true
             },
             {
-                "id": "3",
-                "label": "תזכורת 2 דק'",
-                "time": "08:53:00",
-                "duration_seconds": 10,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 100,
+                "duration_seconds": 10,
                 "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "label": "תזכורת 2 דק'",
                 "loop": false,
+                "time": "08:53:00",
+                "type": "Bell",
                 "uid": "c034e3ca5a09",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "4",
@@ -444,18 +447,19 @@
                 "volume": 85
             },
             {
+                "audio": "bell_standard.mp3",
+                "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
                 "id": "12",
                 "label": "הפסקה",
-                "time": "12:15:00",
-                "duration_seconds": 30,
-                "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 85,
-                "enabled": true,
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "65a4f3b9a6f2",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "13",
@@ -658,17 +662,18 @@
                 "shuffle": true
             },
             {
-                "enabled": true,
-                "time": "08:53:00",
-                "label": "תזכורת 2 דק'",
-                "type": "Bell",
                 "audio": "bell_standard.mp3",
-                "volume": 100,
                 "duration_seconds": 10,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "label": "תזכורת 2 דק'",
                 "loop": false,
+                "time": "08:53:00",
+                "type": "Bell",
                 "uid": "b1efe9819b68",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": true,
@@ -796,17 +801,19 @@
                 "volume": 85
             },
             {
-                "enabled": true,
-                "time": "12:15:00",
-                "label": "הפסקה",
-                "type": "Bell",
                 "audio": "bell_standard.mp3",
-                "volume": 85,
                 "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "id": "12",
+                "label": "הפסקה",
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "d2362495dd31",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": false,
@@ -1001,18 +1008,18 @@
                 "shuffle": true
             },
             {
-                "id": "3",
-                "label": "תזכורת 2 דק'",
-                "time": "08:53:00",
-                "duration_seconds": 10,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 100,
+                "duration_seconds": 10,
                 "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "label": "תזכורת 2 דק'",
                 "loop": false,
+                "time": "08:53:00",
+                "type": "Bell",
                 "uid": "58c2dc799caa",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "4",
@@ -1150,18 +1157,19 @@
                 "volume": 85
             },
             {
+                "audio": "bell_standard.mp3",
+                "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
                 "id": "12",
                 "label": "הפסקה",
-                "time": "12:15:00",
-                "duration_seconds": 30,
-                "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 85,
-                "enabled": true,
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "77e8dbd9ce16",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "13",
@@ -1374,7 +1382,8 @@
                 "time": "08:53:00",
                 "type": "Bell",
                 "uid": "2843919ad3eb",
-                "volume": 100
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": true,
@@ -1471,17 +1480,19 @@
                 "volume": 85
             },
             {
-                "enabled": true,
-                "time": "12:15:00",
-                "label": "הפסקה",
-                "type": "Bell",
                 "audio": "bell_standard.mp3",
-                "volume": 85,
                 "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "id": "12",
+                "label": "הפסקה",
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "e922df604560",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "enabled": false,
@@ -1677,18 +1688,18 @@
                 "shuffle": true
             },
             {
-                "id": "3",
-                "label": "תזכורת 2 דק'",
-                "time": "08:53:00",
-                "duration_seconds": 10,
                 "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 100,
+                "duration_seconds": 10,
                 "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
+                "label": "תזכורת 2 דק'",
                 "loop": false,
+                "time": "08:53:00",
+                "type": "Bell",
                 "uid": "b58f21d8340c",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "4",
@@ -1789,18 +1800,19 @@
                 "volume": 85
             },
             {
+                "audio": "bell_standard.mp3",
+                "duration_seconds": 30,
+                "enabled": true,
+                "fade_in_s": 2,
+                "fade_out_s": 2,
                 "id": "12",
                 "label": "הפסקה",
-                "time": "12:15:00",
-                "duration_seconds": 30,
-                "audio": "bell_standard.mp3",
-                "type": "Bell",
-                "volume": 85,
-                "enabled": true,
                 "loop": false,
+                "time": "12:15:00",
+                "type": "Bell",
                 "uid": "1573445840cb",
-                "fade_in_s": 2.0,
-                "fade_out_s": 2.0
+                "volume": 100,
+                "shuffle": true
             },
             {
                 "id": "13",
@@ -2009,17 +2021,17 @@
     },
     "overrides": [],
     "institution_info": {
-        "name": "",
-        "contact": "",
-        "phone": "",
-        "email": "",
-        "address": "",
+        "name": "צבי - ניסיון",
+        "contact": "איתן",
+        "phone": "052-3587353",
+        "email": "72eitan@gmail.com",
+        "address": "קטיף 82",
         "license_status": "פעיל בתוקף",
         "country": "ישראל",
         "state": "",
-        "city": "",
-        "region": "",
-        "interface_language": "he",
+        "city": "נתיבות",
+        "region": "מערב",
+        "interface_language": "en",
         "license_key": "",
         "payment_status": "",
         "audio_device": "אוזניות (Realtek(R) Audio)"

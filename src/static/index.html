@@ -390,6 +390,20 @@
   #version-banner { display: none; flex: 0 0 auto; background: #a5202a; color: #fff; text-align: center;
     padding: 8px 12px; font-weight: 700; font-size: 0.95rem; }
   #version-banner.show { display: block; }
+  #license-banner { display: none; flex: 0 0 auto; text-align: center; padding: 7px 12px; font-weight: 700;
+    font-size: 0.92rem; cursor: pointer; }
+  #license-banner.show { display: block; }
+  #license-banner.warning { background: #fff3cd; color: #6b4e00; border-bottom: 1px solid #f0d78c; }
+  #license-banner.danger { background: #a5202a; color: #fff; }
+  #license-banner .lb-act { text-decoration: underline; margin-inline-start: 10px; font-weight: 600; }
+  .lic-box { border-radius: 10px; padding: 12px 14px; line-height: 1.6; margin-bottom: 12px; font-size: 0.92rem; }
+  .lic-box.ok { background: #eaf6ee; color: #1d5b32; }
+  .lic-box.warning { background: #fff3cd; color: #6b4e00; }
+  .lic-box.danger { background: #fbe7e8; color: #8a1b23; }
+  .lic-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 0.86rem; margin-bottom: 12px; }
+  .lic-facts b { font-weight: 600; color: #555; }
+  #lic-code { width: 100%; min-height: 70px; font-family: Consolas, monospace; font-size: 0.75rem; direction: ltr;
+    text-align: left; box-sizing: border-box; padding: 6px; border: 1px solid #cfd6e0; border-radius: 8px; }
   .browse-error { direction: rtl; text-align: right; color: #a5202a; padding: 14px; line-height: 1.6; font-size: 0.9rem; }
 
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #222; color: #fff;
@@ -498,6 +512,7 @@
 <body>
 
 <div id="version-banner"></div>
+<div id="license-banner" onclick="openLicenseTab()" role="status"></div>
 <header>
   <div class="hdr-side hdr-right">
     <div class="traffic" id="traffic" role="group" aria-label="מצב המערכת">
@@ -755,7 +770,8 @@
     <button class="close-x" onclick="closeSettingsAutosave()" title="סגור (השינויים נשמרים)">✕</button>
     <h3>⚙️ הגדרות מערכת</h3>
     <div class="settings-tabs">
-      <button class="settings-tab-btn active" data-tab="tab-inst" onclick="switchSettingsTab('tab-inst')">🏫 מוסד ורישוי</button>
+      <button class="settings-tab-btn active" data-tab="tab-inst" onclick="switchSettingsTab('tab-inst')">🏫 פרטי מוסד</button>
+      <button class="settings-tab-btn" data-tab="tab-license" onclick="switchSettingsTab('tab-license')">🔑 רישיון</button>
       <button class="settings-tab-btn" data-tab="tab-audio" onclick="switchSettingsTab('tab-audio')">🔊 שמע ומראה</button>
       <button class="settings-tab-btn" data-tab="tab-boards" onclick="switchSettingsTab('tab-boards')">📅 לוחות שמורים</button>
       <button class="settings-tab-btn" data-tab="tab-io" onclick="switchSettingsTab('tab-io')">📥 ייבוא / ייצוא</button>
@@ -778,19 +794,20 @@
       <div class="field"><label>שפת ממשק</label>
         <select id="s-lang"><option value="he">עברית</option><option value="en">English</option></select></div>
       <hr>
-      <div class="field"><label>מפתח רישיון</label><input type="text" id="s-license-key"></div>
-      <div class="field"><label>סטטוס רישיון</label>
-        <select id="s-license-status">
-          <option value="פעיל בתוקף">🟢 פעיל בתוקף (המערכת פעילה)</option>
-          <option value="לא בתוקף">🔴 לא בתוקף (ההשמעה תושבת אוטומטית)</option>
-        </select></div>
-      <div class="field"><label>סטטוס תשלום (מידע בלבד, ללא אכיפה אוטומטית כרגע)</label><input type="text" id="s-payment"></div>
-      <hr>
       <div class="field"><label>סיסמת עריכה (בלי סיסמה - כל אחד יכול לערוך)</label>
         <input type="password" id="s-new-password" placeholder="סיסמה חדשה - השאר ריק כדי לא לשנות">
         <button type="button" class="btn-ghost btn-small" id="btn-remove-password" style="margin-top:6px"
           onclick="removeEditPassword()">🔓 ביטול הסיסמה (כניסה לעריכה בלי סיסמה)</button></div>
       <button class="btn-primary" onclick="saveInstitutionSettings()">💾 שמור הגדרות</button>
+    </div>
+
+    <div class="settings-pane" id="tab-license">
+      <div class="lic-box" id="lic-box"></div>
+      <div class="lic-facts" id="lic-facts"></div>
+      <div class="field"><label>קוד הפעלה מהספק (למחשב בלי חיבור למרכז הבקרה)</label>
+        <textarea id="lic-code" placeholder="ER1...." spellcheck="false"></textarea>
+        <div class="hint">מחשב שמחובר לאינטרנט מקבל את הרישיון לבד, תוך דקה. אין צורך בקוד.</div></div>
+      <button class="btn-primary" id="lic-activate" onclick="activateLicense()">🔑 הפעלה</button>
     </div>
 
     <div class="settings-pane" id="tab-audio">
@@ -841,7 +858,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CLIENT_VERSION = "2026.10.13-4";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
+const CLIENT_VERSION = "2026.10.13-5";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
 const RESTART_HINT = "יש לסגור את חלון הניהול ולהריץ שוב את start_all.bat (הוא עוצר את העותקים הישנים ומפעיל מחדש).";
 const DAY_ORDER = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const DAY_HEB   = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
@@ -1092,9 +1109,10 @@ function render() {
     statusText = lampMode === "today" ? `מושבת היום · יחזור ב-${pad2(back.getDate())}/${pad2(back.getMonth() + 1)}` : "מושבת עד הפעלה ידנית";
     statusTitle = lampMode === "today" ? `מושבת להיום בלבד (${ddmm(schedule.disabled_date)}) - יחזור לפעול אוטומטית ב-${pad2(back.getDate())}/${pad2(back.getMonth() + 1)}` : "מושבת עד הפעלה ידנית (לחיצה על הירוק ברמזור)";
   }
-  if (schedule.institution_info && schedule.institution_info.license_status !== "פעיל בתוקף") {
-    statusText = "רישיון לא בתוקף"; statusTitle = "רישיון לא בתוקף - ההשמעה מושבתת"; blocked = true; lampMode = "indefinite";
+  if (schedule.license && schedule.license.blocked) {
+    statusText = "רישיון לא בתוקף"; statusTitle = schedule.license.message || "רישיון לא בתוקף - ההשמעה מושבתת"; blocked = true; lampMode = "indefinite";
   }
+  renderLicenseBanner();
   document.querySelectorAll("#traffic .lamp").forEach(l => l.classList.toggle("on", l.dataset.mode === lampMode));
   const pill = document.getElementById("status-pill");
   pill.textContent = statusText; pill.title = statusTitle;
@@ -2162,8 +2180,7 @@ async function jumpToHistory(stepsBack) {
 // ---------------- הגדרות (סגירה ב-✕/לחיצה בחוץ שומרת שינויים) ----------------
 let selectedThemeKey = "classic", settingsSnapshot = null;
 const INST_FIELDS = { name: "s-name", contact: "s-contact", phone: "s-phone", email: "s-email", country: "s-country",
-  state: "s-state", city: "s-city", region: "s-region", address: "s-address", interface_language: "s-lang",
-  license_key: "s-license-key", license_status: "s-license-status", payment_status: "s-payment" };
+  state: "s-state", city: "s-city", region: "s-region", address: "s-address", interface_language: "s-lang" };
 function selectTheme(key) {
   selectedThemeKey = key;
   document.querySelectorAll(".theme-swatch").forEach(el => el.classList.toggle("selected", el.dataset.theme === key));
@@ -2174,7 +2191,8 @@ function readAppearanceForm() {
 }
 async function openSettings() {
   const info = schedule.institution_info || {};
-  Object.entries(INST_FIELDS).forEach(([k, id]) => { document.getElementById(id).value = info[k] ?? (k === "license_status" ? "פעיל בתוקף" : ""); });
+  Object.entries(INST_FIELDS).forEach(([k, id]) => { document.getElementById(id).value = info[k] ?? ""; });
+  renderLicensePane();
   if (!info.interface_language) document.getElementById("s-lang").value = "he";
   document.getElementById("s-new-password").value = "";
   selectTheme((schedule.appearance || {}).theme || "classic");
@@ -2195,6 +2213,46 @@ function switchSettingsTab(tabId) {
   document.querySelectorAll(".settings-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
   document.querySelectorAll(".settings-pane").forEach(p => p.classList.toggle("active", p.id === tabId));
   if (tabId === "tab-boards") refreshBoards();
+  if (tabId === "tab-license") renderLicensePane();
+}
+
+// ---------------- רישיון (טוקן חתום ממרכז הבקרה; לא ניתן לעריכה כאן) ----------------
+function fmtIsoDate(iso) { if (!iso) return "—"; const [y, m, d] = String(iso).slice(0, 10).split("-"); return `${d}/${m}/${y}`; }
+const LIC_STATUS_HEB = { active: "פעיל", trial: "ניסיון", expired: "פג תוקף", suspended: "מושעה" };
+function renderLicenseBanner() {
+  const b = document.getElementById("license-banner");
+  const L = (schedule && schedule.license) || {};
+  let text = "", level = "";
+  if (["warning", "grace", "blocked", "no_license"].includes(L.state)) { text = L.message; level = L.level === "danger" ? "danger" : "warning"; }
+  if (L.payment_overdue) { text = text ? text + " · קיים תשלום פתוח מול ספק המערכת" : "קיים תשלום פתוח מול ספק המערכת. נא להסדיר מול הספק."; level = level || "warning"; }
+  if (!text) { b.className = ""; b.textContent = ""; return; }
+  b.className = "show " + level;
+  b.innerHTML = (level === "danger" ? "⛔ " : "⚠ ") + escapeHtml(text) + (["grace", "blocked", "no_license"].includes(L.state) ? `<span class="lb-act">להזנת קוד הפעלה</span>` : "");
+}
+function renderLicensePane() {
+  const L = (schedule && schedule.license) || {};
+  const box = document.getElementById("lic-box");
+  box.className = "lic-box " + (L.level === "danger" ? "danger" : L.level === "ok" ? "ok" : "warning");
+  box.textContent = (L.level === "ok" ? "✔ " : L.level === "danger" ? "⛔ " : "⚠ ") + (L.message || "—");
+  const src = { cloud: "התקבל אוטומטית ממרכז הבקרה", manual: "קוד הפעלה ידני" }[L.source] || "—";
+  const rows = [["קוד לקוח", L.customer_code || "—"], ["סוג", LIC_STATUS_HEB[L.status] || (L.state === "no_license" ? "ללא רישיון (ניסיון)" : "—")],
+    ["בתוקף עד", L.expires ? fmtIsoDate(L.expires) : (L.status ? "ללא הגבלה" : "—")], ["מקור", src],
+    ["עודכן", L.received ? fmtIsoDate(L.received) + " " + String(L.received).slice(11, 16) : "—"]];
+  if (L.payment_overdue) rows.push(["תשלום", "קיים תשלום פתוח"]);
+  if (L.token_error) rows.push(["שגיאה", L.token_error]);
+  document.getElementById("lic-facts").innerHTML = rows.map(([k, v]) => `<b>${k}</b><span>${escapeHtml(v)}</span>`).join("");
+  document.getElementById("lic-activate").disabled = !canEdit();
+}
+async function openLicenseTab() { await openSettings(); switchSettingsTab("tab-license"); }
+async function activateLicense() {
+  const code = document.getElementById("lic-code").value.trim();
+  if (!code) { showToast("הדביקו את קוד ההפעלה שקיבלתם מהספק"); return; }
+  const { ok, data } = await api("/api/license/activate", "POST", { code });
+  if (!ok) { showToast((data && data.error) || "הקוד לא התקבל"); return; }
+  document.getElementById("lic-code").value = "";
+  schedule.license = data.license; renderLicensePane(); renderLicenseBanner();
+  showToast("✔ " + (data.license.message || "הרישיון הופעל"));
+  fetchSchedule();
 }
 
 // ---------------- לוחות שמורים ----------------

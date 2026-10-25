@@ -732,7 +732,7 @@ async function openCustomer(id, silent) {
           <div class="facts">
             <div class="fact"><div class="f-l">מנוע השמעה</div>${yes(p.engine_alive, "רץ", "לא רץ")}</div>
             <div class="fact"><div class="f-l">מצב מערכת</div><div class="f-v ${p.system_status === "disabled" ? "warnc" : ""}">${sys}</div></div>
-            <div class="fact"><div class="f-l">רישיון במחשב</div>${yes(p.license_valid, "תקף", "לא תקף")}</div>
+            <div class="fact"><div class="f-l">רישיון במחשב</div>${pcLicense(p)}</div>
             <div class="fact"><div class="f-l">האירוע הבא</div><div class="f-v">${p.next_event ? `<span class="num">${esc(p.next_event.time)}</span> ${esc(p.next_event.label || "")}` : "—"}</div></div>
             <div class="fact"><div class="f-l">אירועים היום / בשבוע</div><div class="f-v num">${p.events_today ?? "—"} / ${p.events_week ?? "—"}</div></div>
             <div class="fact"><div class="f-l">סטיית שעון</div><div class="f-v num ${driftCls}">${typeof drift === "number" ? (drift > 0 ? "+" : "") + drift + " שנ'" : "—"}</div></div>
@@ -768,14 +768,18 @@ async function openCustomer(id, silent) {
           <div></div>
           <div class="field span3"><label>הערות</label><textarea name="notes" ${owner ? "" : "disabled"}>${esc(c.notes || "")}</textarea></div>
         </div>
-        <div class="panel-b"><div class="notice warn" style="font-size:12px">בשלב זה הרישיון והתשלום כאן הם לניהול ומעקב בלבד. המחשב בבית הספר מקבל את המצב בכל דיווח, אבל עדיין לא חוסם לפיו.</div></div>
+        <div class="panel-b"><div class="notice info" style="font-size:12px;line-height:1.6">המחשב מקבל את הרישיון החתום בדיווח הבא (תוך דקה).
+          14 יום לפני התפוגה מופיעה אזהרה בבית הספר; אחרי התפוגה 7 ימי חסד עם פס אדום, ואז הצלצולים נחסמים.
+          <b>מושעה</b> = חסימה מיידית. תשלום באיחור = הודעה בבית הספר בלבד, בלי חסימה.
+          מחשב בלי אינטרנט: "קוד הפעלה ידני" למטה.</div></div>
       </form>
 
       ${owner ? `<div class="panel"><div class="panel-h">חיבור המחשב <span class="muted">· קוד לקוח ומפתח</span></div>
         <div class="panel-b" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span>קוד לקוח: <b class="mono">${esc(c.code)}</b></span>
           ${c.machine_id ? `<span class="muted">· מחשב: <span class="mono">${esc(c.machine_id)}</span></span>` : ""}
-          <button class="btn small" id="rotate" style="margin-inline-start:auto">הנפקת מפתח חדש</button>
+          <button class="btn small" id="act-code" style="margin-inline-start:auto">קוד הפעלה ידני</button>
+          <button class="btn small" id="rotate">הנפקת מפתח חדש</button>
         </div></div>` : ""}
 
       ${owner && c.feedback && c.feedback.length ? `<div class="panel"><div class="panel-h">משוב מהלקוח</div>
@@ -805,6 +809,12 @@ async function openCustomer(id, silent) {
     try { await api("/api/customers/" + id, { method: "PATCH", body: { status: "active" } }); toast("הלקוח אושר"); await refreshAll(); openCustomer(id, true); }
     catch (err) { toast(err.message, true); }
   };
+  const ac = $("#act-code");
+  if (ac) ac.onclick = async () => {
+    if ($("#cu-form").dataset.dirty === "1") return toast("יש שינויים שלא נשמרו ברישיון. שמור קודם", true);
+    try { showActivationModal(c.name, await api("/api/customers/" + id + "/activation-code", { method: "POST" })); await openCustomer(id, true); }
+    catch (err) { toast(err.message, true); }
+  };
   const rot = $("#rotate");
   if (rot) rot.onclick = () => confirmModal("הנפקת מפתח חדש",
     "המפתח הנוכחי יבוטל מיד, והמחשב בבית הספר יפסיק לדווח עד שיוזן בו המפתח החדש (בקובץ cloud_config.json). להמשיך?",
@@ -831,6 +841,28 @@ function confirmModal(title, text, okLabel, fn) {
     `<button class="btn primary" id="m-ok">${okLabel}</button><button class="btn" id="m-cancel">ביטול</button>`);
   $("#m-cancel", m).onclick = closeModal;
   $("#m-ok", m).onclick = async () => { try { await fn(); } catch (err) { toast(err.message, true); closeModal(); } };
+}
+const PC_LIC = { ok: ["good", "תקף"], warning: ["warnc", "יפוג בקרוב"], grace: ["bad", "תקופת חסד"],
+  blocked: ["bad", "חסום"], no_license: ["warnc", "אין רישיון"], error: ["warnc", "שגיאת בדיקה"] };
+function pcLicense(p) {
+  const L = p.license;
+  if (!L) return p.license_valid === false ? `<span class="f-v bad">לא תקף</span>` : `<span class="f-v muted">—</span>`;
+  const [cls, label] = PC_LIC[L.state] || ["muted", L.state || "—"];
+  const sub = L.block_date && ["grace", "no_license"].includes(L.state) ? `נחסם ב-${fmtDate(L.block_date)}` :
+    L.expires ? `עד ${fmtDate(L.expires)}` : (L.status ? "ללא הגבלה" : "");
+  return `<div class="f-v ${cls}">${label}</div>${sub ? `<div class="muted" style="font-size:11px;margin-top:3px">${esc(sub)}${L.source === "manual" ? " · קוד ידני" : ""}</div>` : ""}`;
+}
+function showActivationModal(name, r) {
+  const L = r.license || {};
+  const what = `${esc(state.meta.license_statuses[L.s] || L.s)}${L.e ? " עד " + fmtDate(L.e) : " ללא הגבלת זמן"}`;
+  const m = modal("קוד הפעלה ידני · " + esc(name), `
+    <div class="notice info" style="line-height:1.6">לבית ספר שהמחשב שלו לא מגיע למרכז הבקרה. בממשק המערכת: <b>הגדרות ← 🔑 רישיון</b>, מדביקים ולוחצים "הפעלה".
+      הקוד חתום, מתאים רק ללקוח <span class="mono">${esc(r.code)}</span>, ומשקף את הרישיון כפי שהוא עכשיו: <b>${what}</b>.
+      אם תשנה את הרישיון אחר כך - צריך קוד חדש.</div>
+    <div class="keybox" id="act" style="word-break:break-all;white-space:pre-wrap;direction:ltr;text-align:left">${esc(r.activation_code)}</div>`,
+    `<button class="btn primary" id="m-copy">העתקה</button><button class="btn" id="m-close">סגירה</button>`);
+  $("#m-copy", m).onclick = () => { navigator.clipboard.writeText(r.activation_code).then(() => toast("הועתק"), () => toast("ההעתקה נכשלה. סמן והעתק ידנית", true)); };
+  $("#m-close", m).onclick = closeModal;
 }
 function showKeyModal(name, r) {
   const m = modal("פרטי חיבור · " + esc(name), `
@@ -1044,7 +1076,7 @@ $("#releases").addEventListener("click", async e => {
 // ======================================================================= יומן
 const AUDIT_LABEL = { release_upload: "גרסה הועלתה", release_target: "גרסה נשלחה", release_cancel: "עדכון בוטל",
   release_withdraw: "גרסה בוטלה", update_installed: "עדכון הותקן", update_failed: "עדכון נכשל", update_rolled_back: "עדכון חזר לאחור",
-  customer_create: "לקוח נוצר", customer_update: "עדכון לקוח", rotate_key: "מפתח חדש", network_create: "רשת נוצרה",
+  customer_create: "לקוח נוצר", customer_update: "עדכון לקוח", rotate_key: "מפתח חדש", activation_code: "קוד הפעלה", network_create: "רשת נוצרה",
   user_create: "משתמש נוצר", feedback_status: "משוב", agent_register: "רישום מהתקנה", setup: "הגדרה ראשונה" };
 async function loadAudit() {
   const { audit } = await api("/api/audit");

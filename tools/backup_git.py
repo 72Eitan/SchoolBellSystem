@@ -4,7 +4,7 @@ backup_git.py  -  גיבוי הפרויקט: commit ב-Git המקומי + העל
 מופעל ע"י backup_git.bat (בתיקיית הפרויקט). מבקש תיאור לגיבוי (אפשר להדביק את התיאור המוכן
 ש-Claude נותן אחרי כל עדכון), שומר את כל השינויים ב-commit ומעלה ל-GitHub (origin).
 
-התיאור נשמר ב-UTF-8 דרך קובץ זמני, כך שעברית נשמרת נכון (העברה דרך cmd הייתה משבשת אותה).
+ההודעות בחלון באנגלית: גופן ה-cmd לא מציג עברית (נראית כריבועים). התיאור עצמו נשמר ב-UTF-8 דרך קובץ זמני, כך שעברית נשמרת נכון (העברה דרך cmd הייתה משבשת אותה).
 """
 
 import os
@@ -23,54 +23,54 @@ def git(*args, capture=True):
 
 def pause():
     try:
-        input("\nלחץ Enter לסגירה...")
+        input("\nPress Enter to close...")
     except EOFError:
         pass
 
 
 def main():
     print("=" * 50)
-    print("  גיבוי הפרויקט ל-Git ול-GitHub")
+    print("  Project backup: Git + GitHub")
     print("  " + ROOT)
     print("=" * 50)
 
     try:
         r = git("rev-parse", "--abbrev-ref", "HEAD")
     except FileNotFoundError:
-        print("\nשגיאה: Git לא מותקן או לא נמצא ב-PATH.")
-        print("מתקינים מ- https://git-scm.com/download/win ומפעילים שוב.")
+        print("\nERROR: Git is not installed or not in PATH.")
+        print("Install it from https://git-scm.com/download/win and run again.")
         return 1
     if r.returncode != 0:
-        print("\nשגיאה: התיקייה הזו אינה מאגר Git.\n" + r.stderr)
+        print("\nERROR: this folder is not a Git repository.\n" + r.stderr)
         return 1
     branch = r.stdout.strip()
-    print("\nענף: " + branch)
+    print("\nBranch: " + branch)
 
     status = git("status", "--short").stdout.strip()
     if status:
         lines = status.splitlines()
-        print("\nקבצים ששונו (%d):" % len(lines))
+        print("\nChanged files (%d):" % len(lines))
         for line in lines[:40]:
             print("  " + line)
         if len(lines) > 40:
-            print("  ... ועוד %d" % (len(lines) - 40))
+            print("  ... and %d more" % (len(lines) - 40))
     else:
-        print("\nאין שינויים חדשים לשמירה.")
+        print("\nNo new changes to save.")
 
     committed = False
     if status:
-        print("\nהקלד או הדבק תיאור לגיבוי ולחץ Enter")
-        print("(Enter בלי תיאור = \"גיבוי + תאריך\"):")
+        print("\nType or paste a description (Hebrew is fine - it is saved correctly")
+        print("even if it looks like boxes here) and press Enter. Empty = date only:")
         try:
             msg = input("> ").strip()
         except EOFError:
             msg = ""
         if not msg:
-            msg = "גיבוי " + datetime.now().strftime("%d/%m/%Y %H:%M")
+            msg = "Backup " + datetime.now().strftime("%d/%m/%Y %H:%M")
 
         r = git("add", "-A")
         if r.returncode != 0:
-            print("\nשגיאה ב-git add:\n" + r.stderr)
+            print("\nERROR in git add:\n" + r.stderr)
             return 1
         fd, path = tempfile.mkstemp(suffix=".txt")
         try:
@@ -80,23 +80,23 @@ def main():
         finally:
             os.remove(path)
         if r.returncode != 0:
-            print("\nשגיאה ב-commit:\n" + (r.stdout + r.stderr).strip())
+            print("\nERROR in commit:\n" + (r.stdout + r.stderr).strip())
             if "user.email" in r.stderr or "identity" in r.stderr.lower():
-                print('\nצריך להגדיר פעם אחת שם ומייל ל-Git:\n'
-                      '  git config --global user.name "השם שלך"\n'
-                      '  git config --global user.email "המייל שלך"')
+                print('\nSet your Git name and email once:\n'
+                      '  git config --global user.name "Your Name"\n'
+                      '  git config --global user.email "you@example.com"')
             return 1
         committed = True
-        print("\nנשמר ב-Git המקומי: " + git("log", "-1", "--format=%h  %s").stdout.strip())
+        print("\nSaved in local Git: commit " + git("log", "-1", "--format=%h").stdout.strip())
 
-    print("\nמעלה ל-GitHub...")
+    print("\nUploading to GitHub...")
     r = git("push", "origin", "HEAD", capture=False)      # בלי capture - כדי שחלון ההתחברות של GitHub יוכל להופיע
     if r.returncode != 0:
-        print("\nההעלאה ל-GitHub נכשלה." + (" הגיבוי המקומי נשמר." if committed else ""))
-        print("סיבות נפוצות: אין אינטרנט, צריך להתחבר ל-GitHub, או שב-GitHub יש שינויים שאין כאן")
-        print("(אז מריצים: git pull  ואחר כך שוב backup_git.bat).")
+        print("\nUpload to GitHub FAILED." + (" The local backup was saved." if committed else ""))
+        print("Common reasons: no internet, GitHub sign-in needed, or GitHub has changes that are not here")
+        print("(then run: git pull  and run backup_git.bat again).")
         return 1
-    print("\nהגיבוי הושלם: Git מקומי + GitHub.")
+    print("\nBACKUP COMPLETE: local Git + GitHub.")
     return 0
 
 

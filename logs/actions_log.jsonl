@@ -347,3 +347,14 @@
 {"id": "a3312c233a", "timestamp": "2026-10-13T12:13:54", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
 {"id": "3105d323ed", "timestamp": "2026-10-13T12:14:29", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
 {"id": "5e249a716b", "timestamp": "2026-10-13T12:17:01", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "ddf421fc53", "timestamp": "2026-10-14T16:38:26", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד", "user_role": "editor"}
+{"id": "faf49a544e", "timestamp": "2026-10-14T16:38:33", "action": "update_settings", "details": "עדכון הגדרות: פרטי מוסד", "user_role": "editor"}
+{"id": "f5c1048073", "timestamp": "2026-10-14T16:40:25", "action": "system_stop", "details": "חלון הניהול הראשי נסגר והעצירה אושרה - המערכת נעצרה (מנוע + שרת)", "user_role": "system"}
+{"id": "720292ad3d", "timestamp": "2026-10-15T09:51:43", "action": "edit_event", "details": "עריכת אירוע, ראשון, שני, שלישי, רביעי, חמישי, שישי, 08:53 · תזכורת 2 דק'", "user_role": "editor"}
+{"id": "7e734130bf", "timestamp": "2026-10-19T11:52:19", "action": "quick_edit_event", "details": "הגברת עוצמה (85%→100%), שני, 12:15 · הפסקה", "user_role": "editor"}
+{"id": "4db3b7eeaf", "timestamp": "2026-10-19T11:52:25", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "editor"}
+{"id": "a5dd5b2e11", "timestamp": "2026-10-19T11:52:33", "action": "edit_event", "details": "הגברת עוצמה (85%→100%), ראשון, שני, שלישי, רביעי, חמישי, שישי, 12:15 · הפסקה", "user_role": "editor"}
+{"id": "34df38a27d", "timestamp": "2026-10-19T11:52:38", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "editor"}
+{"id": "d0cfe9f287", "timestamp": "2026-10-19T12:00:53", "action": "edit_event", "details": "הגברת עוצמה (85%→100%), ראשון, שני, שלישי, רביעי, חמישי, שישי, 11:30 · שיעור 4 מעבר", "user_role": "editor"}
+{"id": "a5ae2c60bb", "timestamp": "2026-10-19T12:00:57", "action": "undo", "details": "שוחזר מצב קודם (1 צעדים אחורה)", "user_role": "editor"}
+{"id": "e2eeef635c", "timestamp": "2026-10-19T12:01:17", "action": "edit_event", "details": "הגברת עוצמה (85%→100%), ראשון, שני, שלישי, רביעי, חמישי, שישי, 12:15 · הפסקה", "user_role": "editor"}

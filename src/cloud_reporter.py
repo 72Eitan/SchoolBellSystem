@@ -168,7 +168,8 @@ def schedule_status(data, now):
     out.update({
         "system_status": status,
         "disabled_scope": scope if status == "disabled" else None,
-        "license_valid": info.get("license_status") == VALID_LICENSE_VALUE,
+        "license_valid": not license_info().get("blocked", False),
+        "license": license_info(),
         "institution_name": info.get("name") or "",
         "audio_device": info.get("audio_device") or "",
     })
@@ -205,6 +206,41 @@ def schedule_status(data, now):
                 missing.add(os.path.basename(str(ev["audio"]).replace("\\", "/").rstrip("/")))
     out["missing_audio"] = sorted(missing)[:20]
     return out
+
+
+def license_info():
+    """מצב הרישיון החתום במחשב (license_check.py), בקיצור - לדשבורד."""
+    try:
+        import license_check
+        st = license_check.current_state()
+        out = {k: st.get(k) for k in ("state", "blocked", "status", "expires", "block_date", "days_left",
+                                      "payment_overdue", "source", "token_error", "error") if st.get(k) is not None}
+        if _last_reject["msg"]:
+            out["token_error"] = "הרישיון האחרון ממרכז הבקרה נדחה: " + _last_reject["msg"]
+        return out
+    except Exception as e:
+        return {"state": "error", "error": str(e)}
+
+
+_last_reject = {"msg": ""}
+
+
+def apply_license(resp):
+    """שומר את הרישיון החתום מתשובת מרכז הבקרה. מפתח האימות נשמר רק אם עוד אין (בפעם הראשונה)."""
+    try:
+        import license_check
+        if resp.get("license_public_key") and license_check.save_public_key_if_missing(resp["license_public_key"]):
+            log.info("נשמר מפתח האימות של רישיונות ממרכז הבקרה")
+        token = resp.get("license_token")
+        if token:
+            ok, msg, _ = license_check.install_token(token, "cloud")
+            _last_reject["msg"] = "" if ok else msg
+            if not ok:
+                log.warning("רישיון ממרכז הבקרה נדחה: %s", msg)
+            elif msg != "הרישיון כבר מותקן":
+                log.info("רישיון עודכן ממרכז הבקרה: %s", msg)
+    except Exception as e:
+        log.exception("שמירת הרישיון נכשלה: %s", e)
 
 
 LOG_LINE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),\d+ - (ERROR|CRITICAL) - (.*)")
@@ -600,6 +636,7 @@ def send_heartbeat(cfg):
     status = build_status()
     code, resp = post(cfg, "/api/agent/heartbeat", {"status": status})
     if code == 200:
+        apply_license(resp)
         write_json(STATE_FILE, {"last_ok": datetime.now().isoformat(timespec="seconds"),
                                 "license": resp.get("license"), "latest_version": resp.get("latest_version"),
                                 "server_time_utc": resp.get("server_time_utc")})
@@ -630,6 +667,11 @@ def main():
         log.error("עותק אחר של cloud_reporter כבר רץ. יוצא.")
         return 1
     interval = max(20, int(cfg.get("interval_seconds") or 60))
+    try:
+        import license_check
+        license_check.ensure_first_run()
+    except Exception as e:
+        log.warning("license.json: %s", e)
     log.info("מדווח למרכז הבקרה %s כל %d שניות", cfg["server_url"], interval)
     failures = 0
     while True:
