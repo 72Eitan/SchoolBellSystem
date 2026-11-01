@@ -138,7 +138,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "5674780f0c50",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",
@@ -444,7 +445,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "a1ebfdd38c5c",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",
@@ -798,7 +800,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "2ed3355c9cfb",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",
@@ -1154,7 +1157,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "3d4cc5d4cbb2",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",
@@ -1477,7 +1481,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "d8bfd63dca87",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",
@@ -1797,7 +1802,8 @@
                 "time": "11:30:00",
                 "type": "Bell",
                 "uid": "3365b63df2cf",
-                "volume": 85
+                "volume": 85,
+                "shuffle": true
             },
             {
                 "audio": "bell_standard.mp3",

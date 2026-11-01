@@ -887,3 +887,310 @@ Hello from the pygame community. https://www.pygame.org/contribute.html
 2026-10-25 18:34:53,361 - INFO - === מנוע ההשמעה מופעל ===
 2026-10-25 18:34:53,727 - INFO - מנוע השמע אותחל בהצלחה (התקן: אוזניות (Realtek(R) Audio)).
 2026-10-25 18:34:53,869 - INFO - מדלג על אירועים שכבר עברו את שעתם היום (לפני 18:34:53) כדי לא להציף בהשמעות בהפעלה.
+
+===== 2026-10-25 19:16:50  הפעלה =====
+pygame 2.6.1 (SDL 2.28.4, Python 3.13.1)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+2026-10-25 19:16:50,592 - INFO - === מנוע ההשמעה מופעל ===
+2026-10-25 19:16:50,640 - INFO - מנוע השמע אותחל בהצלחה (התקן: אוזניות (Realtek(R) Audio)).
+2026-10-25 19:16:50,649 - INFO - מדלג על אירועים שכבר עברו את שעתם היום (לפני 19:16:50) כדי לא להציף בהשמעות בהפעלה.
+2026-10-26 00:00:00,767 - INFO - יום חדש (2026-10-26) - מאפס מעקב אירועים שנוגנו.
+2026-10-26 07:30:00,673 - INFO - מנגן: 'שעת 0' | שעה 07:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 07:30:17,720 - INFO - 'שעת 0': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 07:58:00,650 - INFO - מנגן: 'תפילה' | שעה 07:58:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 07:58:17,704 - INFO - 'תפילה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 08:53:00,487 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 08:53:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 08:53:08,543 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 08:55:00,107 - INFO - מנגן: 'שיעור 1' | שעה 08:55:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 08:55:17,173 - INFO - 'שיעור 1': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 09:40:00,432 - INFO - מנגן: 'שיעור 2' | שעה 09:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 09:40:08,490 - INFO - 'שיעור 2': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 10:43:00,703 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 10:43:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 10:43:08,727 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 10:45:00,143 - INFO - מנגן: 'שיעור 3' | שעה 10:45:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 10:45:17,216 - INFO - 'שיעור 3': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 11:30:00,470 - INFO - מנגן: 'שיעור 4 מעבר' | שעה 11:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 11:30:13,521 - INFO - 'שיעור 4 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 12:15:00,447 - INFO - מנגן: 'הפסקה' | שעה 12:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 12:15:17,495 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 12:28:00,103 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 12:28:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 90% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 12:28:08,127 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 12:30:00,528 - INFO - מנגן: 'שיעור 5' | שעה 12:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 12:30:17,581 - INFO - 'שיעור 5': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 13:15:00,449 - INFO - מנגן: 'שינוי - שיעור 6 מעבר' | שעה 13:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 13:15:13,490 - INFO - 'שינוי - שיעור 6 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 14:00:00,738 - INFO - מנגן: 'תפילת מנחה' | שעה 14:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 14:00:13,797 - INFO - 'תפילת מנחה': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 14:20:00,731 - INFO - מנגן: 'שיעור 6' | שעה 14:20:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 14:20:17,782 - INFO - 'שיעור 6': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 15:00:00,857 - INFO - מנגן: 'שיעור 8 מעבר' | שעה 15:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 15:00:13,908 - INFO - 'שיעור 8 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 15:40:00,763 - INFO - מנגן: 'הפסקה' | שעה 15:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 15:40:17,813 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 15:48:00,403 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 15:48:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 15:48:13,440 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-26 15:50:00,818 - INFO - מנגן: 'שיעור 9' | שעה 15:50:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 15:50:17,873 - INFO - 'שיעור 9': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 16:30:00,572 - INFO - מנגן: 'סוף יום' | שעה 16:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-26 16:30:17,630 - INFO - 'סוף יום': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-26 17:25:18,188 - INFO - מנגן: 'אירוע חדש' | שעה 17:25:18 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 30s | loop=True | fade_in=2.0s | fade_out=2.0s
+2026-10-26 17:25:46,270 - INFO - 'אירוע חדש': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 00:00:00,968 - INFO - יום חדש (2026-10-27) - מאפס מעקב אירועים שנוגנו.
+2026-10-27 07:30:00,103 - INFO - מנגן: 'שעת 0' | שעה 07:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 07:30:17,145 - INFO - 'שעת 0': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 07:58:00,059 - INFO - מנגן: 'תפילה' | שעה 07:58:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 07:58:17,101 - INFO - 'תפילה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 08:53:00,746 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 08:53:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 08:53:08,765 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (2.0 שנ' עד הסיום).
+2026-10-27 08:55:00,040 - INFO - מנגן: 'שיעור 1' | שעה 08:55:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 08:55:17,080 - INFO - 'שיעור 1': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 09:25:26,276 - INFO - מנגן: 'בדיקה !!!!' | שעה 09:25:26 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 30s | loop=True | fade_in=2.0s | fade_out=2.0s
+2026-10-27 09:25:54,346 - INFO - 'בדיקה !!!!': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 09:40:00,328 - INFO - מנגן: 'שיעור 2' | שעה 09:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 09:40:08,347 - INFO - 'שיעור 2': מתחיל fade-out (2.0 שנ' עד הסיום).
+2026-10-27 10:43:00,113 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 10:43:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 10:43:08,131 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (2.0 שנ' עד הסיום).
+2026-10-27 10:45:00,397 - INFO - מנגן: 'שיעור 3' | שעה 10:45:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 10:45:17,438 - INFO - 'שיעור 3': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 11:30:00,709 - INFO - מנגן: 'שיעור 4 מעבר' | שעה 11:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 11:30:13,739 - INFO - 'שיעור 4 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 12:15:00,499 - INFO - מנגן: 'הפסקה' | שעה 12:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 12:15:17,552 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 12:28:00,369 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 12:28:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 90% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 12:28:08,407 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 12:30:00,878 - INFO - מנגן: 'שיעור 5' | שעה 12:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 12:30:17,942 - INFO - 'שיעור 5': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 13:15:00,220 - INFO - מנגן: 'שינוי - שיעור 6 מעבר' | שעה 13:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 13:15:13,257 - INFO - 'שינוי - שיעור 6 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 14:00:00,197 - INFO - מנגן: 'תפילת מנחה' | שעה 14:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 14:00:13,243 - INFO - 'תפילת מנחה': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 14:20:00,928 - INFO - מנגן: 'שיעור 6' | שעה 14:20:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 14:20:17,986 - INFO - 'שיעור 6': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 15:00:00,226 - INFO - מנגן: 'שיעור 8 מעבר' | שעה 15:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 15:00:13,276 - INFO - 'שיעור 8 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 15:40:01,022 - INFO - מנגן: 'הפסקה' | שעה 15:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 15:40:18,075 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 15:48:00,727 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 15:48:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 15:48:13,797 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-27 15:50:00,464 - INFO - מנגן: 'שיעור 9' | שעה 15:50:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 15:50:17,522 - INFO - 'שיעור 9': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 16:30:00,235 - INFO - מנגן: 'סוף יום' | שעה 16:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-27 16:30:17,294 - INFO - 'סוף יום': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-27 17:11:14,520 - INFO - מתחיל השמעה מתיקייה (אקראית): 'שלישי - בדיקה - שלישי' | שעה 17:11:14 | תיקייה 'D:\Projects\SchoolBellSystem\audio\Music' (7 קבצים) | משך כולל 330s | fade_in=4.0s | fade_out=4.0s
+2026-10-27 17:11:14,528 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:11:14,561 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:11:18,619 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:11:23,658 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:11:27,710 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:11:34,757 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:11:38,829 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:11:44,894 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:11:50,912 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:11:50,931 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:11:54,971 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:12:01,023 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:12:07,056 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:12:11,094 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:12:16,140 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:12:23,183 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:12:27,204 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:12:27,224 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:12:33,265 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:12:39,306 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:12:43,330 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:12:47,364 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:12:54,413 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:12:59,442 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:13:03,458 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:13:03,491 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:13:10,550 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:13:16,591 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:13:20,630 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:13:26,673 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:13:31,705 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:13:35,731 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:13:39,750 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:13:39,763 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:13:43,800 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:13:50,846 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:13:56,883 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:14:01,913 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:14:05,943 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:14:11,977 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:14:15,989 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:14:16,017 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:14:23,068 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:14:29,111 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:14:34,140 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:14:38,181 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:14:44,216 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:14:48,246 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:14:52,259 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:14:52,290 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:14:59,352 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:15:03,400 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:15:09,449 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:15:13,481 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:15:17,513 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:15:23,561 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:15:28,582 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:15:28,615 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:15:35,658 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:15:41,701 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:15:46,732 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-27 17:15:50,762 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:15:54,791 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:16:00,819 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:16:04,828 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-27 17:16:04,849 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled2.mp3'
+2026-10-27 17:16:10,883 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled1.mp3'
+2026-10-27 17:16:15,915 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled3.mp3'
+2026-10-27 17:16:21,947 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled7.mp3'
+2026-10-27 17:16:25,988 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled4.mp3'
+2026-10-27 17:16:33,036 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled6.mp3'
+2026-10-27 17:16:37,074 - INFO - תיקיית שמע 'שלישי - בדיקה - שלישי': מנגן 'untitled5.mp3'
+2026-10-28 00:00:00,905 - INFO - יום חדש (2026-10-28) - מאפס מעקב אירועים שנוגנו.
+2026-10-28 07:30:00,377 - INFO - מנגן: 'שעת 0' | שעה 07:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 35% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 07:30:17,445 - INFO - 'שעת 0': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 07:58:00,217 - INFO - מנגן: 'תפילה' | שעה 07:58:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 07:58:17,265 - INFO - 'תפילה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 08:53:00,736 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 08:53:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 08:53:08,767 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 08:55:00,294 - INFO - מנגן: 'שיעור 1' | שעה 08:55:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 08:55:17,382 - INFO - 'שיעור 1': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 09:40:00,295 - INFO - מנגן: 'שיעור 2' | שעה 09:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 09:40:08,320 - INFO - 'שיעור 2': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 10:43:00,917 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 10:43:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 10:43:08,938 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 10:45:00,287 - INFO - מנגן: 'שיעור 3' | שעה 10:45:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 10:45:17,367 - INFO - 'שיעור 3': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 11:30:00,285 - INFO - מנגן: 'שיעור 4 מעבר' | שעה 11:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 11:30:13,320 - INFO - 'שיעור 4 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 12:15:00,395 - INFO - מנגן: 'הפסקה' | שעה 12:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 12:15:17,472 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 12:28:00,829 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 12:28:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 90% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 12:28:08,861 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 12:30:00,296 - INFO - מנגן: 'שיעור 5' | שעה 12:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 12:30:17,345 - INFO - 'שיעור 5': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 13:15:00,775 - INFO - מנגן: 'שינוי - שיעור 6 מעבר' | שעה 13:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 13:15:13,814 - INFO - 'שינוי - שיעור 6 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 14:00:00,804 - INFO - מנגן: 'תפילת מנחה' | שעה 14:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 14:00:13,847 - INFO - 'תפילת מנחה': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 14:20:00,646 - INFO - מנגן: 'שיעור 6' | שעה 14:20:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 14:20:17,687 - INFO - 'שיעור 6': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 15:00:00,353 - INFO - מנגן: 'שיעור 8 מעבר' | שעה 15:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 15:00:13,383 - INFO - 'שיעור 8 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 15:10:35,301 - INFO - מתחיל השמעה מתיקייה (אקראית): '!!!  בדיקת מוסיקה  !!!!' | שעה 15:10:35 | תיקייה 'D:\Projects\SchoolBellSystem\audio\Music' (7 קבצים) | משך כולל 120s | fade_in=4.0s | fade_out=4.0s
+2026-10-28 15:10:35,304 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-28 15:10:35,335 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled3.mp3'
+2026-10-28 15:10:41,381 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled2.mp3'
+2026-10-28 15:10:47,426 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled5.mp3'
+2026-10-28 15:10:51,456 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled6.mp3'
+2026-10-28 15:10:55,488 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled1.mp3'
+2026-10-28 15:11:00,539 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled7.mp3'
+2026-10-28 15:11:04,578 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled4.mp3'
+2026-10-28 15:11:11,598 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-28 15:11:11,620 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled7.mp3'
+2026-10-28 15:11:15,651 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled4.mp3'
+2026-10-28 15:11:22,689 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled3.mp3'
+2026-10-28 15:11:28,724 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled1.mp3'
+2026-10-28 15:11:33,752 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled6.mp3'
+2026-10-28 15:11:37,773 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled5.mp3'
+2026-10-28 15:11:41,805 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled2.mp3'
+2026-10-28 15:11:47,820 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-28 15:11:47,837 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled3.mp3'
+2026-10-28 15:11:53,871 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled1.mp3'
+2026-10-28 15:11:58,900 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled5.mp3'
+2026-10-28 15:12:02,924 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled7.mp3'
+2026-10-28 15:12:06,955 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled6.mp3'
+2026-10-28 15:12:10,991 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled2.mp3'
+2026-10-28 15:12:17,035 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled4.mp3'
+2026-10-28 15:12:24,056 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': סבב אקראי חדש (7 שירים, כל שיר פעם אחת)
+2026-10-28 15:12:24,074 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled5.mp3'
+2026-10-28 15:12:28,108 - INFO - תיקיית שמע '!!!  בדיקת מוסיקה  !!!!': מנגן 'untitled6.mp3'
+2026-10-28 15:40:00,172 - INFO - מנגן: 'הפסקה' | שעה 15:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 92% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 15:40:17,284 - INFO - 'הפסקה': מתחיל fade-out (1.3 שנ' עד הסיום).
+2026-10-28 15:48:00,150 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 15:48:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 15:48:13,192 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-28 15:50:00,529 - INFO - מנגן: 'שיעור 9' | שעה 15:50:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 15:50:17,582 - INFO - 'שיעור 9': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-28 16:30:00,807 - INFO - מנגן: 'סוף יום' | שעה 16:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-28 16:30:17,858 - INFO - 'סוף יום': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 00:00:00,799 - INFO - יום חדש (2026-10-29) - מאפס מעקב אירועים שנוגנו.
+2026-10-29 07:30:00,735 - INFO - מנגן: 'שעת 0' | שעה 07:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 07:30:17,783 - INFO - 'שעת 0': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 07:58:00,532 - INFO - מנגן: 'תפילה' | שעה 07:58:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 07:58:17,573 - INFO - 'תפילה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 08:53:00,227 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 08:53:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 08:53:08,334 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 08:55:00,828 - INFO - מנגן: 'שיעור 1' | שעה 08:55:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 08:55:17,892 - INFO - 'שיעור 1': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 09:40:00,099 - INFO - מנגן: 'שיעור 2' | שעה 09:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 09:40:08,158 - INFO - 'שיעור 2': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 09:40:21,198 - INFO - צלצול ידני / בדיקה מהממשק: 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' (עוצמה 85%)
+2026-10-29 09:40:21,221 - INFO - מנגן: 'צלצול ידני / בדיקה' | שעה 09:40:21 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=0.0s | fade_out=1.0s
+2026-10-29 09:40:22,230 - INFO - 'צלצול ידני / בדיקה' (צלצול) נעצר: עצירה מהממשק
+2026-10-29 10:43:00,541 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 10:43:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 10:43:08,570 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 10:45:01,000 - INFO - מנגן: 'שיעור 3' | שעה 10:45:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 10:45:18,072 - INFO - 'שיעור 3': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 11:30:00,994 - INFO - מנגן: 'שיעור 4 מעבר' | שעה 11:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 11:30:14,052 - INFO - 'שיעור 4 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 12:15:00,556 - INFO - מנגן: 'הפסקה' | שעה 12:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 12:15:17,599 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 12:28:00,271 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 12:28:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 90% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 12:28:08,299 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (2.0 שנ' עד הסיום).
+2026-10-29 12:30:00,535 - INFO - מנגן: 'שיעור 5' | שעה 12:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 12:30:17,570 - INFO - 'שיעור 5': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 13:15:00,426 - INFO - מנגן: 'שינוי - שיעור 6 מעבר' | שעה 13:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 13:15:13,474 - INFO - 'שינוי - שיעור 6 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 14:00:00,421 - INFO - מנגן: 'שיעור 6' | שעה 14:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 14:00:17,472 - INFO - 'שיעור 6': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 14:20:00,280 - INFO - מנגן: 'תפילת מנחה' | שעה 14:20:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 14:20:13,328 - INFO - 'תפילת מנחה': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 15:00:00,651 - INFO - מנגן: 'שיעור 8 מעבר' | שעה 15:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 15:00:13,818 - INFO - 'שיעור 8 מעבר': מתחיל fade-out (1.8 שנ' עד הסיום).
+2026-10-29 15:06:00,176 - INFO - מנגן: '!!! - ב ד י ק ה - !!!' | שעה 15:06:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\Tune 4.mp3' | עוצמה 66% | משך 30s | loop=True | fade_in=2.0s | fade_out=2.0s
+2026-10-29 15:06:28,285 - INFO - '!!! - ב ד י ק ה - !!!': מתחיל fade-out (1.8 שנ' עד הסיום).
+2026-10-29 15:40:00,477 - INFO - מנגן: 'הפסקה' | שעה 15:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 15:40:17,540 - INFO - 'הפסקה': מתחיל fade-out (1.4 שנ' עד הסיום).
+2026-10-29 15:48:00,311 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 15:48:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 15:48:13,359 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-10-29 15:50:00,755 - INFO - מנגן: 'שיעור 9' | שעה 15:50:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 15:50:17,831 - INFO - 'שיעור 9': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-29 16:30:00,599 - INFO - מנגן: 'סוף יום' | שעה 16:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-10-29 16:30:17,651 - INFO - 'סוף יום': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-10-30 17:37:45,159 - INFO - יום חדש (2026-10-30) - מאפס מעקב אירועים שנוגנו.
+2026-11-01 08:27:24,686 - INFO - יום חדש (2026-11-01) - מאפס מעקב אירועים שנוגנו.
+2026-11-01 08:53:00,288 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 08:53:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 08:53:08,318 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 08:55:00,602 - INFO - מנגן: 'שיעור 1' | שעה 08:55:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 08:55:17,651 - INFO - 'שיעור 1': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-11-01 09:40:00,612 - INFO - מנגן: 'שיעור 2' | שעה 09:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 09:40:08,646 - INFO - 'שיעור 2': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 10:43:00,113 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 10:43:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 70% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 10:43:08,143 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 10:45:00,650 - INFO - מנגן: 'שיעור 3' | שעה 10:45:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 10:45:17,742 - INFO - 'שיעור 3': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-11-01 11:30:00,393 - INFO - מנגן: 'שיעור 4 מעבר' | שעה 11:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 11:30:13,442 - INFO - 'שיעור 4 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 12:15:00,122 - INFO - מנגן: 'הפסקה' | שעה 12:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 100% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 12:15:17,239 - INFO - 'הפסקה': מתחיל fade-out (1.4 שנ' עד הסיום).
+2026-11-01 12:28:00,621 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 12:28:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 90% | משך 10s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 12:28:08,671 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 12:30:00,112 - INFO - מנגן: 'שיעור 5' | שעה 12:30:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 12:30:17,180 - INFO - 'שיעור 5': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-11-01 13:15:00,433 - INFO - מנגן: 'שינוי - שיעור 6 מעבר' | שעה 13:15:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 13:15:13,487 - INFO - 'שינוי - שיעור 6 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 14:00:00,158 - INFO - מנגן: 'תפילת מנחה' | שעה 14:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 14:00:13,210 - INFO - 'תפילת מנחה': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 14:24:00,933 - INFO - מנגן: 'שיעור 6' | שעה 14:24:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 14:24:17,995 - INFO - 'שיעור 6': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-11-01 15:00:00,236 - INFO - מנגן: 'שיעור 8 מעבר' | שעה 15:00:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 15:00:13,285 - INFO - 'שיעור 8 מעבר': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 15:40:00,635 - INFO - מנגן: 'הפסקה' | שעה 15:40:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 15:40:17,711 - INFO - 'הפסקה': מתחיל fade-out (1.5 שנ' עד הסיום).
+2026-11-01 15:48:00,370 - INFO - מנגן: 'תזכורת 2 דק'' | שעה 15:48:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 85% | משך 15s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 15:48:13,414 - INFO - 'תזכורת 2 דק'': מתחיל fade-out (1.9 שנ' עד הסיום).
+2026-11-01 15:50:00,831 - INFO - מנגן: 'שיעור 9' | שעה 15:50:00 | קובץ 'D:\Projects\SchoolBellSystem\audio\bell_standard.mp3' | עוצמה 60% | משך 19s | loop=False | fade_in=2.0s | fade_out=2.0s
+2026-11-01 15:50:17,894 - INFO - 'שיעור 9': מתחיל fade-out (1.5 שנ' עד הסיום).

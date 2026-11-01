@@ -56,3 +56,35 @@
 2026-10-25 19:05:58,826 - INFO - רישיון עודכן ממרכז הבקרה: ניסיון בתוקף עד 11/11/2026
 2026-10-25 19:16:12,929 - INFO - רישיון עודכן ממרכז הבקרה: רישיון בתוקף עד 11/11/2026
 2026-10-25 19:16:54,717 - ERROR - עותק אחר של cloud_reporter כבר רץ. יוצא.
+2026-10-25 19:26:27,923 - INFO - רישיון עודכן ממרכז הבקרה: ניסיון בתוקף עד 11/11/2026
+2026-10-25 19:30:48,965 - INFO - רישיון עודכן ממרכז הבקרה: הרישיון מסתיים בעוד 10 ימים (04/11/2026). יש לפנות לספק לחידוש.
+2026-10-26 12:44:02,260 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-26 12:45:03,848 - INFO - החיבור למרכז הבקרה חזר
+2026-10-26 17:49:07,334 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-26 17:50:09,024 - INFO - החיבור למרכז הבקרה חזר
+2026-10-27 07:57:44,871 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1018)> - בעיית תעודת HTTPS. בדוק שהקובץ src\certs\cacert.pem קיים ושהשעון במחשב נכון)
+2026-10-27 07:58:46,228 - INFO - החיבור למרכז הבקרה חזר
+2026-10-28 04:30:19,905 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [WinError 10054] An existing connection was forcibly closed by the remote host>)
+2026-10-28 04:31:21,368 - INFO - החיבור למרכז הבקרה חזר
+2026-10-28 05:19:25,040 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-28 05:20:26,336 - INFO - החיבור למרכז הבקרה חזר
+2026-10-28 18:46:12,051 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-28 18:47:13,389 - INFO - החיבור למרכז הבקרה חזר
+2026-10-28 19:40:23,680 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-28 19:41:25,177 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 04:32:06,114 - WARNING - אין חיבור למרכז הבקרה ([WinError 10054] An existing connection was forcibly closed by the remote host)
+2026-10-29 04:33:07,511 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 06:44:57,310 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-29 06:45:58,678 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 09:05:01,545 - WARNING - אין חיבור למרכז הבקרה (The read operation timed out)
+2026-10-29 09:06:05,440 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 12:21:20,781 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-29 12:59:30,819 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 14:08:31,987 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-29 14:09:33,410 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 16:12:10,002 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-29 16:14:14,977 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 16:15:15,734 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-10-29 16:20:18,563 - INFO - החיבור למרכז הבקרה חזר
+2026-10-29 17:37:34,345 - WARNING - אין חיבור למרכז הבקרה (<urlopen error [Errno 11001] getaddrinfo failed>)
+2026-11-01 08:28:19,503 - INFO - החיבור למרכז הבקרה חזר
