@@ -5,7 +5,7 @@ cloud_config.json
 # signed license of this bell PC (received from the control center)
 license.json
 # upload package for PythonAnywhere (built from control_center)
-control_center_upload.zip
+dist/control_center_upload.zip
 # remote updates: built packages (developer PC) and staging/backups (bell PC)
 updates_out/
 updates/
@@ -17,3 +17,8 @@ __pycache__/
 *.pyc
 ~$*
 ~WRL*.tmp
+
+# runtime state and logs of this PC (not source)
+logs/
+audio_devices.json
+test_sound_state.json
