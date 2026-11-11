@@ -22,3 +22,8 @@ __pycache__/
 logs/
 audio_devices.json
 test_sound_state.json
+
+# session signing key of this PC (created on first run)
+session_secret.key
+# editors of this institution (names + password hashes)
+users.json

@@ -163,6 +163,11 @@ def evaluate_payload(payload, today):
     out = {"status": status, "expires": expires.isoformat() if expires else None,
            "customer_code": payload.get("c"), "issued": payload.get("i"),
            "payment_overdue": payload.get("p") == "overdue", "days_left": None, "block_date": None}
+    try:      # מכסת מורשי העריכה (me) - רק אם הספק שינה אותה; אחרת ברירת המחדל במחשב (5)
+        if payload.get("me") is not None:
+            out["max_editors"] = max(1, min(50, int(payload["me"])))
+    except (TypeError, ValueError):
+        pass
     if status == "suspended":
         out.update(state="blocked", message="הרישיון הושעה ע\"י ספק המערכת - הצלצולים חסומים. יש לפנות לספק.")
         return out

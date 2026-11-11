@@ -674,7 +674,7 @@
                 "time": "08:53:00",
                 "type": "Bell",
                 "uid": "b1efe9819b68",
-                "volume": 100,
+                "volume": 87,
                 "shuffle": true
             },
             {
@@ -2053,5 +2053,7 @@
         "edit_password_hash": ""
     },
     "show_disabled_events": true,
-    "active_schedule_name": "לוח ישן 2"
+    "active_schedule_name": "לוח ישן 2",
+    "history_limit": 10,
+    "special_dates": []
 }

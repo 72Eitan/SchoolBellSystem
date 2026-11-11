@@ -1,23 +1,52 @@
-# Instructions for Building School Bell System (Hybrid Architecture with Music & Audio Priority)
+# עת רצון – מערכת צלצולים (SchoolBellSystem)
 
-## Architecture Overview
-This system is built using a Hybrid Architecture:
-1. **Deterministic Core (`src/core_engine.py`)**: A rock-solid, zero-AI Python daemon that plays sound files strictly based on `schedule.json`. It MUST run reliably even without internet access.
-2. **Agentic Wrapper (`src/schedule_agent.py`)**: An AI agent powered by Claude/Gemini API that reads natural language requests from school managers, evaluates them against `Context.md` business rules, and updates `schedule.json`.
-3. **Bot Interface (`src/telegram_bot.py`)**: A Telegram bot interface for receiving text/voice commands and returning system status.
+הנחיות ל-Claude Code. לקרוא לפני כל עבודה בפרויקט.
 
-## Audio Concurrency & Priority Rules (CRITICAL)
-- **No Overlapping Audio**: Never play two audio sources simultaneously.
-- **Priority Hierarchy**: `emergency` > `bell` > `music`.
-- **Music Preemption**: Before playing any `bell` or `emergency` event, the core engine MUST check if music is playing. If active, perform an automatic `fadeout(1500)` (1.5 seconds) or instant `stop()`, wait for the channel to clear, and then execute the higher-priority bell.
-- **Duration Control**: Music events must respect `duration_seconds` or stop automatically when the next scheduled bell minute arrives.
+## מה המוצר
+תוכנה שמנהלת את סדר היום של מוסד לימודים: צלצולים, מוסיקה להפסקות, הודעות ותרגילים, לפי לוח שבועי.
+מוצר מסחרי שנמכר לבתי ספר. היוצר מנהל את כל הלקוחות ממרכז בקרה.
 
-## Tech Stack
-- Python 3.10+
-- `pygame` (using `pygame.mixer` with dedicated channels for background music and foreground bells)
-- `python-telegram-bot` for Telegram integration
-- `google-generativeai` / `anthropic` SDK for AI agent logic
+## מסמכים מחייבים
+- `docs/תסריט ראשי ומסכם למערכת.pdf` – המפרט. כל מה שכתוב בו צריך להיבנות, בלי להחסיר.
+- `docs/עת רצון - מפרט מול מצב קיים.pdf` – השוואת המפרט לקוד (55 סעיפים).
+- `PROJECT_SUMMARY.md` – היסטוריה, החלטות ומה נבדק. לעדכן בסוף כל שלב.
+- `Context.md` – החוקים העסקיים של המערכת.
 
-## Execution Guidelines
-- Implement thread safety and state locks (`last_played_time`) to prevent duplicate triggering within the same minute.
-- Include full error handling, logging, and graceful fallbacks for missing audio files or corrupted JSON files.
+## ארכיטקטורה
+ארבעה תהליכים נפרדים במחשב בית הספר. באג באחד לא עוצר את האחרים.
+
+| קובץ | תפקיד | פורט |
+|---|---|---|
+| `src/watchdog.py` | השומר: מפעיל את המנוע, השרת ושמירת החלון, ומחייה תהליך שנפל | 8597 |
+| `src/main.py` | **מנוע ההשמעה. הרכיב הקריטי.** בודק כל שנייה את `schedule.json` ומנגן | 8599 |
+| `src/web_server.py` | שרת Flask: ה-API והממשק | 8500 |
+| `src/static/index.html` | הממשק: HTML/CSS/JS בקובץ אחד, בלי ספריות | – |
+| `src/cloud_reporter.py` | דיווח למרכז הבקרה, קבלת רישיון ועדכונים | 8598 |
+| `src/license_check.py` | אימות רישיון חתום (Ed25519) | – |
+| `src/updater.py` | התקנת עדכון מרחוק עם גיבוי וחזרה אוטומטית | – |
+| `src/window_guard.py`, `src/close_confirm.py` | שמירה על חלון הניהול מפני סגירה בטעות | 8595, 8596 |
+| `control_center/` | מרכז הבקרה של היוצר (Flask + SQLite). רץ ב-PythonAnywhere | 8600 |
+
+- `schedule.json` הוא מקור האמת היחיד ללוח ולהגדרות. כותבים אליו רק דרך השרת, בכתיבה אטומית.
+- הפעלה: `start_all.bat`. עצירה: `stop_all.bat`. גיבוי: `backup_git.bat`.
+- גרסה: `SERVER_VERSION` ב-`web_server.py` ו-`CLIENT_VERSION` ב-`index.html` חייבים להיות זהים.
+
+## כללים שאסור לשבור
+1. **המנוע חייב לעבוד בלי אינטרנט ובלי AI.** שום יכולת חדשה לא תלויה ברשת כדי לצלצל.
+2. **שינוי ב-`main.py` רק כשאין ברירה**, עם הסבר מראש ובדיקה של הצליל שיוצא בפועל.
+3. **אף פעם לא שני צלילים יחד.** עדיפויות: תרגיל/חירום > צלצול > מוסיקה.
+4. **תאימות ל-Python 3.8 ול-Windows 7.** בלי תחביר חדש יותר (`match`, `X | Y` בטיפוסים) ובלי ספריות מעבר ל-`requirements.txt` בלי אישור.
+5. **לא לערוך את `schedule.json`, `saved_schedules.json`, `users.json`, `license.json` או `cloud_config.json` ביד.** לבדיקות עובדים על עותק.
+6. **לא לכתוב ולא למחוק מחוץ לתיקיית הפרויקט** (גיבויים וגרסאות ישנות נמצאים בתיקיות אחרות).
+7. **כל שגיאה ברכיב צדדי (רישיון, דיווח, לוג) = ממשיכים לצלצל.** רק רישיון חסום עוצר השמעה.
+8. הממשק בעברית, מימין לשמאל. טקסטים חדשים נכתבים כך שאפשר יהיה לתרגם אותם בהמשך.
+9. אין אימוג'י חדש בממשק בלי לבנות מחדש את הגופן המוטמע (Twemoji).
+
+## שיטת עבודה
+תכנון ← אישור של המשתמש ← שינוי קטן אחד ← בדיקה ← גיבוי. לא מבצעים בלי אישור.
+בסוף כל שינוי בקוד: להעלות את מספר הגרסה בשני המקומות, ולתת תיאור קצר בעברית ל-`backup_git.bat`.
+
+## מבנה התיקייה
+`src/` קוד מחשב בית הספר · `control_center/` מרכז הבקרה · `tools/` כלי בנייה וגיבוי · `audio/` קבצי שמע ·
+`docs/` מסמכי תכנון · `dist/` חבילות התקנה ועדכון (תוצר בנייה) · `logs/` לוגים (לא ב-Git) ·
+`Ex_Import/` דוגמאות ייבוא Excel · `Img/` לוגו ואייקונים.

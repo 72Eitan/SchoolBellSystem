@@ -37,7 +37,7 @@ from flask import Flask, g, send_file, has_request_context, jsonify, request, se
 import ed25519_pure as ed
 from werkzeug.security import check_password_hash, generate_password_hash
 
-APP_VERSION = "2026.10.13-cc2"
+APP_VERSION = "2026.11.11-cc3"
 PORT = 8600
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS customers (
     contact_name TEXT DEFAULT '', phone TEXT DEFAULT '', email TEXT DEFAULT '',
     network_id INTEGER REFERENCES networks(id),
     plan TEXT DEFAULT 'basic',
+    max_editors INTEGER DEFAULT 5,
     license_status TEXT DEFAULT 'trial',
     license_expires TEXT,
     payment_status TEXT DEFAULT 'pending',
@@ -140,6 +141,13 @@ CREATE TABLE IF NOT EXISTS customers (
     created_at TEXT NOT NULL,
     last_seen TEXT,
     last_payload TEXT
+);
+CREATE TABLE IF NOT EXISTS boards (
+    customer_id INTEGER PRIMARY KEY REFERENCES customers(id),
+    view_token TEXT NOT NULL UNIQUE,
+    board_json TEXT NOT NULL DEFAULT '{}',
+    board_hash TEXT NOT NULL DEFAULT '',
+    updated_at TEXT
 );
 CREATE TABLE IF NOT EXISTS heartbeats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -230,6 +238,8 @@ def init_db():
     for col in ("license_token", "license_basis"):
         if col not in cols:
             conn.execute("ALTER TABLE customers ADD COLUMN %s TEXT" % col)
+    if "max_editors" not in cols:
+        conn.execute("ALTER TABLE customers ADD COLUMN max_editors INTEGER DEFAULT %d" % DEFAULT_MAX_EDITORS)
     # ניסיון בלי תאריך סיום = 30 יום מיום היצירה (כך זה גם מוצג בדשבורד)
     conn.execute("UPDATE customers SET license_expires = date(created_at, '+%d day') "
                  "WHERE license_status='trial' AND (license_expires IS NULL OR license_expires='')" % TRIAL_DAYS)
@@ -258,6 +268,9 @@ def license_public_hex():
     return _pub_cache[sec]
 
 
+DEFAULT_MAX_EDITORS = 5      # מכסת מורשי העריכה במוסד. נשלחת ברישיון החתום רק כשהיא שונה מברירת המחדל
+
+
 def license_payload(c):
     """מה נכנס לרישיון שהמחשב מקבל. בלי שדות מיותרים - הקוד הידני צריך להיות קצר ככל האפשר."""
     status = c["license_status"] if c["license_status"] in LICENSE_STATUSES else "trial"
@@ -267,6 +280,12 @@ def license_payload(c):
     p = {"c": c["code"], "s": status, "e": exp}
     if c["payment_status"] == "overdue":
         p["p"] = "overdue"
+    try:
+        me = int(c["max_editors"] or DEFAULT_MAX_EDITORS)
+    except (KeyError, IndexError, TypeError, ValueError):
+        me = DEFAULT_MAX_EDITORS
+    if me != DEFAULT_MAX_EDITORS:
+        p["me"] = me
     return p
 
 
@@ -676,13 +695,13 @@ def api_overview():
 
 EDITABLE_FIELDS = ("name", "sector", "institution_type", "country", "city", "address", "contact_name",
                    "phone", "email", "network_id", "plan", "license_status", "license_expires",
-                   "payment_status", "monthly_price", "notes", "status")
+                   "payment_status", "monthly_price", "notes", "status", "max_editors")
 
 
 FIELD_LABELS = {"name": "שם", "sector": "מגזר", "institution_type": "סוג מוסד", "country": "ארץ", "city": "עיר",
                 "address": "כתובת", "contact_name": "איש קשר", "phone": "טלפון", "email": "דוא\"ל", "network_id": "רשת",
                 "plan": "מסלול", "license_status": "רישיון", "license_expires": "רישיון עד", "payment_status": "תשלום",
-                "monthly_price": "מחיר", "notes": "הערות", "status": "סטטוס"}
+                "monthly_price": "מחיר", "notes": "הערות", "status": "סטטוס", "max_editors": "מורשי עריכה"}
 
 
 def clean_customer_fields(body):
@@ -698,6 +717,13 @@ def clean_customer_fields(body):
                 v = float(v or 0)
             except (TypeError, ValueError):
                 raise ValueError("מחיר חודשי לא תקין")
+        elif k == "max_editors":
+            try:
+                v = DEFAULT_MAX_EDITORS if v in (None, "") else int(v)
+            except (TypeError, ValueError):
+                raise ValueError("מספר מורשי עריכה לא תקין")
+            if not 1 <= v <= 50:
+                raise ValueError("מורשי עריכה: בין 1 ל-50")
         elif k == "license_expires":
             v = (v or "").strip() or None
             if v:
@@ -1197,10 +1223,128 @@ def api_agent_heartbeat():
         conn.execute("DELETE FROM heartbeats WHERE received_at < ?", (iso(now - timedelta(days=HEARTBEAT_KEEP_DAYS)),))
     offer = update_offer(conn, c, payload.get("version"))
     token = license_token(conn, c)
+    brow = conn.execute("SELECT view_token FROM boards WHERE customer_id=?", (c["id"],)).fetchone()
     conn.commit()
     return jsonify({"ok": True, "server_time_utc": iso(now), "license": license_reply(c),
+                    "view_url": view_url(brow["view_token"]) if brow else None,
                     "license_token": token, "license_public_key": license_public_hex(),
                     "latest_version": latest_version(), "update": offer})
+
+
+# ------------------------------------------------------------------ לוח צפייה (מורים, תלמידים, הורים)
+# מחשב הצלצולים שולח לכאן עותק צפייה של הלוח בכל שינוי. הצופים מקבלים קישור /v/<token> - בלי התחברות,
+# בלי פקדים. אף אחד מבחוץ לא ניגש למחשב בבית הספר. הקישור ניתן להחלפה (אם דלף).
+
+BOARD_MAX_BYTES = 400 * 1024
+
+
+def new_view_token():
+    return secrets.token_urlsafe(9)        # 12 תווים, קשה לנחש
+
+
+def board_row(conn, customer_id, create=True):
+    row = conn.execute("SELECT * FROM boards WHERE customer_id=?", (customer_id,)).fetchone()
+    if row or not create:
+        return row
+    conn.execute("INSERT INTO boards(customer_id, view_token) VALUES (?,?)", (customer_id, new_view_token()))
+    return conn.execute("SELECT * FROM boards WHERE customer_id=?", (customer_id,)).fetchone()
+
+
+def view_url(token):
+    base = app.config.get("PUBLIC_URL") or request.host_url
+    return base.rstrip("/") + "/v/" + token
+
+
+@app.route("/api/agent/board", methods=["POST"])
+def api_agent_board():
+    """board: עותק הצפייה (בלי קבצי שמע והגדרות פנימיות). hash: לזיהוי שינוי. rotate: true מחליף את קישור הצפייה."""
+    c, body = agent_customer()
+    if not c:
+        return api_error("קוד לקוח או מפתח שגויים", 401)
+    conn = db()
+    with _db_lock:
+        row = board_row(conn, c["id"])
+        if body.get("rotate"):
+            conn.execute("UPDATE boards SET view_token=? WHERE customer_id=?", (new_view_token(), c["id"]))
+            audit(conn, "view_link_rotate", "קישור הצפייה הוחלף מבית הספר", c["id"], username="(מחשב)")
+        board = body.get("board")
+        if isinstance(board, dict):
+            raw = json.dumps(board, ensure_ascii=False)
+            if len(raw.encode("utf-8")) > BOARD_MAX_BYTES:
+                return api_error("הלוח גדול מדי", 413)
+            conn.execute("UPDATE boards SET board_json=?, board_hash=?, updated_at=? WHERE customer_id=?",
+                         (raw, str(body.get("hash") or "")[:80], iso(utcnow()), c["id"]))
+        conn.commit()
+        row = board_row(conn, c["id"], create=False)
+    return jsonify({"ok": True, "view_url": view_url(row["view_token"]), "board_hash": row["board_hash"]})
+
+
+def _board_by_token(token):
+    if not token or len(token) > 40:
+        return None, None
+    conn = db()
+    row = conn.execute("SELECT b.*, c.name AS cname, c.last_seen, c.status AS cstatus FROM boards b "
+                       "JOIN customers c ON c.id=b.customer_id WHERE b.view_token=?", (token,)).fetchone()
+    if not row or row["cstatus"] == "archived":
+        return None, None
+    return conn, row
+
+
+@app.route("/v/<token>")
+def view_page(token):
+    _, row = _board_by_token(token)
+    if not row:
+        return app.response_class("<h2 dir='rtl' style='font-family:sans-serif'>הקישור לא תקין או הוחלף. בקשו קישור חדש מבית הספר.</h2>",
+                                  status=404, mimetype="text/html")
+    return send_from_directory(STATIC_DIR, "viewer.html")
+
+
+@app.route("/v/<token>/manifest.json")
+def view_manifest(token):
+    _, row = _board_by_token(token)
+    if not row:
+        return api_error("לא נמצא", 404)
+    name = (json.loads(row["board_json"] or "{}").get("name") or row["cname"] or "עת רצון")[:40]
+    return jsonify({"name": "עת רצון · " + name, "short_name": "עת רצון", "start_url": "/v/" + token, "scope": "/v/" + token,
+                    "display": "standalone", "dir": "rtl", "lang": "he", "background_color": "#ffffff", "theme_color": "#1e3c72",
+                    "icons": [{"src": "/static/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+                              {"src": "/static/icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+                              {"src": "/static/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]})
+
+
+@app.route("/api/view/<token>")
+def api_view(token):
+    """הנתונים לדף הצפייה. ETag לפי גרסת הלוח, כך שרענון בלי שינוי עולה כמעט כלום (חשוב במסלול החינמי)."""
+    _, row = _board_by_token(token)
+    if not row:
+        return api_error("לא נמצא", 404)
+    last_seen = parse_iso(row["last_seen"])
+    offline_min = int((utcnow() - last_seen).total_seconds() // 60) if last_seen else None
+    etag = '"%s-%s"' % (row["board_hash"] or "0", 1 if (offline_min is not None and offline_min >= 15) else 0)
+    if request.headers.get("If-None-Match") == etag:
+        return app.response_class(status=304, headers={"ETag": etag})
+    resp = jsonify({"board": json.loads(row["board_json"] or "{}"), "updated_at": row["updated_at"],
+                    "pc_last_seen": row["last_seen"], "pc_offline_min": offline_min})
+    resp.headers["ETag"] = etag
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
+
+@app.route("/api/customers/<int:cid>/view-link", methods=["GET", "POST"])
+@login_required(roles=("owner",))
+def api_customer_view_link(cid):
+    """קישור הצפייה של הלקוח (לכרטיס הלקוח). POST מחליף אותו."""
+    conn = db()
+    if not conn.execute("SELECT id FROM customers WHERE id=?", (cid,)).fetchone():
+        return api_error("לא נמצא", 404)
+    with _db_lock:
+        row = board_row(conn, cid)
+        if request.method == "POST":
+            conn.execute("UPDATE boards SET view_token=? WHERE customer_id=?", (new_view_token(), cid))
+            audit(conn, "view_link_rotate", "קישור הצפייה הוחלף", cid)
+            row = board_row(conn, cid, create=False)
+        conn.commit()
+    return jsonify({"ok": True, "view_url": view_url(row["view_token"]), "updated_at": row["updated_at"]})
 
 
 @app.route("/api/agent/update/<int:rid>/package")

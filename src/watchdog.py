@@ -24,6 +24,9 @@ SRC_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(SRC_DIR)
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 LOG_FILE = os.path.join(LOGS_DIR, "watchdog.log")
+APP_LOG = os.path.join(LOGS_DIR, "app.log")     # הלוג המשותף של המנוע ושל השרת
+APP_LOG_MAX = 5 * 1024 * 1024    # מעל הגודל הזה הלוג "מתגלגל" בהפעלה הבאה
+APP_LOG_KEEP = 5                 # כמה קבצים ישנים לשמור (app.log.1 = החדש ביותר)
 LOCK_PORT = 8597                 # עותק יחיד של השומר (המנוע 8599, הדיווח 8598, השרת 8500)
 CHECK_SECONDS = 3
 MAX_RESTARTS = 5                 # מקסימום הפעלות מחדש...
@@ -49,6 +52,25 @@ def log(msg):
             f.write(line)
     except OSError:
         pass
+
+
+def rotate_app_log():
+    """מגלגל את logs/app.log כשהוא גדול מדי: app.log -> app.log.1 -> ... (נשמרים APP_LOG_KEEP קבצים).
+
+    נקרא רק בהפעלת השומר, לפני שהמנוע והשרת עולים - רק אז אף תהליך לא מחזיק את הקובץ פתוח
+    (ב-Windows אי אפשר לשנות שם של קובץ פתוח). כל כישלון = ממשיכים כרגיל עם הקובץ הקיים.
+    """
+    try:
+        if not os.path.exists(APP_LOG) or os.path.getsize(APP_LOG) <= APP_LOG_MAX:
+            return
+        size_mb = os.path.getsize(APP_LOG) / (1024.0 * 1024.0)
+        for i in range(APP_LOG_KEEP, 0, -1):
+            src = APP_LOG if i == 1 else "%s.%d" % (APP_LOG, i - 1)
+            if os.path.exists(src):
+                os.replace(src, "%s.%d" % (APP_LOG, i))
+        log("app.log גולגל (%.1fMB) - נפתח קובץ חדש" % size_mb)
+    except OSError as e:
+        log("לא ניתן לגלגל את app.log (%s) - ממשיכים עם הקובץ הקיים" % e)
 
 
 def acquire_lock():
@@ -101,6 +123,7 @@ def main():
         log("שומר אחר כבר רץ - יוצא")
         return 1
     log("=== השומר מופעל ===")
+    rotate_app_log()
     PROCS[:] = [p for p in PROCS if os.name == "nt" or not p.get("windows_only")]
     for p in PROCS:
         p["restarts"], p["gave_up_until"] = [], 0

@@ -422,6 +422,23 @@ def advance_folder_session(rec, now_mono):
 # ============================================================
 # עזר לחישובי זמן/אירועים (משותף לבדיקת "אירוע פעיל עכשיו" ולהתחלה רגילה)
 # ============================================================
+def silent_day_entry(data, today_iso):
+    """יום ללא שמע (חופשה / חג / יום מיוחד) שהוגדר בממשק: special_dates = [{date, end_date, label, mode}].
+    מחזיר את הרשומה שחלה על התאריך, או None. תאריכים בפורמט YYYY-MM-DD, ולכן השוואת טקסט מספיקה.
+    כל שגיאה = None (ממשיכים לצלצל כרגיל)."""
+    try:
+        for it in data.get("special_dates") or []:
+            if it.get("mode", "silent") != "silent":
+                continue
+            start = str(it.get("date") or "")
+            end = str(it.get("end_date") or start)
+            if start and start <= today_iso <= end:
+                return it
+    except Exception:
+        pass
+    return None
+
+
 def event_time_seconds(ev):
     try:
         h, m, s = [int(x) for x in ev["time"].split(":")]
@@ -445,6 +462,8 @@ def find_event_in_progress(data, now):
         return None, None
     now_seconds = now.hour * 3600 + now.minute * 60 + now.second
     today_iso = now.date().isoformat()
+    if silent_day_entry(data, today_iso):
+        return None, None
     for ev in data.get("weekly_schedule", {}).get(day_key, []):
         if not ev.get("enabled", True) or is_skipped_on(ev, today_iso) or not is_sound_event(ev):
             continue
@@ -719,6 +738,7 @@ def main():
     startup_now_str = datetime.now().strftime("%H:%M:%S")
     logging.info(f"מדלג על אירועים שכבר עברו את שעתם היום (לפני {startup_now_str}) כדי לא להציף בהשמעות בהפעלה.")
 
+    silent_logged_for = None        # התאריך שעליו כבר נרשם בלוג "יום ללא שמע" (פעם אחת ביום)
     while True:
         try:
             tick_counter += 1
@@ -817,6 +837,14 @@ def main():
 
             events = data.get("weekly_schedule", {}).get(day_key, [])
             now_time = now.time()
+
+            # יום ללא שמע (חופשה / חג): הלוח לא מתנגן היום. צלצול ידני ובדיקות ממשיכים לעבוד (טופלו למעלה).
+            silent = silent_day_entry(data, today_iso)
+            if silent:
+                events = []
+                if silent_logged_for != today_iso:
+                    silent_logged_for = today_iso
+                    logging.info(f"היום ({today_iso}) הוא יום ללא שמע: '{silent.get('label', '')}' - הלוח לא מתנגן.")
 
             # מוסיקה שמתנגנת ומתקרב צלצול/תרגיל - fade-out מתחיל עכשיו, כך שהצלצול יתחיל בזמנו בלי חפיפה
             prefade_for_upcoming(events, day_key, today_iso, now, active_playbacks, played_today)

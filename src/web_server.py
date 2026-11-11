@@ -19,6 +19,9 @@ import tempfile
 import threading
 import subprocess
 import hashlib
+import hmac
+import secrets
+import time
 import logging
 import csv
 import re
@@ -44,7 +47,8 @@ TEST_REQUEST_FILE = os.path.join(BASE_DIR, "test_sound_request.json")
 TEST_STATE_FILE = os.path.join(BASE_DIR, "test_sound_state.json")      # נכתב ע"י המנוע: האם צלצול ידני מתנגן
 ENGINE_LOCK_PORT = 8599   # המנוע מחזיק את הפורט הזה כל זמן שהוא רץ (main.py)      # מצבים קודמים לצורך Undo עם קפיצה לאחור
 STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
-MAX_UNDO_STEPS = 50
+DEFAULT_HISTORY_LIMIT = 10        # כמה פעולות אחרונות אפשר לבטל / להחזיר. ניתן לשינוי בהגדרות (history_limit)
+MIN_HISTORY_LIMIT, MAX_HISTORY_LIMIT = 1, 100
 
 os.makedirs(LOGS_DIR, exist_ok=True)
 # FileHandler עם קידוד מפורש (ולא basicConfig(encoding=...)) - כדי לעבוד גם על Python 3.8 / Windows 7
@@ -66,7 +70,7 @@ THEME_PRESETS = {
 }
 
 # גרסת השרת - הממשק (index.html) משווה אליה ומציג אזהרה אם רץ שרת ישן יותר
-SERVER_VERSION = "2026.10.13-5"
+SERVER_VERSION = "2026.11.11-1"
 SERVER_PORT = 8500
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
@@ -75,7 +79,32 @@ app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
 @app.route("/api/version", methods=["GET"])
 def api_version():
     return jsonify({"version": SERVER_VERSION})
-app.secret_key = os.environ.get("BELL_SECRET_KEY", "school-bell-system-local-secret")  # מספיק לשימוש מקומי ברשת בית ספר
+SESSION_SECRET_FILE = os.path.join(BASE_DIR, "session_secret.key")
+USERS_FILE = os.path.join(BASE_DIR, "users.json")        # מורשי העריכה של המוסד. לא חלק מ-schedule.json, כדי ש-Undo לא ישנה הרשאות
+
+
+def load_session_secret():
+    """מפתח חתימה ל-session: אקראי וייחודי לכל התקנה, נוצר בהפעלה הראשונה ונשמר בקובץ (לא ב-Git).
+    קודם היה מפתח קבוע בקוד - מי שהכיר אותו יכול היה לזייף התחברות כעורך."""
+    env = os.environ.get("BELL_SECRET_KEY")
+    if env:
+        return env
+    try:
+        if os.path.exists(SESSION_SECRET_FILE):
+            with open(SESSION_SECRET_FILE, "r", encoding="utf-8") as f:
+                key = f.read().strip()
+            if len(key) >= 32:
+                return key
+        key = secrets.token_hex(32)
+        with open(SESSION_SECRET_FILE, "w", encoding="utf-8") as f:
+            f.write(key)
+        return key
+    except OSError as e:
+        logging.error(f"לא ניתן לשמור מפתח session ({e}) - משתמשים במפתח זמני עד ההפעלה הבאה")
+        return secrets.token_hex(32)
+
+
+app.secret_key = load_session_secret()
 
 
 # ============================================================
@@ -106,6 +135,8 @@ DEFAULT_DATA = {
     "permissions": {"edit_password_hash": ""},
     "show_disabled_events": True,
     "active_schedule_name": None,
+    "history_limit": DEFAULT_HISTORY_LIMIT,
+    "special_dates": [],      # ימים ללא שמע (חופשות, חגים): [{id, label, date, end_date, mode: "silent"}]
     "weekly_schedule": {day: [] for day in DAY_ORDER}
 }
 
@@ -173,6 +204,7 @@ def load_data():
 
     data = _deep_default_merge(data, DEFAULT_DATA)
     weekly = data.get("weekly_schedule", {})
+    uids_added, seen_uids = False, set()
     for day in DAY_ORDER:
         events = weekly.get(day, [])
         for ev in events:
@@ -184,10 +216,19 @@ def load_data():
             ev.setdefault("loop", False)
             migrate_fades(ev)
             sanitize_message_fields(ev)
-            ev.setdefault("uid", uuid.uuid4().hex[:12])
+            if not ev.get("uid") or ev["uid"] in seen_uids:      # חסר או כפול -> מזהה חדש
+                ev["uid"] = uuid.uuid4().hex[:12]
+                uids_added = True
+            seen_uids.add(ev["uid"])
         events.sort(key=lambda x: x.get("time", "00:00:00"))
         weekly[day] = events
     data["weekly_schedule"] = weekly
+    if uids_added:
+        # המזהה הקבוע (uid) של אירוע נשמר מיד. בלי זה הוא היה מתחלף בכל קריאה, ואי אפשר היה לזהות לפיו אירוע.
+        try:
+            save_data(data, log_action=False, action_name="assign_uids")
+        except Exception as e:
+            logging.error(f"לא ניתן היה לשמור מזהי אירועים: {e}")
 
     # "השבת להיום בלבד" שהתאריך שלו כבר עבר: המנוע ממילא מנגן (הוא בודק את התאריך), אבל הקובץ
     # נשאר "מושבת" - ולכן הממשק (וכל מי שקורא את הקובץ) הציג השבתה בלי סוף. מחזירים לפעולה ושומרים.
@@ -233,7 +274,8 @@ def append_action_log(action_name, details=""):
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "action": action_name,
         "details": details,
-        "user_role": session.get("role", "viewer") if has_request_context() else "system"
+        "user_role": session.get("role", "viewer") if has_request_context() else "system",
+        "user": actor_name(),
     }
     try:
         with open(ACTIONS_LOG_FILE, "a", encoding="utf-8") as f:
@@ -258,42 +300,67 @@ def read_action_log(limit=300):
     return entries
 
 
-def load_undo_stack():
+def clamp_history_limit(value):
+    try:
+        n = int(value)
+    except (TypeError, ValueError):
+        n = DEFAULT_HISTORY_LIMIT
+    return max(MIN_HISTORY_LIMIT, min(MAX_HISTORY_LIMIT, n))
+
+
+def load_history():
+    """{"undo": [...], "redo": [...]} - בכל רשימה האחרון הוא הקרוב ביותר למצב הנוכחי.
+    קובץ בפורמט הישן (רשימה אחת) נקרא כרשימת undo."""
     if not os.path.exists(UNDO_STACK_FILE):
-        return []
+        return {"undo": [], "redo": []}
     try:
         with open(UNDO_STACK_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+            raw = json.load(f)
     except Exception:
-        return []
+        return {"undo": [], "redo": []}
+    if isinstance(raw, list):
+        return {"undo": raw, "redo": []}
+    if isinstance(raw, dict):
+        return {"undo": list(raw.get("undo") or []), "redo": list(raw.get("redo") or [])}
+    return {"undo": [], "redo": []}
 
 
-def save_undo_stack(stack):
-    with open(UNDO_STACK_FILE, "w", encoding="utf-8") as f:
-        json.dump(stack[-MAX_UNDO_STEPS:], f, ensure_ascii=False)
+def save_history(history, limit):
+    """כתיבה אטומית. נשמרות רק `limit` הפעולות האחרונות בכל רשימה - כדי שהקובץ לא יתנפח."""
+    limit = clamp_history_limit(limit)
+    out = {"undo": history.get("undo", [])[-limit:], "redo": history.get("redo", [])[-limit:]}
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(dir=LOGS_DIR, prefix=".undo_", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False)
+        os.replace(tmp_path, UNDO_STACK_FILE)
+    except Exception as e:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        logging.error(f"שגיאה בשמירת היסטוריית הפעולות: {e}")
 
 
-def push_undo_snapshot(pre_change_data, action_name, log_entry_id, details=""):
-    """שומר עותק של המצב *לפני* שינוי, לצורך שחזור עתידי (כולל קפיצה לאחור מספר צעדים)."""
-    stack = load_undo_stack()
-    stack.append({
+def push_undo_snapshot(pre_change_data, action_name, log_entry_id, details="", limit=DEFAULT_HISTORY_LIMIT):
+    """שומר עותק של המצב *לפני* שינוי. פעולה חדשה מבטלת את האפשרות "להחזיר" (Redo), כמו בכל עורך."""
+    history = load_history()
+    history["undo"].append({
         "snapshot": pre_change_data,
         "action_name": action_name,
         "details": details,
         "log_entry_id": log_entry_id,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
     })
-    save_undo_stack(stack)
+    history["redo"] = []
+    save_history(history, limit)
 
 
-def list_undo_history():
-    """רשימת נקודות שחזור זמינות, מהאחרונה לישנה ביותר - עבור תצוגת 'היסטוריה כמו בכרום'."""
-    stack = load_undo_stack()
+def _history_rows(entries, key):
     out = []
-    for i, entry in enumerate(reversed(stack)):
+    for i, entry in enumerate(reversed(entries)):
         name = entry.get("action_name", "")
         out.append({
-            "steps_back": i + 1,
+            key: i + 1,
             "action_name": name,
             "title": ACTION_TITLES.get(name, name),
             "details": entry.get("details", ""),
@@ -302,17 +369,76 @@ def list_undo_history():
     return out
 
 
-def jump_to_undo_step(steps_back):
-    """קופץ אחורה N צעדים בבת אחת - משחזר את המצב מנקודת ההיסטוריה הרלוונטית
-    ומסיר אותה ואת כל מה שאחריה מהמחסנית (כמו history back בדפדפן)."""
-    stack = load_undo_stack()
-    if steps_back < 1 or steps_back > len(stack):
+def list_history():
+    """פעולות שאפשר לבטל (undo) ופעולות שבוטלו ואפשר להחזיר (redo), מהקרובה לרחוקה, + נתוני נפח."""
+    history = load_history()
+    try:
+        file_bytes = os.path.getsize(UNDO_STACK_FILE)
+    except OSError:
+        file_bytes = 0
+    try:
+        step_bytes = os.path.getsize(SCHEDULE_FILE)
+    except OSError:
+        step_bytes = 0
+    return {
+        "undo": _history_rows(history["undo"], "steps_back"),
+        "redo": _history_rows(history["redo"], "steps_forward"),
+        "limit": clamp_history_limit(load_data().get("history_limit")),
+        "default_limit": DEFAULT_HISTORY_LIMIT, "min_limit": MIN_HISTORY_LIMIT, "max_limit": MAX_HISTORY_LIMIT,
+        "file_bytes": file_bytes, "step_bytes": step_bytes,
+    }
+
+
+def step_history(direction, steps, current_data):
+    """זז `steps` צעדים אחורה ("undo") או קדימה ("redo") ומחזיר את המצב שצריך לשחזר (None אם אין).
+    כל צעד מעביר רשומה מרשימה אחת לשנייה, עם המצב שהיה לפניו - כך אפשר ללכת הלוך ושוב."""
+    history = load_history()
+    src, dst = ("undo", "redo") if direction == "undo" else ("redo", "undo")
+    if steps < 1 or steps > len(history[src]):
         return None
-    target_index = len(stack) - steps_back
-    snapshot_entry = stack[target_index]
-    stack = stack[:target_index]
-    save_undo_stack(stack)
-    return snapshot_entry["snapshot"]
+    state = current_data
+    for _ in range(steps):
+        entry = history[src].pop()
+        history[dst].append({
+            "snapshot": state,
+            "action_name": entry.get("action_name", ""),
+            "details": entry.get("details", ""),
+            "log_entry_id": entry.get("log_entry_id"),
+            "timestamp": entry.get("timestamp", ""),
+        })
+        state = entry["snapshot"]
+    # ההגדרה "כמה פעולות לשמור" לא משתנה בעקבות ביטול/החזרה של פעולה אחרת
+    limit = clamp_history_limit(current_data.get("history_limit"))
+    state["history_limit"] = limit
+    save_history(history, limit)
+    return state
+
+
+class StaleEvent(Exception):
+    """האירוע שהבקשה מתייחסת אליו (לפי uid) כבר לא קיים ביום הזה - מישהו אחר שינה את הלוח בינתיים."""
+
+
+def resolve_item(weekly, it):
+    """האינדקס העדכני של אירוע ביום שלו. מזהים לפי uid (קבוע) כשהוא נשלח; index לבדו - רק לתאימות לאחור.
+    כך עריכה משני מקומות (או של סוכן) לא פוגעת באירוע הלא נכון גם אם הסדר ברשימה השתנה."""
+    events = weekly.get(it.get("day"), [])
+    uid = it.get("uid")
+    if uid:
+        for i, ev in enumerate(events):
+            if ev.get("uid") == uid:
+                return i
+        raise StaleEvent()
+    idx = it.get("index")
+    if not isinstance(idx, int) or isinstance(idx, bool) or idx < 0 or idx >= len(events):
+        raise IndexError("אינדקס לא תקין")
+    return idx
+
+
+def public_data(data):
+    """עותק של הנתונים לשליחה לדפדפן - בלי ה-hash של סיסמת העריכה."""
+    safe = json.loads(json.dumps(data))
+    safe.get("permissions", {}).pop("edit_password_hash", None)
+    return safe
 
 
 # ---- תיאור פעולות בעברית להיסטוריה וללוג: "הנמכת עוצמה (85%→60%), שלישי, 09:40 · שיעור 2" ----
@@ -321,7 +447,9 @@ ACTION_TITLES = {
     "quick_edit_events": "עדכון אירוע", "delete_event": "מחיקת אירוע", "duplicate_event": "שכפול אירוע",
     "duplicate_day": "שכפול יום", "replace_audio_all": "החלפת קובץ שמע", "system_status": "מצב מערכת",
     "update_settings": "עדכון הגדרות", "import_excel": "ייבוא Excel", "schedule_save": "שמירת לוח",
-    "schedule_load": "טעינת לוח", "undo": "ביטול פעולה", "license_activate": "הפעלת רישיון",
+    "schedule_load": "טעינת לוח", "undo": "ביטול פעולה", "redo": "החזרת פעולה", "bulk_edit": "שינוי גורף",
+    "special_dates": "ימים ללא שמע", "login": "התחברות",
+    "view_link_rotate": "החלפת קישור צפייה", "user_add": "הוספת מורשה", "user_update": "עדכון מורשה", "user_delete": "מחיקת מורשה", "license_activate": "הפעלת רישיון",
 }
 FIELD_NAMES = {"label": "תיאור", "type": "סוג", "duration_seconds": "משך", "loop": "השמעה חוזרת",
                "fade_in_s": "Fade In", "fade_out_s": "Fade Out", "shuffle": "השמעה אקראית",
@@ -381,25 +509,175 @@ def mutate(action_name, details, mutator_fn):
     save_data(data, log_action=True, action_name=action_name, action_details=details)
     log_entries = read_action_log(limit=1)
     log_id = log_entries[0]["id"] if log_entries else None
-    push_undo_snapshot(pre_snapshot, action_name, log_id, details)
-    return result if result is not None else data
+    push_undo_snapshot(pre_snapshot, action_name, log_id, details, data.get("history_limit"))
+    return result if result is not None else public_data(data)
 
 
 # ============================================================
 # הרשאות (עריכה / צפייה בלבד)
 # ============================================================
+def request_is_local():
+    """הבקשה הגיעה מהמחשב עצמו (חלון הניהול במחשב הצלצולים) ולא ממחשב אחר / טלפון ברשת."""
+    return has_request_context() and request.remote_addr in ("127.0.0.1", "::1")
+
+
+# ============================================================
+# מורשי עריכה: לכל אחד שם וסיסמה משלו. "מנהל" מוסיף/מסיר מורשים; "עורך" עורך את הלוח.
+# המכסה (ברירת מחדל 5, כולל המנהלים) נקבעת ממרכז הבקרה ומגיעה ברישיון החתום (שדה me), ולכן אי אפשר לשנות אותה במחשב.
+# כל השאר - צפייה בלבד, בלי הגבלה.
+# כל עוד לא הוגדר אף משתמש: עורכים רק ממחשב הצלצולים עצמו (ומשם יוצרים את חשבון המנהל הראשון).
+# ============================================================
+DEFAULT_MAX_EDITORS = 5
+USER_ROLES = {"admin": "מנהל", "editor": "עורך"}
+_users_lock = threading.Lock()
+
+
+def max_editors():
+    try:
+        import license_check
+        n = int(license_check.current_state().get("max_editors") or DEFAULT_MAX_EDITORS)
+        return max(1, n)
+    except Exception:
+        return DEFAULT_MAX_EDITORS
+
+
+def load_users():
+    try:
+        with open(USERS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        users = data.get("users") if isinstance(data, dict) else None
+        return [u for u in (users or []) if isinstance(u, dict) and u.get("id") and u.get("name")]
+    except FileNotFoundError:
+        return []
+    except Exception as e:
+        logging.error(f"users.json לא קריא ({e})")
+        return []
+
+
+def save_users(users):
+    fd, tmp_path = tempfile.mkstemp(dir=BASE_DIR, prefix=".users_", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump({"users": users}, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, USERS_FILE)
+    except Exception:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
+
+
+def migrate_legacy_password():
+    """סיסמת עריכה אחת מהגרסה הקודמת -> חשבון "מנהל" עם אותה סיסמה (פעם אחת, בהפעלה)."""
+    if os.path.exists(USERS_FILE):
+        return
+    try:
+        data = load_data()
+        pw_hash = data.get("permissions", {}).get("edit_password_hash", "")
+        if not pw_hash:
+            return
+        save_users([{"id": uuid.uuid4().hex[:10], "name": "מנהל", "role": "admin", "pw_hash": pw_hash,
+                     "pw_ver": 1, "active": True, "created": datetime.now().isoformat(timespec="seconds"),
+                     "last_login": None}])
+        data["permissions"]["edit_password_hash"] = ""
+        save_data(data, log_action=False, action_name="migrate_password")
+        append_action_log("user_add", "סיסמת העריכה הקודמת הועברה לחשבון 'מנהל' (שם משתמש: מנהל)")
+        logging.info("סיסמת העריכה הקודמת הועברה לחשבון משתמש 'מנהל'")
+    except Exception as e:
+        logging.error(f"העברת סיסמת העריכה לחשבון משתמש נכשלה: {e}")
+
+
+def allowed_user_ids(users, limit=None):
+    """אילו חשבונות פעילים נכנסים במכסה. אם המכסה ירדה ממרכז הבקרה - קודם המנהלים, ואז לפי ותק."""
+    limit = limit or max_editors()
+    active = [u for u in users if u.get("active", True)]
+    active.sort(key=lambda u: (0 if u.get("role") == "admin" else 1, u.get("created") or ""))
+    return {u["id"] for u in active[:limit]}
+
+
+def current_user():
+    if not has_request_context() or not session.get("uid"):
+        return None
+    users = load_users()
+    u = next((x for x in users if x["id"] == session.get("uid")), None)
+    if not u or not u.get("active", True) or u.get("pw_ver", 1) != session.get("pw_ver"):
+        return None
+    if u["id"] not in allowed_user_ids(users):
+        return None
+    return u
+
+
+def actor_name():
+    if not has_request_context():
+        return "מערכת"
+    u = current_user()
+    if u:
+        return u["name"]
+    return "מחשב הצלצולים" if request_is_local() else ""
+
+
 def is_editor():
-    data = load_data()
-    pw_hash = data.get("permissions", {}).get("edit_password_hash", "")
-    if not pw_hash:
-        return True  # לא הוגדרה סיסמת עריכה -> אין נעילה (ברירת מחדל תואמת אחורה)
-    return session.get("role") == "editor"
+    if not load_users():
+        # עוד לא הוגדרו מורשים: עורכים רק ממחשב הצלצולים עצמו. ממחשב אחר / מטלפון - צפייה בלבד.
+        return request_is_local()
+    return current_user() is not None
+
+
+def is_admin():
+    if not load_users():
+        return request_is_local()
+    u = current_user()
+    return bool(u and u.get("role") == "admin")
 
 
 def require_editor():
     if not is_editor():
-        return jsonify({"error": "פעולה זו דורשת התחברות כעורך"}), 403
+        return jsonify({"error": "פעולה זו דורשת התחברות של מורשה עריכה"}), 403
     return None
+
+
+def require_admin():
+    if not is_admin():
+        return jsonify({"error": "רק מנהל יכול לנהל את מורשי העריכה"}), 403
+    return None
+
+
+# ---- סיסמת עריכה: PBKDF2 עם salt (במקום SHA-256 פשוט). סיסמה ישנה ממשיכה לעבוד ומשודרגת בהתחברות הבאה ----
+PBKDF2_ITERATIONS = 120000
+
+
+def hash_password(password):
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, PBKDF2_ITERATIONS)
+    return "pbkdf2$%d$%s$%s" % (PBKDF2_ITERATIONS, salt.hex(), digest.hex())
+
+
+def verify_password(password, stored):
+    """(תקין?, צריך שדרוג לפורמט החדש?)"""
+    if not stored:
+        return False, False
+    if stored.startswith("pbkdf2$"):
+        try:
+            _, iters, salt_hex, digest_hex = stored.split("$")
+            digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), bytes.fromhex(salt_hex), int(iters))
+            return hmac.compare_digest(digest.hex(), digest_hex), False
+        except (ValueError, TypeError):
+            return False, False
+    legacy = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return hmac.compare_digest(legacy, stored), True
+
+
+# ---- הגנה מניחוש סיסמה: 5 ניסיונות שגויים מאותה כתובת = נעילה ל-10 דקות ----
+LOGIN_MAX_FAILURES, LOGIN_LOCK_SECONDS = 5, 600
+_login_failures = {}      # כתובת -> [זמני ניסיונות שגויים]
+
+
+def login_locked_seconds(addr):
+    now = time.time()
+    recent = [t for t in _login_failures.get(addr, []) if now - t < LOGIN_LOCK_SECONDS]
+    _login_failures[addr] = recent
+    if len(recent) >= LOGIN_MAX_FAILURES:
+        return int(LOGIN_LOCK_SECONDS - (now - recent[0])) + 1
+    return 0
 
 
 # ============================================================
@@ -619,7 +897,7 @@ def index():
 # ============================================================
 @app.route("/api/schedule", methods=["GET"])
 def api_get_schedule():
-    data = load_data()
+    data = public_data(load_data())
     data["license"] = license_state_public()
     return jsonify(data)
 
@@ -633,6 +911,7 @@ def license_state_public():
         st = license_check.current_state()
         st["customer_code"] = st.get("customer_code") or license_check.configured_customer_code()
         st["has_public_key"] = bool(license_check.public_key())
+        st["max_editors"] = int(st.get("max_editors") or DEFAULT_MAX_EDITORS)
         return st
     except Exception as e:
         return {"state": "error", "blocked": False, "level": "warning", "message": "בדיקת הרישיון נכשלה: %s" % e}
@@ -681,27 +960,261 @@ def api_themes():
 # ============================================================
 @app.route("/api/session", methods=["GET"])
 def api_session():
-    data = load_data()
-    has_password = bool(data.get("permissions", {}).get("edit_password_hash"))
-    return jsonify({"role": "editor" if is_editor() else "viewer", "password_set": has_password})
+    users = load_users()
+    u = current_user()
+    return jsonify({"role": "editor" if is_editor() else "viewer", "admin": is_admin(),
+                    "user": {"id": u["id"], "name": u["name"], "role": u["role"]} if u else None,
+                    "users_exist": bool(users), "password_set": bool(users),
+                    "local": request_is_local(), "max_editors": max_editors()})
 
 
 @app.route("/api/login", methods=["POST"])
 def api_login():
     body = request.get_json(force=True)
+    name = str(body.get("name") or "").strip()
     password = body.get("password", "")
-    data = load_data()
-    pw_hash = data.get("permissions", {}).get("edit_password_hash", "")
-    if not pw_hash or hashlib.sha256(password.encode("utf-8")).hexdigest() == pw_hash:
-        session["role"] = "editor"
-        return jsonify({"ok": True, "role": "editor"})
-    return jsonify({"ok": False, "error": "סיסמה שגויה"}), 401
+    users = load_users()
+    if not users:
+        if request_is_local():
+            session["role"] = "editor"
+            return jsonify({"ok": True, "role": "editor"})
+        return jsonify({"ok": False, "error": "עוד לא הוגדרו מורשי עריכה. אפשר לערוך רק ממחשב הצלצולים, "
+                                              "ושם יוצרים את חשבון המנהל (הגדרות ← מורשי עריכה)."}), 403
+    addr = request.remote_addr or "?"
+    wait = login_locked_seconds(addr)
+    if wait:
+        return jsonify({"ok": False, "error": f"יותר מדי ניסיונות שגויים. נסו שוב בעוד {wait // 60 + 1} דקות."}), 429
+    u = next((x for x in users if x["name"].strip().lower() == name.lower()), None)
+    good, needs_upgrade = verify_password(password, u["pw_hash"]) if u else (False, False)
+    if not good:
+        _login_failures.setdefault(addr, []).append(time.time())
+        logging.warning(f"ניסיון התחברות שגוי מהכתובת {addr} (שם: {name[:40]})")
+        return jsonify({"ok": False, "error": "שם משתמש או סיסמה שגויים"}), 401
+    if not u.get("active", True):
+        return jsonify({"ok": False, "error": "החשבון הושבת. יש לפנות למנהל המערכת במוסד."}), 403
+    if u["id"] not in allowed_user_ids(users):
+        return jsonify({"ok": False, "error": "מספר מורשי העריכה במוסד גדול מהמכסה ברישיון, והחשבון הזה מעבר לה. "
+                                              "יש לפנות למנהל המערכת במוסד."}), 403
+    _login_failures.pop(addr, None)
+    with _users_lock:
+        users = load_users()
+        for x in users:
+            if x["id"] == u["id"]:
+                if needs_upgrade:
+                    x["pw_hash"] = hash_password(password)
+                x["last_login"] = datetime.now().isoformat(timespec="seconds")
+        try:
+            save_users(users)
+        except Exception as e:
+            logging.error(f"עדכון פרטי ההתחברות נכשל: {e}")
+    session["role"] = "editor"
+    session["uid"], session["pw_ver"] = u["id"], u.get("pw_ver", 1)
+    append_action_log("login", f"התחברות: {u['name']} ({USER_ROLES.get(u['role'], u['role'])})")
+    return jsonify({"ok": True, "role": "editor", "user": {"name": u["name"], "role": u["role"]}})
 
 
 @app.route("/api/logout", methods=["POST"])
 def api_logout():
+    session.pop("uid", None)
+    session.pop("pw_ver", None)
     session["role"] = "viewer"
     return jsonify({"ok": True, "role": "viewer"})
+
+
+# ============================================================
+# API: מורשי עריכה
+# ============================================================
+def _public_user(u, allowed):
+    return {"id": u["id"], "name": u["name"], "role": u["role"], "role_name": USER_ROLES.get(u["role"], u["role"]),
+            "active": u.get("active", True), "in_quota": u["id"] in allowed,
+            "created": u.get("created"), "last_login": u.get("last_login")}
+
+
+def _users_payload(users):
+    allowed = allowed_user_ids(users)
+    me = current_user()
+    return {"users": [_public_user(u, allowed) for u in users], "max_editors": max_editors(),
+            "active_count": sum(1 for u in users if u.get("active", True)), "me": me["id"] if me else None}
+
+
+def _validate_name(name, users, skip_id=None):
+    name = str(name or "").strip()
+    if not (2 <= len(name) <= 40):
+        return None, "שם משתמש: 2 עד 40 תווים"
+    if any(u["name"].strip().lower() == name.lower() and u["id"] != skip_id for u in users):
+        return None, "כבר קיים משתמש בשם הזה"
+    return name, None
+
+
+def _validate_password(pw):
+    pw = str(pw or "")
+    if len(pw) < 6:
+        return None, "סיסמה: לפחות 6 תווים"
+    if len(pw) > 128:
+        return None, "סיסמה ארוכה מדי"
+    return pw, None
+
+
+def _active_admins(users, skip_id=None):
+    return [u for u in users if u.get("role") == "admin" and u.get("active", True) and u["id"] != skip_id]
+
+
+@app.route("/api/users", methods=["GET"])
+def api_list_users():
+    guard = require_admin()
+    if guard:
+        return guard
+    return jsonify(_users_payload(load_users()))
+
+
+@app.route("/api/users", methods=["POST"])
+def api_add_user():
+    """הוספת מורשה. המשתמש הראשון נוצר רק ממחשב הצלצולים, והוא תמיד מנהל."""
+    guard = require_admin()
+    if guard:
+        return guard
+    body = request.get_json(force=True)
+    with _users_lock:
+        users = load_users()
+        first = not users
+        name, err = _validate_name(body.get("name"), users)
+        pw, err2 = _validate_password(body.get("password"))
+        if err or err2:
+            return jsonify({"error": err or err2}), 400
+        role = "admin" if first else (body.get("role") if body.get("role") in USER_ROLES else "editor")
+        limit = max_editors()
+        if sum(1 for u in users if u.get("active", True)) >= limit:
+            return jsonify({"error": f"הגעתם למכסת מורשי העריכה ({limit}). כדי להוסיף מורשה יש להשבית או למחוק מורשה קיים, "
+                                     f"או לפנות לספק להגדלת המכסה."}), 403
+        u = {"id": uuid.uuid4().hex[:10], "name": name, "role": role, "pw_hash": hash_password(pw), "pw_ver": 1,
+             "active": True, "created": datetime.now().isoformat(timespec="seconds"), "last_login": None}
+        users.append(u)
+        save_users(users)
+    append_action_log("user_add", f"נוסף מורשה עריכה: {name} ({USER_ROLES[role]})")
+    if first:          # מי שיצר את החשבון הראשון נשאר מחובר אליו
+        session["role"], session["uid"], session["pw_ver"] = "editor", u["id"], 1
+    return jsonify(_users_payload(users))
+
+
+@app.route("/api/users/<uid>", methods=["PATCH"])
+def api_update_user(uid):
+    """שינוי שם / תפקיד / פעיל / איפוס סיסמה. איפוס סיסמה או השבתה מנתקים את המשתמש מכל המכשירים."""
+    guard = require_admin()
+    if guard:
+        return guard
+    body = request.get_json(force=True)
+    with _users_lock:
+        users = load_users()
+        u = next((x for x in users if x["id"] == uid), None)
+        if not u:
+            return jsonify({"error": "המשתמש לא נמצא"}), 404
+        changes = []
+        if "name" in body and str(body["name"]).strip() != u["name"]:
+            name, err = _validate_name(body["name"], users, skip_id=uid)
+            if err:
+                return jsonify({"error": err}), 400
+            changes.append(f"שם: {u['name']} → {name}")
+            u["name"] = name
+        if "role" in body and body["role"] in USER_ROLES and body["role"] != u["role"]:
+            if u["role"] == "admin" and not _active_admins(users, skip_id=uid):
+                return jsonify({"error": "חייב להישאר לפחות מנהל פעיל אחד"}), 400
+            changes.append(f"תפקיד: {USER_ROLES[u['role']]} → {USER_ROLES[body['role']]}")
+            u["role"] = body["role"]
+        if "active" in body and bool(body["active"]) != u.get("active", True):
+            if body["active"]:
+                if sum(1 for x in users if x.get("active", True)) >= max_editors():
+                    return jsonify({"error": f"הגעתם למכסת מורשי העריכה ({max_editors()})"}), 403
+            elif u["role"] == "admin" and not _active_admins(users, skip_id=uid):
+                return jsonify({"error": "חייב להישאר לפחות מנהל פעיל אחד"}), 400
+            u["active"] = bool(body["active"])
+            u["pw_ver"] = u.get("pw_ver", 1) + 1
+            changes.append("הופעל" if u["active"] else "הושבת")
+        if body.get("password"):
+            pw, err = _validate_password(body["password"])
+            if err:
+                return jsonify({"error": err}), 400
+            u["pw_hash"], u["pw_ver"] = hash_password(pw), u.get("pw_ver", 1) + 1
+            changes.append("איפוס סיסמה")
+        save_users(users)
+        me = current_user() is None and session.get("uid") == uid      # שיניתי את הסיסמה של עצמי -> נשארים מחוברים
+        if me and not body.get("active") is False:
+            session["pw_ver"] = u["pw_ver"]
+    if changes:
+        append_action_log("user_update", f"עדכון מורשה {u['name']}: " + ", ".join(changes))
+    return jsonify(_users_payload(users))
+
+
+@app.route("/api/users/<uid>", methods=["DELETE"])
+def api_delete_user(uid):
+    guard = require_admin()
+    if guard:
+        return guard
+    with _users_lock:
+        users = load_users()
+        u = next((x for x in users if x["id"] == uid), None)
+        if not u:
+            return jsonify({"error": "המשתמש לא נמצא"}), 404
+        if u["role"] == "admin" and not _active_admins(users, skip_id=uid):
+            return jsonify({"error": "חייב להישאר לפחות מנהל פעיל אחד"}), 400
+        users = [x for x in users if x["id"] != uid]
+        save_users(users)
+    append_action_log("user_delete", f"נמחק מורשה עריכה: {u['name']}")
+    return jsonify(_users_payload(users))
+
+
+@app.route("/api/me/password", methods=["POST"])
+def api_change_my_password():
+    """כל מורשה יכול להחליף את הסיסמה של עצמו (עם הסיסמה הנוכחית)."""
+    u = current_user()
+    if not u:
+        return jsonify({"error": "יש להתחבר קודם"}), 403
+    body = request.get_json(force=True)
+    good, _ = verify_password(str(body.get("old") or ""), u["pw_hash"])
+    if not good:
+        return jsonify({"error": "הסיסמה הנוכחית שגויה"}), 400
+    pw, err = _validate_password(body.get("new"))
+    if err:
+        return jsonify({"error": err}), 400
+    with _users_lock:
+        users = load_users()
+        for x in users:
+            if x["id"] == u["id"]:
+                x["pw_hash"], x["pw_ver"] = hash_password(pw), x.get("pw_ver", 1) + 1
+                session["pw_ver"] = x["pw_ver"]
+        save_users(users)
+    append_action_log("user_update", f"{u['name']} החליף/ה את הסיסמה שלו/ה")
+    return jsonify({"ok": True})
+
+
+# ============================================================
+# API: קישור הצפייה בענן (מורים, תלמידים, הורים). cloud_reporter.py שולח את הלוח וכותב את הקישור ל-logs/board_state.json
+# ============================================================
+BOARD_STATE_FILE = os.path.join(LOGS_DIR, "board_state.json")
+CLOUD_REQUEST_FILE = os.path.join(LOGS_DIR, "cloud_request.json")
+
+
+@app.route("/api/cloud/view-link", methods=["GET"])
+def api_cloud_view_link():
+    try:
+        with open(BOARD_STATE_FILE, "r", encoding="utf-8") as f:
+            st = json.load(f)
+    except (OSError, ValueError):
+        st = {}
+    connected = os.path.exists(os.path.join(BASE_DIR, "cloud_config.json"))
+    return jsonify({"view_url": st.get("view_url"), "pushed_at": st.get("pushed_at"), "connected": connected,
+                    "rotate_pending": os.path.exists(CLOUD_REQUEST_FILE)})
+
+
+@app.route("/api/cloud/view-link/rotate", methods=["POST"])
+def api_cloud_view_link_rotate():
+    """החלפת קישור הצפייה (אם דלף). מתבצע בדיווח הבא למרכז הבקרה, תוך שניות."""
+    guard = require_admin()
+    if guard:
+        return guard
+    with open(CLOUD_REQUEST_FILE, "w", encoding="utf-8") as f:
+        json.dump({"rotate_view": True, "at": datetime.now().isoformat(timespec="seconds")}, f)
+    append_action_log("view_link_rotate", "בקשה להחלפת קישור הצפייה")
+    return jsonify({"ok": True})
 
 
 # ============================================================
@@ -750,7 +1263,7 @@ def api_update_event():
         return guard
     body = request.get_json(force=True)
     day, index, event = body.get("day"), body.get("index"), body.get("event")
-    if day not in DAY_ORDER or index is None or not event:
+    if day not in DAY_ORDER or (index is None and not body.get("uid")) or not event:
         return jsonify({"error": "בקשה לא תקינה"}), 400
     event["time"] = migrate_time(event.get("time", "00:00:00"))
     event["type"] = normalize_type(event.get("type"))
@@ -764,10 +1277,11 @@ def api_update_event():
 
     def do(data):
         weekly = data["weekly_schedule"]
-        for it in [{"day": day, "index": index}] + also + remove:
-            if not isinstance(it.get("index"), int) or it["index"] < 0 or it["index"] >= len(weekly.get(it["day"], [])):
-                raise IndexError("אינדקס לא תקין")
+        index = resolve_item(weekly, {"day": day, "index": body.get("index"), "uid": body.get("uid")})
+        for it in also + remove:
+            it["index"] = resolve_item(weekly, it)
         before["ev"] = copy.deepcopy(weekly[day][index])
+        event["uid"] = before["ev"].get("uid") or uuid.uuid4().hex[:12]     # המזהה של אירוע לא משתנה בעריכה
         weekly[day][index] = event
         for it in also:
             twin = weekly[it["day"]][it["index"]]
@@ -812,15 +1326,14 @@ def api_quick_update_event():
         return guard
     body = request.get_json(force=True)
     day, index, fields = body.get("day"), body.get("index"), body.get("fields", {})
-    if day not in DAY_ORDER or index is None or not fields:
+    if day not in DAY_ORDER or (index is None and not body.get("uid")) or not fields:
         return jsonify({"error": "בקשה לא תקינה"}), 400
 
     desc = {}
 
     def do(data):
         events = data["weekly_schedule"].get(day, [])
-        if index < 0 or index >= len(events):
-            raise IndexError("אינדקס לא תקין")
+        index = resolve_item(data["weekly_schedule"], {"day": day, "index": body.get("index"), "uid": body.get("uid")})
         old = copy.deepcopy(events[index])
         apply_quick_fields(events[index], fields)
         desc["text"] = f"{', '.join(describe_changes(old, events[index]) or ['עדכון'])}, {event_ref([day], old)}"
@@ -860,20 +1373,18 @@ def api_quick_update_many():
         return guard
     body = request.get_json(force=True)
     items = body.get("items") or []
-    if not items or any(it.get("day") not in DAY_ORDER or it.get("index") is None or not it.get("fields") for it in items):
+    if not items or any(it.get("day") not in DAY_ORDER or (it.get("index") is None and not it.get("uid")) or not it.get("fields") for it in items):
         return jsonify({"error": "בקשה לא תקינה"}), 400
     current = load_data()["weekly_schedule"]
     try:
-        first = current[items[0]["day"]][items[0]["index"]]
+        first = current[items[0]["day"]][resolve_item(current, items[0])]
     except (IndexError, KeyError, TypeError):
         return jsonify({"error": "אינדקס לא תקין"}), 404
     desc = {}
 
     def do(data):
         for it in items:
-            events = data["weekly_schedule"].get(it["day"], [])
-            if it["index"] < 0 or it["index"] >= len(events):
-                raise IndexError("אינדקס לא תקין")
+            it["index"] = resolve_item(data["weekly_schedule"], it)
         groups = {}      # אותו שינוי בכמה ימים -> שורה אחת
         for it in items:
             ev = data["weekly_schedule"][it["day"]][it["index"]]
@@ -899,16 +1410,15 @@ def api_delete_event():
     if guard:
         return guard
     body = request.get_json(force=True)
-    items = body.get("items") or [{"day": body.get("day"), "index": body.get("index")}]
-    if any(it.get("day") not in DAY_ORDER or not isinstance(it.get("index"), int) for it in items):
+    items = body.get("items") or [{"day": body.get("day"), "index": body.get("index"), "uid": body.get("uid")}]
+    if any(it.get("day") not in DAY_ORDER or (not isinstance(it.get("index"), int) and not it.get("uid")) for it in items):
         return jsonify({"error": "בקשה לא תקינה"}), 400
     desc = {}
 
     def do(data):
         weekly = data["weekly_schedule"]
         for it in items:
-            if it["index"] < 0 or it["index"] >= len(weekly.get(it["day"], [])):
-                raise IndexError("אינדקס לא תקין")
+            it["index"] = resolve_item(weekly, it)
         first = copy.deepcopy(weekly[items[0]["day"]][items[0]["index"]])
         for it in sorted(items, key=lambda x: -x["index"]):
             del weekly[it["day"]][it["index"]]
@@ -931,13 +1441,12 @@ def api_duplicate_event():
     body = request.get_json(force=True)
     day, index = body.get("day"), body.get("index")
     target_day = body.get("target_day", day)
-    if day not in DAY_ORDER or target_day not in DAY_ORDER or index is None:
+    if day not in DAY_ORDER or target_day not in DAY_ORDER or (index is None and not body.get("uid")):
         return jsonify({"error": "בקשה לא תקינה"}), 400
 
     def do(data):
         events = data["weekly_schedule"].get(day, [])
-        if index < 0 or index >= len(events):
-            raise IndexError("אינדקס לא תקין")
+        index = resolve_item(data["weekly_schedule"], {"day": day, "index": body.get("index"), "uid": body.get("uid")})
         clone = copy.deepcopy(events[index])
         clone["uid"] = uuid.uuid4().hex[:12]
         clone["label"] = clone.get("label", "") + " (עותק)"
@@ -975,6 +1484,126 @@ def api_duplicate_day():
         data["weekly_schedule"][target_day] = cloned
 
     data = mutate("duplicate_day", f"שכפול יום, {DAY_HEB[source_day]} → {DAY_HEB[target_day]} (כל האירועים ביום היעד הוחלפו)", do)
+    return jsonify(data)
+
+
+# ============================================================
+# API: שינוי גורף - אותו שינוי לכל האירועים / לכל האירועים מסוג מסוים / לכל מי שמנגן קובץ מסוים
+# ============================================================
+BULK_SCOPES = ("all", "type", "audio")
+
+
+def _bulk_matches(ev, scope, value):
+    if normalize_type(ev.get("type")) == "Message":      # הודעה היא בלי צליל - שינוי גורף חל על אירועי שמע בלבד
+        return False
+    if scope == "type":
+        return normalize_type(ev.get("type")) == normalize_type(value)
+    if scope == "audio":
+        return str(ev.get("audio") or "") == str(value or "")
+    return True
+
+
+@app.route("/api/events/bulk", methods=["POST"])
+def api_bulk_update():
+    """scope: "all" | "type" | "audio" (+ value), days: [יום] (ברירת מחדל - כל השבוע),
+    fields: volume / enabled / audio / fade_in_s / fade_out_s.  dry_run: true מחזיר רק כמה אירועים יושפעו.
+    כל השינוי הוא פעולה אחת ב-Undo."""
+    guard = require_editor()
+    if guard:
+        return guard
+    body = request.get_json(force=True)
+    scope, value = body.get("scope", "all"), body.get("value")
+    days = [d for d in DAY_ORDER if d in (body.get("days") or DAY_ORDER)]
+    raw = body.get("fields") or {}
+    fields = {}
+    try:
+        if raw.get("volume") is not None:
+            fields["volume"] = max(0, min(100, int(raw["volume"])))
+        if raw.get("enabled") is not None:
+            fields["enabled"] = bool(raw["enabled"])
+        if raw.get("audio"):
+            fields["audio"] = str(raw["audio"])
+        for k in ("fade_in_s", "fade_out_s"):
+            if raw.get(k) is not None:
+                fields[k] = max(0.0, min(30.0, float(raw[k])))
+    except (TypeError, ValueError):
+        return jsonify({"error": "ערך לא תקין"}), 400
+    if scope not in BULK_SCOPES or not days or not fields or (scope != "all" and not value):
+        return jsonify({"error": "בקשה לא תקינה"}), 400
+
+    weekly_now = load_data()["weekly_schedule"]
+    count = sum(1 for d in days for ev in weekly_now[d] if _bulk_matches(ev, scope, value))
+    if body.get("dry_run"):
+        return jsonify({"count": count})
+    if not count:
+        return jsonify({"error": "אין אירועים מתאימים"}), 400
+
+    def do(data):
+        for d in days:
+            for ev in data["weekly_schedule"][d]:
+                if _bulk_matches(ev, scope, value):
+                    ev.update(fields)
+
+    what = []
+    if "volume" in fields:
+        what.append(f"עוצמה {fields['volume']}%")
+    if "enabled" in fields:
+        what.append("הפעלה" if fields["enabled"] else "השבתה")
+    if "audio" in fields:
+        what.append("קובץ שמע " + (os.path.basename(fields["audio"].replace("\\", "/").rstrip("/")) or fields["audio"]))
+    if "fade_in_s" in fields or "fade_out_s" in fields:
+        what.append("Fade")
+    type_names = {"Bell": "הצלצולים", "Music": "המוסיקה", "Exercise": "התרגילים"}
+    who = {"all": "כל האירועים", "type": "כל " + type_names.get(normalize_type(value), str(value)),
+           "audio": f"כל האירועים עם '{os.path.basename(str(value).replace(chr(92), '/').rstrip('/'))}'"}[scope]
+    where = "" if len(days) == 7 else " בימים " + ", ".join(DAY_HEB[d] for d in days)
+    data = mutate("bulk_edit", f"שינוי גורף ({', '.join(what)}) ל{who}{where} - {count} אירועים", do)
+    return jsonify({"count": count, "data": data})
+
+
+# ============================================================
+# API: ימים ללא שמע (חופשות, חגים, ימים מיוחדים). המנוע לא מנגן בהם את הלוח; צלצול ידני ממשיך לעבוד.
+# ============================================================
+_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+MAX_SPECIAL_DATES = 400
+
+
+def _valid_iso(d):
+    if not isinstance(d, str) or not _ISO_DATE.match(d):
+        return False
+    try:
+        date(int(d[:4]), int(d[5:7]), int(d[8:10]))
+        return True
+    except ValueError:
+        return False
+
+
+@app.route("/api/special-dates", methods=["POST"])
+def api_set_special_dates():
+    """מחליף את כל הרשימה. items: [{id?, label, date, end_date?}] - טווח כולל משני הצדדים."""
+    guard = require_editor()
+    if guard:
+        return guard
+    body = request.get_json(force=True)
+    items = body.get("items")
+    if not isinstance(items, list) or len(items) > MAX_SPECIAL_DATES:
+        return jsonify({"error": "בקשה לא תקינה"}), 400
+    clean = []
+    for it in items:
+        start, end = it.get("date"), it.get("end_date") or it.get("date")
+        if not _valid_iso(start) or not _valid_iso(end):
+            return jsonify({"error": "תאריך לא תקין"}), 400
+        if end < start:
+            return jsonify({"error": "תאריך הסיום לפני תאריך ההתחלה"}), 400
+        clean.append({"id": str(it.get("id") or uuid.uuid4().hex[:10])[:20],
+                      "label": str(it.get("label") or "").strip()[:80] or "יום ללא שמע",
+                      "date": start, "end_date": end, "mode": "silent"})
+    clean.sort(key=lambda x: (x["date"], x["end_date"]))
+
+    def do(data):
+        data["special_dates"] = clean
+
+    data = mutate("special_dates", f"עדכון ימים ללא שמע ({len(clean)} רשומות)", do)
     return jsonify(data)
 
 
@@ -1180,6 +1809,9 @@ def api_browse():
 @app.route("/api/browse/resolve", methods=["POST"])
 def api_browse_resolve():
     """ממיר נתיב שנבחר לערך שנשמר בשדה audio."""
+    guard = require_editor()
+    if guard:
+        return guard
     body = request.get_json(force=True)
     return jsonify({"value": to_stored_audio_value(body.get("path", ""))})
 
@@ -1241,19 +1873,16 @@ def api_set_settings():
             data["appearance"].update(body["appearance"])
         if "show_disabled_events" in body:
             data["show_disabled_events"] = bool(body["show_disabled_events"])
-        if "new_edit_password" in body and body["new_edit_password"] is not None:
-            pw = body["new_edit_password"]
-            data["permissions"]["edit_password_hash"] = (
-                hashlib.sha256(pw.encode("utf-8")).hexdigest() if pw else ""
-            )
+        if body.get("history_limit") is not None:
+            data["history_limit"] = clamp_history_limit(body["history_limit"])
 
     parts = [{"institution_info": "פרטי מוסד", "audio_device": "התקן שמע", "appearance": "מראה",
-               "show_disabled_events": "הצגת לא-פעילים", "new_edit_password": "סיסמת עריכה"}[k] for k in
-             ("institution_info", "audio_device", "appearance", "show_disabled_events", "new_edit_password") if body.get(k) is not None]
+               "show_disabled_events": "הצגת לא-פעילים",
+               "history_limit": "מספר פעולות לביטול"}[k] for k in
+             ("institution_info", "audio_device", "appearance", "show_disabled_events", "history_limit")
+             if body.get(k) is not None]
     data = mutate("update_settings", "עדכון הגדרות: " + (", ".join(parts) or "—"), do)
-    safe = json.loads(json.dumps(data))
-    safe.get("permissions", {}).pop("edit_password_hash", None)
-    return jsonify(safe)
+    return jsonify(public_data(data))
 
 
 # ============================================================
@@ -1440,23 +2069,43 @@ def api_log():
 
 @app.route("/api/undo/history", methods=["GET"])
 def api_undo_history():
-    return jsonify(list_undo_history())
+    return jsonify(list_history())
 
 
-@app.route("/api/undo", methods=["POST"])
-def api_undo():
-    """צעד אחד אחורה (התנהגות ברירת מחדל - שקולה ל-jump עם steps_back=1)."""
+def _history_step(direction):
     guard = require_editor()
     if guard:
         return guard
     body = request.get_json(silent=True) or {}
-    steps_back = int(body.get("steps_back", 1))
-    snapshot = jump_to_undo_step(steps_back)
-    if snapshot is None:
-        return jsonify({"error": "אין פעולות לשחזור"}), 400
-    save_data(snapshot, log_action=True, action_name="undo",
-              action_details=f"שוחזר מצב קודם ({steps_back} צעדים אחורה)")
-    return jsonify(snapshot)
+    key = "steps_back" if direction == "undo" else "steps_forward"
+    try:
+        steps = int(body.get(key, 1))
+    except (TypeError, ValueError):
+        steps = 1
+    state = step_history(direction, steps, load_data())
+    if state is None:
+        return jsonify({"error": "אין פעולות לביטול" if direction == "undo" else "אין פעולות להחזרה"}), 400
+    text = (f"בוטלו {steps} פעולות אחרונות" if steps > 1 else "בוטלה הפעולה האחרונה") if direction == "undo" \
+        else (f"הוחזרו {steps} פעולות" if steps > 1 else "הוחזרה פעולה שבוטלה")
+    save_data(state, log_action=True, action_name=direction, action_details=text)
+    return jsonify(public_data(state))
+
+
+@app.route("/api/undo", methods=["POST"])
+def api_undo():
+    """ביטול פעולה (Undo). steps_back: כמה צעדים אחורה (ברירת מחדל 1)."""
+    return _history_step("undo")
+
+
+@app.route("/api/redo", methods=["POST"])
+def api_redo():
+    """החזרת פעולה שבוטלה (Redo). steps_forward: כמה צעדים קדימה (ברירת מחדל 1)."""
+    return _history_step("redo")
+
+
+@app.errorhandler(StaleEvent)
+def handle_stale_event(e):
+    return jsonify({"error": "הלוח השתנה בינתיים ממקום אחר. הלוח רוענן - נסו שוב.", "stale": True}), 409
 
 
 # ============================================================
@@ -1474,7 +2123,7 @@ _window_lock = threading.Lock()
 
 
 def _request_is_local():
-    return request.remote_addr in ("127.0.0.1", "::1")
+    return request_is_local()
 
 
 def _stop_whole_system():
@@ -1563,6 +2212,7 @@ if __name__ == "__main__":
         print(msg)
         sys.exit(1)
     load_data()
+    migrate_legacy_password()
     try:
         import license_check
         if license_check.ensure_first_run():

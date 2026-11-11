@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(schedule.json)",
+      "Edit(saved_schedules.json)",
+      "Edit(users.json)",
+      "Edit(license.json)",
+      "Edit(cloud_config.json)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)"
+    ],
+    "ask": [
+      "Edit(src/main.py)"
+    ]
+  }
+}

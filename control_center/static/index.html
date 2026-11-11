@@ -765,7 +765,7 @@ async function openCustomer(id, silent) {
           ${select("plan", "מסלול", opt({ basic: "בסיסי", pro: "מורחב" }, c.plan))}
           ${select("payment_status", "תשלום", opt(state.meta.payment_statuses, c.payment_status))}
           ${field("monthly_price", "מחיר חודשי (₪)", "number")}
-          <div></div>
+          ${field("max_editors", "מורשי עריכה (מכסה)", "number")}
           <div class="field span3"><label>הערות</label><textarea name="notes" ${owner ? "" : "disabled"}>${esc(c.notes || "")}</textarea></div>
         </div>
         <div class="panel-b"><div class="notice info" style="font-size:12px;line-height:1.6">המחשב מקבל את הרישיון החתום בדיווח הבא (תוך דקה).
@@ -780,7 +780,9 @@ async function openCustomer(id, silent) {
           ${c.machine_id ? `<span class="muted">· מחשב: <span class="mono">${esc(c.machine_id)}</span></span>` : ""}
           <button class="btn small" id="act-code" style="margin-inline-start:auto">קוד הפעלה ידני</button>
           <button class="btn small" id="rotate">הנפקת מפתח חדש</button>
-        </div></div>` : ""}
+        </div></div>
+      <div class="panel"><div class="panel-h">קישור צפייה <span class="muted">· מורים, תלמידים והורים, בלי התחברות</span></div>
+        <div class="panel-b" id="view-link-b" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="muted">טוען...</span></div></div>` : ""}
 
       ${owner && c.feedback && c.feedback.length ? `<div class="panel"><div class="panel-h">משוב מהלקוח</div>
         ${c.feedback.map(f => `<div class="fb" style="grid-template-columns:1fr"><div class="fb-h"><span class="pill ${f.status === "new" ? "info" : "idle"}">${state.meta.feedback_statuses[f.status]}</span>
@@ -815,6 +817,7 @@ async function openCustomer(id, silent) {
     try { showActivationModal(c.name, await api("/api/customers/" + id + "/activation-code", { method: "POST" })); await openCustomer(id, true); }
     catch (err) { toast(err.message, true); }
   };
+  loadViewLink(id);
   const rot = $("#rotate");
   if (rot) rot.onclick = () => confirmModal("הנפקת מפתח חדש",
     "המפתח הנוכחי יבוטל מיד, והמחשב בבית הספר יפסיק לדווח עד שיוזן בו המפתח החדש (בקובץ cloud_config.json). להמשיך?",
@@ -822,6 +825,19 @@ async function openCustomer(id, silent) {
       const r = await api("/api/customers/" + id + "/rotate-key", { method: "POST" });
       showKeyModal(c.name, r);
     });
+}
+
+async function loadViewLink(id, rotate) {
+  const box = $("#view-link-b"); if (!box) return;
+  try {
+    const r = await api("/api/customers/" + id + "/view-link", rotate ? { method: "POST" } : {});
+    box.innerHTML = `<input class="input mono" readonly value="${esc(r.view_url)}" style="flex:1;min-width:240px;direction:ltr" onclick="this.select()">
+      <button class="btn small" id="vl-open">פתיחה</button><button class="btn small" id="vl-rot">החלפת קישור</button>
+      <span class="muted" style="width:100%;font-size:12px">${r.updated_at ? "הלוח עודכן מהמחשב: " + fmtDateTime(r.updated_at) : "המחשב עוד לא שלח לוח (נשלח בדיווח הבא אחרי עדכון התוכנה בבית הספר)"}</span>`;
+    $("#vl-open").onclick = () => window.open(r.view_url, "_blank");
+    $("#vl-rot").onclick = () => confirmModal("החלפת קישור הצפייה", "הקישור הנוכחי יפסיק לעבוד מיד, ובית הספר יראה את הקישור החדש בהגדרות שלו. להמשיך?",
+      "החלפה", () => loadViewLink(id, true));
+  } catch (e) { box.innerHTML = `<span class="muted">${esc(e.message)}</span>`; }
 }
 
 // ======================================================================= חלונות

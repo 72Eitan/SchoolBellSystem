@@ -45,6 +45,9 @@ AUDIO_DIR = os.path.join(BASE_DIR, "audio")
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 APP_LOG = os.path.join(LOGS_DIR, "app.log")
 STATE_FILE = os.path.join(LOGS_DIR, "cloud_state.json")          # התשובה האחרונה מהמרכז (רישיון וכו')
+BOARD_STATE_FILE = os.path.join(LOGS_DIR, "board_state.json")     # לוח הצפייה בענן: קישור, ה-hash שנשלח אחרון
+CLOUD_REQUEST_FILE = os.path.join(LOGS_DIR, "cloud_request.json")  # בקשות מהממשק (למשל החלפת קישור הצפייה)
+BOARD_CHECK_SECONDS = 5                # כל כמה שניות בודקים אם הלוח השתנה (רק קריאת זמן שינוי - זול)
 FEEDBACK_OUTBOX = os.path.join(LOGS_DIR, "feedback_outbox.jsonl")  # משוב שממתין לשליחה
 REPORTER_LOG = os.path.join(LOGS_DIR, "cloud_reporter.log")
 UPDATES_DIR = os.path.join(BASE_DIR, "updates")
@@ -605,6 +608,79 @@ def handle_update(cfg, offer, status):
 _tick = {"n": 0, "engine": None}
 
 
+# ------------------------------------------------------------------ לוח צפייה בענן
+# עותק צפייה של הלוח נשלח למרכז הבקרה בכל שינוי, ומשם מורים, תלמידים והורים רואים אותו בקישור - בלי לגשת למחשב.
+# נשלח רק מה שצריך לתצוגה: בלי קבצי שמע, עוצמות, הגדרות פנימיות או פרטי קשר.
+BOARD_EVENT_FIELDS = ("time", "label", "type", "enabled", "skip_date", "duration_seconds",
+                      "msg_body", "msg_display", "msg_size", "msg_color", "msg_bg")
+
+
+def build_board(data):
+    weekly = {}
+    for day, events in (data.get("weekly_schedule") or {}).items():
+        weekly[day] = [{k: ev[k] for k in BOARD_EVENT_FIELDS if k in ev} for ev in (events or []) if isinstance(ev, dict)]
+    try:
+        import license_check
+        lic_blocked = bool(license_check.current_state().get("blocked"))
+    except Exception:
+        lic_blocked = False
+    inst = data.get("institution_info") or {}
+    return {
+        "name": inst.get("name", ""), "city": inst.get("city", ""),
+        "accent_color": (data.get("appearance") or {}).get("accent_color", ""),
+        "system_status": data.get("system_status"), "disabled_scope": data.get("disabled_scope"),
+        "disabled_date": data.get("disabled_date"), "special_dates": data.get("special_dates") or [],
+        "license_blocked": lic_blocked, "weekly_schedule": weekly,
+    }
+
+
+_board = {"mtime": None, "date": None}
+
+
+def push_board(cfg, force=False):
+    """שולח את הלוח למרכז הבקרה אם השתנה (לפי hash). מחזיר True אם נשלח."""
+    try:
+        mtime = os.path.getmtime(SCHEDULE_FILE)
+    except OSError:
+        return False
+    req = read_json(CLOUD_REQUEST_FILE) or {}
+    today = datetime.now().date().isoformat()
+    if not force and not req and mtime == _board["mtime"] and today == _board["date"]:
+        return False
+    data = read_json(SCHEDULE_FILE)
+    if not data:
+        return False
+    board = build_board(data)
+    raw = json.dumps(board, ensure_ascii=False, sort_keys=True)
+    h = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
+    state = read_json(BOARD_STATE_FILE) or {}
+    body = {"hash": h}
+    if h != state.get("hash") or force:
+        body["board"] = board
+    if req.get("rotate_view"):
+        body["rotate"] = True
+    if "board" not in body and "rotate" not in body:
+        _board.update(mtime=mtime, date=today)
+        return False
+    code, resp = post(cfg, "/api/agent/board", body)
+    if code != 200:
+        if code == 404:
+            log.info("מרכז הבקרה עוד לא תומך בלוח צפייה (צריך לעדכן אותו)")
+            _board.update(mtime=mtime, date=today)     # לא לנסות שוב עד השינוי הבא
+        return False
+    _board.update(mtime=mtime, date=today)
+    write_json(BOARD_STATE_FILE, {"hash": h, "view_url": resp.get("view_url"),
+                                  "pushed_at": datetime.now().isoformat(timespec="seconds")})
+    if req:
+        try:
+            os.remove(CLOUD_REQUEST_FILE)
+        except OSError:
+            pass
+        if req.get("rotate_view"):
+            log.info("קישור הצפייה הוחלף")
+    return True
+
+
 def build_status():
     now = datetime.now()
     status = schedule_status(read_json(SCHEDULE_FILE), now)
@@ -637,6 +713,11 @@ def send_heartbeat(cfg):
     code, resp = post(cfg, "/api/agent/heartbeat", {"status": status})
     if code == 200:
         apply_license(resp)
+        if resp.get("view_url"):           # הקישור הוחלף ממרכז הבקרה -> מעדכנים את מה שמוצג בהגדרות
+            bst = read_json(BOARD_STATE_FILE) or {}
+            if bst.get("view_url") != resp["view_url"]:
+                bst["view_url"] = resp["view_url"]
+                write_json(BOARD_STATE_FILE, bst)
         write_json(STATE_FILE, {"last_ok": datetime.now().isoformat(timespec="seconds"),
                                 "license": resp.get("license"), "latest_version": resp.get("latest_version"),
                                 "server_time_utc": resp.get("server_time_utc")})
@@ -687,6 +768,10 @@ def main():
                     failures = 0
                     flush_feedback(cfg)
                     try:
+                        push_board(cfg, force=_board["mtime"] is None)
+                    except Exception as e:
+                        log.warning("שליחת לוח הצפייה נכשלה: %s", e)
+                    try:
                         handle_update(cfg, resp.get("update"), status)
                     except Exception as e:
                         log.exception("טיפול בעדכון נכשל: %s", e)
@@ -703,7 +788,16 @@ def main():
             if once:
                 print("שגיאה:", e)
                 return 2
-        time.sleep(interval if failures < 3 else min(interval * 3, 300))
+        wait = interval if failures < 3 else min(interval * 3, 300)
+        # בזמן ההמתנה לדיווח הבא: אם הלוח השתנה - שולחים אותו מיד (תוך שניות), כדי שהצופים יראו את השינוי
+        end = time.time() + wait
+        while time.time() < end:
+            time.sleep(min(BOARD_CHECK_SECONDS, max(0.5, end - time.time())))
+            if failures == 0 and cfg.get("customer_code"):
+                try:
+                    push_board(cfg)
+                except Exception as e:
+                    log.warning("שליחת לוח הצפייה נכשלה: %s", e)
 
 
 if __name__ == "__main__":

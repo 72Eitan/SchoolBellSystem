@@ -353,6 +353,45 @@
   .settings-tab-btn.active { background: #eef3fb; color: var(--accent-1); font-weight: 700; }
   .settings-pane { display: none; }
   .settings-pane.active { display: block; }
+  /* חלון ההגדרות בגודל קבוע: מעבר בין לשוניות לא משנה את גודל החלון, ורק תוכן הלשונית נגלל */
+  .modal.settings-modal { width: 820px; max-width: 96vw; height: 620px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+  .modal.settings-modal > h3, .modal.settings-modal > .settings-tabs { flex: 0 0 auto; }
+  .modal.settings-modal .settings-tabs { flex-wrap: nowrap; gap: 2px; }
+  .modal.settings-modal .settings-tab-btn { padding: 8px 7px; font-size: 0.78rem; white-space: nowrap; }
+  .modal.settings-modal .settings-tabs { overflow-x: auto; scrollbar-width: thin; }
+  @media (max-width: 760px) { .modal.settings-modal .settings-tabs { flex-wrap: wrap; } }
+  .modal.settings-modal > .settings-pane.active { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 2px 4px 4px 8px; }
+  .view-link-box { background: #f3f6fb; border: 1px solid #dde5f0; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.85rem; }
+  .view-link-box .vl-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  .view-link-box input { flex: 1; min-width: 220px; direction: ltr; font-size: 0.8rem; }
+  .view-link-box .vl-qr { margin-top: 10px; display: flex; gap: 12px; align-items: center; }
+  .view-link-box .vl-qr svg, .view-link-box .vl-qr img { background: #fff; padding: 6px; border-radius: 8px; }
+  .users-quota { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.85rem; }
+  .users-quota .bar { flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+  .users-quota .bar > i { display: block; height: 100%; background: var(--accent-1); }
+  .user-row { display: flex; align-items: center; gap: 8px; padding: 8px 4px; border-bottom: 1px solid #eee; font-size: 0.85rem; flex-wrap: wrap; }
+  .user-row .u-name { font-weight: 700; min-width: 110px; } .user-row .u-meta { color: #777; font-size: 0.75rem; flex: 1; }
+  .user-row .u-role { font-size: 0.7rem; border-radius: 10px; padding: 1px 8px; background: #e0e7ff; color: #3730a3; }
+  .user-row .u-role.admin { background: #fde68a; color: #7c4a03; }
+  .user-row.off { opacity: 0.55; } .user-row .u-acts { display: flex; gap: 4px; }
+  .user-form { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr auto; gap: 8px; align-items: end; margin-top: 12px; }
+  .user-form .field { margin: 0; } .user-form .btn-primary { height: 36px; }
+  @media (max-width: 700px) { .user-form { grid-template-columns: 1fr 1fr; } }
+  .bulk-days { display: flex; gap: 6px; flex-wrap: wrap; }
+  .bulk-days label { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82rem; background: #f3f5f9; border-radius: 6px; padding: 3px 7px; cursor: pointer; }
+  .bulk-opt { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85rem; }
+  .bulk-opt > label { min-width: 96px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+  .bulk-opt input[type=number] { width: 72px; } .bulk-opt input[type=text] { flex: 1; min-width: 0; direction: ltr; }
+  .bulk-opt select { width: auto; }
+  .sd-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; align-items: end; margin-bottom: 10px; }
+  .sd-form .field { margin: 0; } .sd-form .btn-primary { height: 36px; }
+  .sd-row { display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+  .sd-row .sd-name { flex: 1; font-weight: 600; } .sd-row .sd-when { color: #555; direction: ltr; }
+  .sd-row.past { opacity: 0.5; } .sd-row .sd-tag { font-size: 0.7rem; border-radius: 10px; padding: 1px 8px; background: #fde68a; color: #7c4a03; }
+  @media (max-width: 700px) { .sd-form { grid-template-columns: 1fr 1fr; } }
+  .history-head { font-size: 0.78rem; font-weight: 700; color: var(--accent-1); margin: 10px 0 4px; }
+  .history-entry.redo { opacity: 0.75; border-right: 3px solid var(--accent-1); padding-right: 8px; }
+  .flip-x { display: inline-block; transform: scaleX(-1); }
   .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
   .theme-swatch { border-radius: 10px; padding: 10px 4px; text-align: center; cursor: pointer; border: 2px solid transparent;
     font-size: 0.72rem; color: #fff; }
@@ -562,8 +601,10 @@
 </header>
 
 <div class="controls-bar">
-  <button class="btn-ghost" onclick="doUndo()">↩️ בטל פעולה אחרונה</button>
+  <button class="btn-ghost" onclick="doUndo()">↩️ בטל פעולה</button>
+  <button class="btn-ghost" onclick="doRedo()"><span class="flip-x">↩️</span> החזר פעולה</button>
   <button class="btn-ghost" onclick="openHistory()">🕘 היסטוריה</button>
+  <button class="btn-ghost" onclick="openBulk()">✏️ שינוי גורף</button>
   <button class="btn-ghost" id="btn-toggle-disabled" onclick="toggleShowDisabled()">👁 הצג לא-פעילים</button>
   <button class="btn-ghost" onclick="openSchedulesTab()">📅 לוחות</button>
   <button class="btn-ghost" onclick="openSettings()">⚙️ הגדרות</button>
@@ -685,6 +726,35 @@
 </div>
 
 <!-- ================= עיון בקבצים / תיקיות ================= -->
+<!-- ================= שינוי גורף ================= -->
+<div class="overlay hidden" id="bulk-overlay" data-close="closeBulk">
+  <div class="modal">
+    <button class="close-x" onclick="closeBulk()">✕</button>
+    <h3>✏️ שינוי גורף</h3>
+    <p class="hint" style="margin-top:0">אותו שינוי לכמה אירועים בבת אחת. לפני הביצוע תוצג כמות האירועים לאישור, ואפשר לבטל ב"בטל פעולה".</p>
+    <div class="field"><label>על אילו אירועים</label>
+      <select id="bulk-scope" onchange="bulkScopeChanged()">
+        <option value="all">כל האירועים</option><option value="type:Bell">כל הצלצולים</option>
+        <option value="type:Music">כל המוסיקה</option><option value="type:Exercise">כל התרגילים</option>
+        <option value="audio">כל האירועים שמנגנים קובץ מסוים</option></select></div>
+    <div class="field" id="bulk-audio-field" style="display:none"><label>קובץ השמע שמתנגן היום</label><select id="bulk-audio"></select></div>
+    <div class="field"><label>באילו ימים</label><div class="bulk-days" id="bulk-days"></div></div>
+    <div class="field"><label>מה לשנות (אפשר יותר מדבר אחד)</label>
+      <div class="bulk-opt"><label><input type="checkbox" id="bulk-do-volume"> עוצמה</label>
+        <input type="number" id="bulk-volume" min="0" max="100" value="85" oninput="document.getElementById('bulk-do-volume').checked = true"> %</div>
+      <div class="bulk-opt"><label><input type="checkbox" id="bulk-do-enabled"> מצב</label>
+        <select id="bulk-enabled" onchange="document.getElementById('bulk-do-enabled').checked = true"><option value="1">פעיל</option><option value="0">לא פעיל</option></select></div>
+      <div class="bulk-opt"><label><input type="checkbox" id="bulk-do-audio"> קובץ שמע</label>
+        <input type="text" id="bulk-new-audio" readonly placeholder="לא נבחר">
+        <button type="button" class="btn-ghost btn-small" onclick="bulkBrowse()">בחירה...</button></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="applyBulk()">המשך</button>
+      <button class="btn-cancel" onclick="closeBulk()">ביטול</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay hidden" id="browse-overlay" data-close="closeBrowser">
   <div class="modal wide">
     <button class="close-x" onclick="closeBrowser()">✕</button>
@@ -745,8 +815,11 @@
 <div class="overlay hidden" id="login-overlay" data-close="closeLoginModal">
   <div class="modal">
     <button class="close-x" onclick="closeLoginModal()">✕</button>
-    <h3>התחברות כעורך</h3>
-    <div class="field"><label>סיסמת עריכה</label><input type="password" id="login-password"></div>
+    <h3>התחברות לעריכה</h3>
+    <div class="field"><label>שם משתמש</label><input type="text" id="login-name" autocomplete="username" style="direction:rtl;text-align:right"></div>
+    <div class="field"><label>סיסמה</label><input type="password" id="login-password" autocomplete="current-password"
+      onkeydown="if (event.key === 'Enter') doLogin()"></div>
+    <p class="hint" id="login-hint" style="margin-top:0">שם המשתמש והסיסמה נקבעים על ידי מנהל המערכת במוסד.</p>
     <div class="modal-actions">
       <button class="btn-save" onclick="doLogin()">🔓 התחבר</button>
       <button class="btn-cancel" onclick="closeLoginModal()">ביטול</button>
@@ -759,24 +832,25 @@
   <div class="modal">
     <button class="close-x" onclick="closeHistory()">✕</button>
     <h3>🕘 היסטוריית שינויים</h3>
-    <p style="font-size:0.78rem;color:#888;">"חזור לכאן" משחזר את המצב שלפני הפעולה הזו, כולל ביטול כל הפעולות שאחריה.</p>
-    <div id="history-list" style="max-height:340px;overflow-y:auto;"></div>
+    <p class="hint" id="history-note" style="margin-top:0"></p>
+    <div id="history-list" style="max-height:380px;overflow-y:auto;"></div>
   </div>
 </div>
 
 <!-- ================= הגדרות ================= -->
 <div class="overlay hidden" id="settings-overlay" data-close="closeSettingsAutosave">
-  <div class="modal wide">
+  <div class="modal wide settings-modal">
     <button class="close-x" onclick="closeSettingsAutosave()" title="סגור (השינויים נשמרים)">✕</button>
     <h3>⚙️ הגדרות מערכת</h3>
     <div class="settings-tabs">
       <button class="settings-tab-btn active" data-tab="tab-inst" onclick="switchSettingsTab('tab-inst')">🏫 פרטי מוסד</button>
+      <button class="settings-tab-btn" data-tab="tab-users" onclick="switchSettingsTab('tab-users')">👥 גישה</button>
       <button class="settings-tab-btn" data-tab="tab-license" onclick="switchSettingsTab('tab-license')">🔑 רישיון</button>
       <button class="settings-tab-btn" data-tab="tab-audio" onclick="switchSettingsTab('tab-audio')">🔊 שמע ומראה</button>
       <button class="settings-tab-btn" data-tab="tab-boards" onclick="switchSettingsTab('tab-boards')">📅 לוחות שמורים</button>
+      <button class="settings-tab-btn" data-tab="tab-dates" onclick="switchSettingsTab('tab-dates')">📅 חופשות</button>
       <button class="settings-tab-btn" data-tab="tab-io" onclick="switchSettingsTab('tab-io')">📥 ייבוא / ייצוא</button>
-      <button class="settings-tab-btn" data-tab="tab-log" onclick="switchSettingsTab('tab-log')">📜 לוג פעולות</button>
-      <button class="settings-tab-btn" data-tab="tab-bot" onclick="switchSettingsTab('tab-bot')">🤖 טלגרם</button>
+      <button class="settings-tab-btn" data-tab="tab-log" onclick="switchSettingsTab('tab-log')">📜 לוג והיסטוריה</button>
     </div>
 
     <div class="settings-pane active" id="tab-inst">
@@ -793,12 +867,12 @@
       <div class="field"><label>כתובת מלאה</label><input type="text" id="s-address"></div>
       <div class="field"><label>שפת ממשק</label>
         <select id="s-lang"><option value="he">עברית</option><option value="en">English</option></select></div>
-      <hr>
-      <div class="field"><label>סיסמת עריכה (בלי סיסמה - כל אחד יכול לערוך)</label>
-        <input type="password" id="s-new-password" placeholder="סיסמה חדשה - השאר ריק כדי לא לשנות">
-        <button type="button" class="btn-ghost btn-small" id="btn-remove-password" style="margin-top:6px"
-          onclick="removeEditPassword()">🔓 ביטול הסיסמה (כניסה לעריכה בלי סיסמה)</button></div>
       <button class="btn-primary" onclick="saveInstitutionSettings()">💾 שמור הגדרות</button>
+    </div>
+
+    <div class="settings-pane" id="tab-users">
+      <div class="view-link-box" id="view-link-box"></div>
+      <div id="users-pane"></div>
     </div>
 
     <div class="settings-pane" id="tab-license">
@@ -830,6 +904,18 @@
       <div id="board-list"></div>
     </div>
 
+    <div class="settings-pane" id="tab-dates">
+      <p class="hint" style="font-size:0.8rem;margin-top:0">ימים ללא שמע: חופשות, חגים וימים מיוחדים. בתאריכים שברשימה הלוח לא מתנגן כלל.
+        צלצול ידני ממשיך לעבוד, והמערכת חוזרת לבד לפעולה ביום שאחרי.</p>
+      <div class="sd-form">
+        <div class="field"><label>תיאור</label><input type="text" id="sd-label" maxlength="80" placeholder="לדוגמה: חופשת חנוכה" style="direction:rtl;text-align:right"></div>
+        <div class="field"><label>מתאריך</label><input type="date" id="sd-from" onchange="sdFromChanged()"></div>
+        <div class="field"><label>עד תאריך (כולל)</label><input type="date" id="sd-to"></div>
+        <button type="button" class="btn-primary" onclick="addSpecialDate()">+ הוסף</button>
+      </div>
+      <div id="sd-list"></div>
+    </div>
+
     <div class="settings-pane" id="tab-io">
       <div class="field"><label>ייבוא מקובץ Excel (מבנה Schedule_Import.xlsx) - יחליף את כל לוח הזמנים</label>
         <input type="file" id="import-file" accept=".xlsx,.csv"></div>
@@ -840,17 +926,13 @@
     </div>
 
     <div class="settings-pane" id="tab-log">
-      <p style="font-size:0.75rem;color:#888;">קובץ המעקב הוא Append-only - כל פעולה, כולל Undo עצמו, נרשמת לצמיתות ולא ניתנת למחיקה דרך הממשק.</p>
-      <div id="log-list" style="margin-top:10px;max-height:340px;overflow-y:auto;"></div>
-    </div>
-
-    <div class="settings-pane" id="tab-bot">
-      <p>המערכת מחוברת לבוט Telegram לבקרה, עדכונים ושליטה מרחוק.</p>
-      <ul style="font-size:0.85rem;color:#444;">
-        <li><code>/start</code> - הפעלת התקשורת מול הבוט</li>
-        <li><code>/status</code> - דיווח חי על מצב המערכת והצלצול הבא</li>
-        <li>טקסט חופשי - עדכון לוח הזמנים באמצעות AI</li>
-      </ul>
+      <div class="field"><label>כמה פעולות אחרונות אפשר לבטל ולהחזיר (Undo / Redo)</label>
+        <div class="audio-row"><input type="number" id="s-history-limit" min="1" max="100" step="1" style="width:90px" oninput="updateHistoryHint()">
+          <button type="button" class="btn-primary" onclick="saveHistoryLimit()">💾 שמור</button></div>
+        <div class="hint" id="history-limit-hint"></div></div>
+      <hr>
+      <p class="hint" style="margin-top:0">לוג הפעולות: כל פעולה, כולל ביטול והחזרה, נרשמת לצמיתות ולא ניתנת למחיקה דרך הממשק.</p>
+      <div id="log-list"></div>
     </div>
   </div>
 </div>
@@ -858,7 +940,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CLIENT_VERSION = "2026.10.13-5";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
+const CLIENT_VERSION = "2026.11.11-1";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
 const RESTART_HINT = "יש לסגור את חלון הניהול ולהריץ שוב את start_all.bat (הוא עוצר את העותקים הישנים ומפעיל מחדש).";
 const DAY_ORDER = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const DAY_HEB   = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
@@ -872,7 +954,7 @@ let schedule = null;
 let missingAudio = new Set();   // ערכי audio שהמנוע לא ימצא (מהשרת, באותה בדיקה שהמנוע עושה)
 let themes = {};
 let sessionRole = "viewer";
-let passwordSet = false;
+let passwordSet = false, sessionLocal = true, sessionUser = null, sessionAdmin = false, maxEditors = 5;
 let showDisabledEvents = true;
 let modalState = { mode: "add", day: null, index: null, originalAudio: null };
 let dupState = { day: null, index: null };
@@ -909,11 +991,25 @@ function nextOccurrenceIso(dayKey) {
   d.setDate(d.getDate() + diff);
   return isoDate(d);
 }
+// כל אירוע שנשלח לשרת כ-{day, index} מקבל גם את המזהה הקבוע שלו (uid). השרת מזהה לפי ה-uid,
+// כך שעריכה משני מקומות בו-זמנית לא פוגעת באירוע הלא נכון גם אם הסדר ברשימה השתנה.
+function attachUids(body) {
+  if (!body || typeof body !== "object" || !schedule || !schedule.weekly_schedule) return body;
+  const fix = o => {
+    if (!o || typeof o !== "object" || o.uid || !Number.isInteger(o.index)) return;
+    const ev = (schedule.weekly_schedule[o.day] || [])[o.index];
+    if (ev && ev.uid) o.uid = ev.uid;
+  };
+  fix(body);
+  ["items", "also", "remove"].forEach(k => { if (Array.isArray(body[k])) body[k].forEach(fix); });
+  return body;
+}
 async function api(url, method = "GET", body = null) {
   const opts = { method, headers: {} };
-  if (body !== null) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(body); }
+  if (body !== null) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(attachUids(body)); }
   const res = await fetch(url, opts);
   let data = null; try { data = await res.json(); } catch (e) {}
+  if (res.status === 409 && data && data.stale) { showToast(data.error); fetchSchedule(); }   // הלוח השתנה ממקום אחר
   return { ok: res.ok, data };
 }
 
@@ -961,7 +1057,8 @@ async function fetchThemes() {
 }
 async function fetchSession() {
   const { data } = await api("/api/session");
-  sessionRole = data.role; passwordSet = data.password_set; updatePasswordUi();
+  sessionRole = data.role; passwordSet = !!data.users_exist; sessionLocal = data.local !== false;
+  sessionUser = data.user || null; sessionAdmin = !!data.admin; maxEditors = data.max_editors || 5;
   updateAuthUI();
 }
 function applyAppearance() {
@@ -976,7 +1073,11 @@ function applyAppearance() {
 
 // ---------------- אירוע קודם / הבא / סוף יום ----------------
 function activeOn(ev, dateIso) { return ev.enabled !== false && ev.skip_date !== dateIso; }
-function activeSoundOn(ev, dateIso) { return activeOn(ev, dateIso) && isSoundEv(ev); }
+// יום ללא שמע (חופשה / חג) שהוגדר בהגדרות: הלוח לא מתנגן בו (כמו במנוע)
+function silentEntryOn(dateIso) {
+  return ((schedule && schedule.special_dates) || []).find(it => it.date <= dateIso && dateIso <= (it.end_date || it.date)) || null;
+}
+function activeSoundOn(ev, dateIso) { return !silentEntryOn(dateIso) && activeOn(ev, dateIso) && isSoundEv(ev); }
 // אותה שעה: הצלצול לפני המוסיקה (כמו במנוע)
 function byTimeThenPriority(a, b) { return a.ev.time.localeCompare(b.ev.time) || typePriority(b.ev) - typePriority(a.ev); }
 function typePriority(ev) { const t = normType(ev.type); return t === "Exercise" ? 3 : (t === "Bell" ? 2 : 1); }
@@ -1108,6 +1209,11 @@ function render() {
     const back = new Date((schedule.disabled_date || todayIso()) + "T12:00:00"); back.setDate(back.getDate() + 1);
     statusText = lampMode === "today" ? `מושבת היום · יחזור ב-${pad2(back.getDate())}/${pad2(back.getMonth() + 1)}` : "מושבת עד הפעלה ידנית";
     statusTitle = lampMode === "today" ? `מושבת להיום בלבד (${ddmm(schedule.disabled_date)}) - יחזור לפעול אוטומטית ב-${pad2(back.getDate())}/${pad2(back.getMonth() + 1)}` : "מושבת עד הפעלה ידנית (לחיצה על הירוק ברמזור)";
+  }
+  const silentToday = silentEntryOn(todayIso());
+  if (!blocked && silentToday) {
+    lampMode = "today"; statusText = `יום ללא שמע · ${silentToday.label}`;
+    statusTitle = `היום מוגדר כיום ללא שמע (${silentToday.label}) - הלוח לא מתנגן. צלצול ידני פועל. שינוי: הגדרות ← חופשות`;
   }
   if (schedule.license && schedule.license.blocked) {
     statusText = "רישיון לא בתוקף"; statusTitle = schedule.license.message || "רישיון לא בתוקף - ההשמעה מושבתת"; blocked = true; lampMode = "indefinite";
@@ -1353,8 +1459,9 @@ function toggleMode() {
   if (!isViewMode()) { setMode("view"); return; }
   // מעבר לעריכה: רק למורשים. כשיש סיסמת עריכה - קודם התחברות
   if (canEdit()) { setMode("edit"); return; }
+  if (!passwordSet) { showToast(REMOTE_NO_PW_MSG); return; }
   pendingEditAfterLogin = true;
-  document.getElementById("login-overlay").classList.remove("hidden");
+  openLogin();
 }
 
 // ---------------- מצב צפייה: היום הנוכחי נגלל לאט למטה, ובסוף חוזר למעלה וחוזר חלילה ----------------
@@ -1463,7 +1570,7 @@ window.addEventListener("resize", () => { clearTimeout(window._tkT); window._tkT
 ["pointerdown", "wheel", "keydown"].forEach(t => document.addEventListener(t, markActivity, true));
 
 // ---------------- עריכה מהירה מהקובייה ----------------
-function requireEdit() { if (!canEdit()) { showToast("יש להתחבר כעורך כדי לערוך"); return false; } return true; }
+function requireEdit() { if (!canEdit()) { showToast(passwordSet ? "יש להתחבר כמורשה עריכה" : REMOTE_NO_PW_MSG); return false; } return true; }
 // ---------------- בדיקת צליל: מושמע ע"י מנוע ההשמעה ברמקולים של מחשב הצלצולים ----------------
 // כפתור "צלצול ידני" בכותרת וכל כפתורי "▶ בדיקה": לחיצה מנגנת, לחיצה נוספת (כשמתנגן) עוצרת
 let bellPlaying = false, bellStartedAt = 0, bellPollTimer = null;
@@ -2064,12 +2171,15 @@ async function toggleShowDisabled() {
 }
 
 // ---------------- הרשאות ----------------
-function canEdit() { return sessionRole === "editor" || !passwordSet; }
+function canEdit() { return sessionRole === "editor"; }
+const REMOTE_NO_PW_MSG = "עוד לא הוגדרו מורשי עריכה, ולכן עריכה אפשרית רק ממחשב הצלצולים. כדי לערוך מכאן: במחשב הצלצולים, הגדרות ← מורשי עריכה ← יצירת חשבון מנהל.";
 function updateAuthUI() {
   const btn = document.getElementById("btn-auth");
-  if (!passwordSet) { btn.textContent = "🔓 עריכה פתוחה לכולם"; btn.disabled = true; }
-  else if (sessionRole === "editor") { btn.textContent = "🔓 מחובר כעורך (התנתק)"; btn.disabled = false; }
-  else { btn.textContent = "🔒 התחברות כעורך"; btn.disabled = false; }
+  btn.disabled = false; btn.title = "";
+  if (!passwordSet && sessionRole === "editor") { btn.textContent = "🔓 עריכה במחשב זה"; btn.disabled = true; btn.title = "עוד לא הוגדרו מורשי עריכה. ממחשבים אחרים ומטלפונים אפשר רק לצפות. להגדרה: הגדרות ← מורשי עריכה"; }
+  else if (!passwordSet) { btn.textContent = "🔒 צפייה בלבד"; btn.title = REMOTE_NO_PW_MSG; }
+  else if (sessionUser) { btn.textContent = `👤 ${sessionUser.name} (התנתק)`; btn.title = sessionAdmin ? "מחובר כמנהל" : "מחובר כעורך"; }
+  else { btn.textContent = "🔒 התחברות לעריכה"; }
   updateSystemButtonsState();
 }
 function updateSystemButtonsState() {
@@ -2077,20 +2187,27 @@ function updateSystemButtonsState() {
   document.getElementById("btn-manual-bell").disabled = !canEdit();
 }
 function handleAuthClick() {
-  if (!passwordSet) return;
-  if (sessionRole === "editor") api("/api/logout", "POST", {}).then(fetchSession);
-  else document.getElementById("login-overlay").classList.remove("hidden");
+  if (!passwordSet) { if (sessionRole !== "editor") showToast(REMOTE_NO_PW_MSG); return; }
+  if (sessionUser) api("/api/logout", "POST", {}).then(async () => { await fetchSession(); if (!canEdit()) setMode("view"); showToast("התנתקת"); });
+  else openLogin();
 }
 async function doLogin() {
-  const { data } = await api("/api/login", "POST", { password: document.getElementById("login-password").value });
+  const name = document.getElementById("login-name").value.trim();
+  if (!name) { showToast("יש להקליד שם משתמש"); return; }
+  const { data } = await api("/api/login", "POST", { name, password: document.getElementById("login-password").value });
   if (data && data.ok) {
+    const go = pendingEditAfterLogin;
     closeLoginModal(); await fetchSession();
-    if (pendingEditAfterLogin) { pendingEditAfterLogin = false; setMode("edit"); } else render();
-    showToast("התחברת בהצלחה כעורך");
+    if (go) setMode("edit"); else render();
+    showToast(`שלום ${(data.user && data.user.name) || ""} - התחברת לעריכה`);
   }
-  else showToast("סיסמה שגויה");
+  else showToast((data && data.error) || "שם משתמש או סיסמה שגויים");
 }
 function closeLoginModal() { pendingEditAfterLogin = false; document.getElementById("login-overlay").classList.add("hidden"); document.getElementById("login-password").value = ""; }
+function openLogin() {
+  document.getElementById("login-overlay").classList.remove("hidden");
+  setTimeout(() => document.getElementById(document.getElementById("login-name").value ? "login-password" : "login-name").focus(), 50);
+}
 
 // ---------------- שכפול ----------------
 function openDupModal(day, index) {
@@ -2149,17 +2266,39 @@ async function setSystem(mode) {
 async function doUndo() {
   if (!requireEdit()) return;
   const { ok, data } = await api("/api/undo", "POST", { steps_back: 1 });
-  if (!ok) { showToast((data && data.error) || "אין מה לשחזר"); return; }
+  if (!ok) { showToast((data && data.error) || "אין פעולות לביטול"); return; }
   showToast("הפעולה האחרונה בוטלה"); markActivity(); await fetchSchedule();
+}
+async function doRedo() {
+  if (!requireEdit()) return;
+  const { ok, data } = await api("/api/redo", "POST", { steps_forward: 1 });
+  if (!ok) { showToast((data && data.error) || "אין פעולות להחזרה"); return; }
+  showToast("הפעולה הוחזרה"); markActivity(); await fetchSchedule();
+}
+function historyRow(it, btnLabel, handler, steps, cls) {
+  return `<div class="history-entry ${cls}"><div><div class="h-main">${escapeHtml(it.details || it.title || it.action_name)}</div>
+      <div class="h-meta">${escapeHtml(it.title || "")} · ${escapeHtml(fmtStamp(it.timestamp))}</div></div>
+      <button type="button" class="btn-ghost btn-small" onclick="${handler}(${steps})">${btnLabel}</button></div>`;
 }
 async function openHistory() {
   const { data } = await api("/api/undo/history");
-  const list = document.getElementById("history-list");
-  list.innerHTML = !data || !data.length ? "<p style='color:#888;'>אין היסטוריה זמינה.</p>" :
-    data.map(it => `<div class="history-entry"><div><div class="h-main">${escapeHtml(it.details || it.title || it.action_name)}</div>
-      <div class="h-meta">${escapeHtml(it.title || "")} · ${escapeHtml(fmtStamp(it.timestamp))}</div></div>
-      <button type="button" class="btn-ghost btn-small" onclick="jumpToHistory(${it.steps_back})">חזור לכאן</button></div>`).join("");
+  const undo = (data && data.undo) || [], redo = (data && data.redo) || [];
+  document.getElementById("history-note").textContent =
+    `נשמרות ${(data && data.limit) || 10} הפעולות האחרונות (אפשר לשנות בהגדרות ← לוג והיסטוריה). "בטל עד כאן" מבטל את הפעולה ואת כל מה שנעשה אחריה.`;
+  let html = "";
+  if (redo.length) html += `<div class="history-head">פעולות שבוטלו - אפשר להחזיר</div>` +
+    redo.slice().reverse().map(it => historyRow(it, "החזר עד כאן", "jumpRedo", it.steps_forward, "redo")).join("");
+  html += `<div class="history-head">פעולות אחרונות - אפשר לבטל</div>` +
+    (undo.length ? undo.map(it => historyRow(it, "בטל עד כאן", "jumpToHistory", it.steps_back, "")).join("")
+                 : "<p style='color:#888;'>אין פעולות לביטול.</p>");
+  document.getElementById("history-list").innerHTML = html;
   document.getElementById("history-overlay").classList.remove("hidden");
+}
+async function jumpRedo(stepsForward) {
+  if (!requireEdit()) return;
+  const { ok } = await api("/api/redo", "POST", { steps_forward: stepsForward });
+  if (!ok) { showToast("שגיאה בהחזרת הפעולות"); return; }
+  showToast(stepsForward > 1 ? `הוחזרו ${stepsForward} פעולות` : "הפעולה הוחזרה"); markActivity(); await fetchSchedule(); openHistory();
 }
 function fmtStamp(iso) {
   const d = new Date(iso);
@@ -2169,12 +2308,14 @@ function fmtStamp(iso) {
 function closeHistory() { document.getElementById("history-overlay").classList.add("hidden"); }
 async function jumpToHistory(stepsBack) {
   if (!requireEdit()) return;
-  const choice = await showChoice("שחזור", "לשחזר את המערכת לנקודה זו? כל השינויים שאחריה יבוטלו.",
-    [{ label: "↩️ שחזר", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
-  if (choice !== "yes") return;
+  if (stepsBack > 1) {
+    const choice = await showChoice("ביטול פעולות", `לבטל את ${stepsBack} הפעולות האחרונות? אפשר יהיה להחזיר אותן ב"החזר פעולה".`,
+      [{ label: "↩️ בטל", value: "yes", cls: "btn-primary" }, { label: "לא לבטל", value: null, cls: "btn-cancel" }]);
+    if (choice !== "yes") return;
+  }
   const { ok } = await api("/api/undo", "POST", { steps_back: stepsBack });
-  if (!ok) { showToast("שגיאה בשחזור"); return; }
-  closeHistory(); showToast("המערכת שוחזרה"); markActivity(); await fetchSchedule();
+  if (!ok) { showToast("שגיאה בביטול הפעולות"); return; }
+  showToast(stepsBack > 1 ? `בוטלו ${stepsBack} פעולות` : "הפעולה בוטלה"); markActivity(); await fetchSchedule(); openHistory();
 }
 
 // ---------------- הגדרות (סגירה ב-✕/לחיצה בחוץ שומרת שינויים) ----------------
@@ -2194,18 +2335,17 @@ async function openSettings() {
   Object.entries(INST_FIELDS).forEach(([k, id]) => { document.getElementById(id).value = info[k] ?? ""; });
   renderLicensePane();
   if (!info.interface_language) document.getElementById("s-lang").value = "he";
-  document.getElementById("s-new-password").value = "";
   selectTheme((schedule.appearance || {}).theme || "classic");
   document.getElementById("s-font-size").value = (schedule.appearance || {}).font_size || "normal";
   await loadAudioDevices(info.audio_device || "");
-  refreshLog();
+  refreshLog(); loadHistorySettings();
   settingsSnapshot = { inst: JSON.stringify(readInstForm()), app: JSON.stringify(readAppearanceForm()) };
   document.getElementById("settings-overlay").classList.remove("hidden");
 }
 async function closeSettingsAutosave() {
   document.getElementById("settings-overlay").classList.add("hidden");
   if (!settingsSnapshot || !canEdit()) return;
-  if (JSON.stringify(readInstForm()) !== settingsSnapshot.inst || document.getElementById("s-new-password").value) await saveInstitutionSettings();
+  if (JSON.stringify(readInstForm()) !== settingsSnapshot.inst) await saveInstitutionSettings();
   if (JSON.stringify(readAppearanceForm()) !== settingsSnapshot.app) await saveAudioAppearance();
   settingsSnapshot = null;
 }
@@ -2213,6 +2353,8 @@ function switchSettingsTab(tabId) {
   document.querySelectorAll(".settings-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
   document.querySelectorAll(".settings-pane").forEach(p => p.classList.toggle("active", p.id === tabId));
   if (tabId === "tab-boards") refreshBoards();
+  if (tabId === "tab-dates") renderSpecialDates();
+  if (tabId === "tab-users") { renderViewLink(); renderUsersPane(); }
   if (tabId === "tab-license") renderLicensePane();
 }
 
@@ -2341,27 +2483,11 @@ async function loadAudioDevices(selected) {
 }
 async function saveInstitutionSettings() {
   const body = { institution_info: readInstForm() };
-  const pw = document.getElementById("s-new-password").value;
-  if (pw !== "") body.new_edit_password = pw;
   const { ok } = await api("/api/settings", "POST", body);
   if (!ok) { showToast("שגיאה בשמירת הגדרות"); return; }
   showToast("ההגדרות נשמרו");
   settingsSnapshot && (settingsSnapshot.inst = JSON.stringify(readInstForm()));
-  document.getElementById("s-new-password").value = "";
-  await fetchSchedule(); await fetchSession();
-}
-async function removeEditPassword() {
-  if (!confirm("לבטל את סיסמת העריכה?\nאחרי הביטול כל אחד יוכל לעבור למצב עריכה בלי סיסמה.")) return;
-  const { ok } = await api("/api/settings", "POST", { new_edit_password: "" });
-  if (!ok) { showToast("שגיאה בביטול הסיסמה"); return; }
-  document.getElementById("s-new-password").value = "";
-  showToast("הסיסמה בוטלה - הכניסה לעריכה ללא סיסמה");
-  await fetchSession();
-  updatePasswordUi();
-}
-function updatePasswordUi() {
-  const b = document.getElementById("btn-remove-password");
-  if (b) b.style.display = passwordSet ? "" : "none";
+  await fetchSchedule();
 }
 async function saveAudioAppearance() {
   const f = readAppearanceForm();
@@ -2403,12 +2529,293 @@ async function doImport() {
 const ACTION_TITLE = { add_event: "הוספה", edit_event: "עריכה", quick_edit_event: "עדכון", quick_edit_events: "עדכון",
   delete_event: "מחיקה", duplicate_event: "שכפול", duplicate_day: "שכפול יום", replace_audio_all: "החלפת קובץ",
   system_status: "מצב מערכת", update_settings: "הגדרות", import_excel: "ייבוא", schedule_save: "שמירת לוח",
-  schedule_load: "טעינת לוח", undo: "ביטול פעולה" };
+  schedule_load: "טעינת לוח", undo: "ביטול פעולה", redo: "החזרת פעולה", bulk_edit: "שינוי גורף", special_dates: "ימים ללא שמע",
+  login: "התחברות", view_link_rotate: "החלפת קישור צפייה", user_add: "הוספת מורשה", user_update: "עדכון מורשה", user_delete: "מחיקת מורשה" };
+// ---------------- קישור צפייה בענן: מורים, תלמידים והורים רואים את הלוח בטלפון, בלי התחברות ובלי פקדים ----------------
+async function renderViewLink() {
+  const box = document.getElementById("view-link-box");
+  const { data } = await api("/api/cloud/view-link");
+  const head = `<b>📱 צפייה בלוח מכל מקום - למורים, תלמידים והורים</b>`;
+  if (!data || !data.connected) {
+    box.innerHTML = head + `<div class="hint">המחשב לא מחובר למרכז הבקרה, ולכן אין קישור צפייה. פנו לספק המערכת.</div>`; return;
+  }
+  if (!data.view_url) {
+    box.innerHTML = head + `<div class="hint">הקישור ייווצר תוך דקה מהחיבור למרכז הבקרה. אם הוא לא מופיע - בדקו את החיבור לאינטרנט.</div>`; return;
+  }
+  box.innerHTML = head + `<div class="hint">רואים את הלוח, מצב המערכת וההודעות - בלי שום פקד. שולחים את הקישור או מציגים את הקוד לסריקה.
+      הלוח מתעדכן תוך שניות מכל שינוי.</div>
+    <div class="vl-row"><input type="text" readonly id="vl-url" value="${escapeHtml(data.view_url)}" onclick="this.select()">
+      <button type="button" class="btn-ghost btn-small" onclick="copyViewLink()">העתקה</button>
+      <button type="button" class="btn-ghost btn-small" onclick="window.open(document.getElementById('vl-url').value, '_blank')">פתיחה</button>
+      ${sessionAdmin ? `<button type="button" class="btn-ghost btn-small" onclick="rotateViewLink()" ${data.rotate_pending ? "disabled" : ""}>${data.rotate_pending ? "מחליף..." : "החלפת קישור"}</button>` : ""}</div>
+    <div class="vl-qr"><div id="vl-qr"></div><div class="hint" style="margin:0">סריקה בטלפון פותחת את הלוח.<br>בתפריט הדפדפן: "הוספה למסך הבית" - והלוח נפתח כמו אפליקציה.</div></div>`;
+  drawQr(data.view_url);
+}
+function drawQr(url) {
+  // ספריית QR מקומית (qrcode.js, רישיון MIT) - עובד גם בלי גישה לאתרים חיצוניים
+  const el = document.getElementById("vl-qr"); if (!el) return;
+  const draw = () => {
+    try { const q = qrcode(0, "M"); q.addData(url); q.make(); el.innerHTML = q.createSvgTag({ cellSize: 4, margin: 2, scalable: false }); }
+    catch (e) { el.innerHTML = ""; }
+  };
+  if (window.qrcode) return draw();
+  const sc = document.createElement("script"); sc.src = "/qrcode.js"; sc.onload = draw; sc.onerror = () => { el.innerHTML = ""; };
+  document.head.appendChild(sc);
+}
+async function copyViewLink() {
+  const inp = document.getElementById("vl-url");
+  try { await navigator.clipboard.writeText(inp.value); } catch (e) { inp.select(); document.execCommand("copy"); }
+  showToast("הקישור הועתק");
+}
+async function rotateViewLink() {
+  const c = await showChoice("החלפת קישור הצפייה", "הקישור הנוכחי יפסיק לעבוד, וכל מי שצריך יקבל ממך את הקישור החדש. להחליף?",
+    [{ label: "החלפה", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+  if (c !== "yes") return;
+  const { ok, data } = await api("/api/cloud/view-link/rotate", "POST", {});
+  if (!ok) { showToast((data && data.error) || "שגיאה"); return; }
+  showToast("הקישור יוחלף תוך כמה שניות"); renderViewLink();
+  setTimeout(renderViewLink, 8000); setTimeout(renderViewLink, 20000);
+}
+
+// ---------------- מורשי עריכה ----------------
+// מנהל: מוסיף/מסיר מורשים. עורך: עורך את הלוח ומחליף את הסיסמה של עצמו. כל השאר - צפייה בלבד.
+// המכסה (ברירת מחדל 5, כולל המנהלים) נקבעת על ידי הספק ומגיעה ברישיון.
+function fmtWhen(iso) { return iso ? fmtStamp(iso) : "עוד לא התחבר"; }
+function pwFields(prefix, withOld) {
+  return (withOld ? `<div class="field"><label>הסיסמה הנוכחית</label><input type="password" id="${prefix}-old" autocomplete="current-password"></div>` : "") +
+    `<div class="field"><label>סיסמה חדשה (לפחות 6 תווים)</label><input type="password" id="${prefix}-new" autocomplete="new-password"></div>`;
+}
+async function renderUsersPane() {
+  const box = document.getElementById("users-pane");
+  if (!passwordSet) {
+    box.innerHTML = sessionLocal ? `
+      <p style="font-size:0.88rem">עדיין לא הוגדרו מורשי עריכה. כרגע אפשר לערוך רק ממחשב הצלצולים, ומכל מקום אחר רק לצפות.</p>
+      <p class="hint">צרו חשבון <b>מנהל</b>. המנהל יוכל להוסיף עד ${maxEditors} מורשי עריכה (כולל עצמו), ולכל אחד יהיו שם וסיסמה משלו.
+        מאותו רגע עריכה תתאפשר רק אחרי התחברות - גם במחשב הצלצולים.</p>
+      <div class="user-form" style="grid-template-columns:1fr 1fr auto">
+        <div class="field"><label>שם המנהל</label><input type="text" id="nu-name" maxlength="40" style="direction:rtl;text-align:right"></div>
+        ${pwFields("nu", false)}
+        <button type="button" class="btn-primary" onclick="addUser(true)">יצירת חשבון מנהל</button>
+      </div>` : `<p style="font-size:0.88rem">${escapeHtml(REMOTE_NO_PW_MSG)}</p>`;
+    return;
+  }
+  if (!sessionUser) {
+    box.innerHTML = `<p style="font-size:0.88rem">כדי לראות ולנהל את מורשי העריכה יש להתחבר.</p>
+      <button type="button" class="btn-primary" onclick="openLogin()">🔒 התחברות</button>`;
+    return;
+  }
+  let html = `<div class="field"><label>החשבון שלי: <b>${escapeHtml(sessionUser.name)}</b> (${sessionAdmin ? "מנהל" : "עורך"})</label></div>
+    <div class="user-form" style="grid-template-columns:1fr 1fr auto;margin-top:0">${pwFields("me", true)}
+      <button type="button" class="btn-ghost" onclick="changeMyPassword()">החלפת הסיסמה שלי</button></div>`;
+  if (!sessionAdmin) {
+    box.innerHTML = html + `<hr><p class="hint">רק מנהל יכול להוסיף ולהסיר מורשי עריכה.</p>`;
+    return;
+  }
+  const { ok, data } = await api("/api/users");
+  if (!ok) { box.innerHTML = html + `<p>${escapeHtml((data && data.error) || "שגיאה")}</p>`; return; }
+  const used = data.active_count, max = data.max_editors;
+  html += `<hr><div class="users-quota"><span><b>${used}</b> מתוך <b>${max}</b> מורשי עריכה פעילים</span>
+      <span class="bar"><i style="width:${Math.min(100, Math.round(used * 100 / max))}%"></i></span></div>` +
+    data.users.map(u => {
+      const me = u.id === data.me;
+      return `<div class="user-row${u.active ? "" : " off"}">
+        <span class="u-name">${escapeHtml(u.name)}${me ? " (אני)" : ""}</span>
+        <span class="u-role${u.role === "admin" ? " admin" : ""}">${escapeHtml(u.role_name)}</span>
+        <span class="u-meta">${u.active ? (u.in_quota ? "פעיל" : "⚠️ מעבר למכסה - לא יכול להתחבר") : "מושבת"} · כניסה אחרונה: ${escapeHtml(fmtWhen(u.last_login))}</span>
+        <span class="u-acts">
+          <button type="button" class="btn-ghost btn-small" onclick="userRole('${u.id}', '${u.role === "admin" ? "editor" : "admin"}')">${u.role === "admin" ? "הפוך לעורך" : "הפוך למנהל"}</button>
+          <button type="button" class="btn-ghost btn-small" onclick="userResetPassword('${u.id}')">איפוס סיסמה</button>
+          ${me ? "" : `<button type="button" class="btn-ghost btn-small" onclick="userActive('${u.id}', ${!u.active})">${u.active ? "השבתה" : "הפעלה"}</button>
+          <button type="button" class="btn-ghost btn-small" title="מחיקה" onclick="userDelete('${u.id}')">🗑</button>`}
+        </span></div>`;
+    }).join("") +
+    (used < max ? `<div class="user-form">
+        <div class="field"><label>שם משתמש</label><input type="text" id="nu-name" maxlength="40" style="direction:rtl;text-align:right"></div>
+        ${pwFields("nu", false)}
+        <div class="field"><label>תפקיד</label><select id="nu-role"><option value="editor">עורך</option><option value="admin">מנהל</option></select></div>
+        <button type="button" class="btn-primary" onclick="addUser(false)">+ הוספה</button></div>`
+      : `<p class="hint">הגעתם למכסה. כדי להוסיף מורשה יש להשבית או למחוק מורשה קיים, או לפנות לספק להגדלת המכסה.</p>`) +
+    `<p class="hint">עורך: עורך את הלוח ואת ההגדרות. מנהל: גם מוסיף ומסיר מורשים. איפוס סיסמה או השבתה מנתקים את המשתמש מכל המכשירים.
+      כל השאר - מורים, תלמידים, מסכים - צופים בלוח בלי התחברות.</p>`;
+  box.innerHTML = html;
+}
+async function usersCall(url, method, body, okMsg) {
+  const { ok, data } = await api(url, method, body);
+  if (!ok) { showToast((data && data.error) || "שגיאה"); return false; }
+  if (okMsg) showToast(okMsg);
+  await fetchSession(); updateAuthUI(); await renderUsersPane(); return true;
+}
+async function addUser(first) {
+  const name = document.getElementById("nu-name").value.trim(), password = document.getElementById("nu-new").value;
+  const role = first ? "admin" : document.getElementById("nu-role").value;
+  if (!name || !password) { showToast("יש למלא שם וסיסמה"); return; }
+  if (first) {
+    const c = await showChoice("יצירת חשבון מנהל", `מאחר שייווצר החשבון, עריכה תתאפשר רק אחרי התחברות - גם במחשב הצלצולים.<br>
+      שם המשתמש: <b>${escapeHtml(name)}</b>. כדאי לרשום את הסיסמה במקום בטוח.`,
+      [{ label: "יצירה", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+    if (c !== "yes") return;
+  }
+  await usersCall("/api/users", "POST", { name, password, role }, first ? `החשבון נוצר. את/ה מחובר/ת כ-${name}` : `${name} נוסף/ה למורשי העריכה`);
+}
+async function changeMyPassword() {
+  const old = document.getElementById("me-old").value, nw = document.getElementById("me-new").value;
+  if (!old || !nw) { showToast("יש למלא את שתי הסיסמאות"); return; }
+  await usersCall("/api/me/password", "POST", { old, new: nw }, "הסיסמה הוחלפה");
+}
+async function userRole(id, role) { await usersCall(`/api/users/${id}`, "PATCH", { role }, "התפקיד עודכן"); }
+async function userActive(id, active) { await usersCall(`/api/users/${id}`, "PATCH", { active }, active ? "החשבון הופעל" : "החשבון הושבת והמשתמש נותק"); }
+async function userDelete(id) {
+  const c = await showChoice("מחיקת מורשה", "למחוק את החשבון? המשתמש ינותק ולא יוכל להתחבר.",
+    [{ label: "מחיקה", value: "yes", cls: "btn-off" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+  if (c === "yes") await usersCall(`/api/users/${id}`, "DELETE", null, "החשבון נמחק");
+}
+async function userResetPassword(id) {
+  const c = await showChoice("איפוס סיסמה", `<div class="field"><label>סיסמה חדשה (לפחות 6 תווים)</label>
+      <input type="password" id="reset-pw" autocomplete="new-password"></div><p class="hint">המשתמש ינותק מכל המכשירים ויתחבר עם הסיסמה החדשה.</p>`,
+    [{ label: "איפוס", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+  if (c !== "yes") return;
+  const password = (document.getElementById("reset-pw") || {}).value || "";
+  await usersCall(`/api/users/${id}`, "PATCH", { password }, "הסיסמה אופסה");
+}
+
+// ---------------- ימים ללא שמע (חופשות / חגים) ----------------
+function fmtDmy(iso) { const [y, m, d] = iso.split("-"); return `${d}/${m}/${y}`; }
+function sdFromChanged() {
+  const from = document.getElementById("sd-from").value, to = document.getElementById("sd-to");
+  if (from && (!to.value || to.value < from)) to.value = from;
+  to.min = from || "";
+}
+function renderSpecialDates() {
+  const items = (schedule && schedule.special_dates) || [], today = todayIso();
+  document.getElementById("sd-list").innerHTML = !items.length ? "<p style='color:#888;font-size:0.85rem'>לא הוגדרו ימים ללא שמע.</p>" :
+    items.map(it => {
+      const end = it.end_date || it.date, past = end < today, now = it.date <= today && today <= end;
+      return `<div class="sd-row${past ? " past" : ""}"><span class="sd-name">${escapeHtml(it.label)}</span>` +
+        (now ? `<span class="sd-tag">היום</span>` : (past ? `<span class="sd-tag" style="background:#e5e7eb;color:#555">עבר</span>` : "")) +
+        `<span class="sd-when">${it.date === end ? fmtDmy(it.date) : fmtDmy(it.date) + " – " + fmtDmy(end)}</span>` +
+        `<button type="button" class="btn-ghost btn-small" title="הסרה מהרשימה" onclick="removeSpecialDate('${escapeHtml(it.id)}')">🗑</button></div>`;
+    }).join("");
+}
+async function saveSpecialDates(items, okMsg) {
+  const { ok, data } = await api("/api/special-dates", "POST", { items });
+  if (!ok) { showToast((data && data.error) || "שגיאה בשמירה"); return false; }
+  showToast(okMsg); await fetchSchedule(); renderSpecialDates(); return true;
+}
+async function addSpecialDate() {
+  if (!requireEdit()) return;
+  const label = document.getElementById("sd-label").value.trim(), from = document.getElementById("sd-from").value;
+  const to = document.getElementById("sd-to").value || from;
+  if (!from) { showToast("יש לבחור תאריך"); return; }
+  if (to < from) { showToast("תאריך הסיום לפני תאריך ההתחלה"); return; }
+  const items = ((schedule && schedule.special_dates) || []).concat([{ label, date: from, end_date: to }]);
+  if (await saveSpecialDates(items, "נוסף לרשימת הימים ללא שמע"))
+    ["sd-label", "sd-from", "sd-to"].forEach(id => { document.getElementById(id).value = ""; });
+}
+async function removeSpecialDate(id) {
+  if (!requireEdit()) return;
+  await saveSpecialDates(((schedule && schedule.special_dates) || []).filter(it => it.id !== id), "הוסר מהרשימה");
+}
+
+// ---------------- שינוי גורף ----------------
+function openBulk() {
+  if (!requireEdit()) return;
+  document.getElementById("bulk-days").innerHTML = DAY_ORDER.map((d, i) =>
+    `<label><input type="checkbox" class="bulk-day" value="${d}" checked> ${DAY_HEB[i]}</label>`).join("");
+  const used = [...new Set(DAY_ORDER.flatMap(d => (schedule.weekly_schedule[d] || []).filter(isSoundEv).map(e => e.audio || "")).filter(Boolean))].sort();
+  document.getElementById("bulk-audio").innerHTML = used.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join("");
+  document.getElementById("bulk-scope").value = "all";
+  ["bulk-do-volume", "bulk-do-enabled", "bulk-do-audio"].forEach(id => { document.getElementById(id).checked = false; });
+  document.getElementById("bulk-new-audio").value = "";
+  bulkScopeChanged();
+  document.getElementById("bulk-overlay").classList.remove("hidden");
+}
+function closeBulk() { document.getElementById("bulk-overlay").classList.add("hidden"); }
+function bulkScopeChanged() {
+  document.getElementById("bulk-audio-field").style.display = document.getElementById("bulk-scope").value === "audio" ? "" : "none";
+}
+async function bulkBrowse() {
+  const picked = await openBrowser("file", document.getElementById("bulk-new-audio").value);
+  if (picked) { document.getElementById("bulk-new-audio").value = picked; document.getElementById("bulk-do-audio").checked = true; }
+}
+async function applyBulk() {
+  if (!requireEdit()) return;
+  const sv = document.getElementById("bulk-scope").value;
+  const body = { scope: sv.split(":")[0], days: [...document.querySelectorAll(".bulk-day:checked")].map(c => c.value), fields: {} };
+  if (body.scope === "type") body.value = sv.split(":")[1];
+  if (body.scope === "audio") body.value = document.getElementById("bulk-audio").value;
+  const what = [];
+  if (document.getElementById("bulk-do-volume").checked) {
+    const v = parseInt(document.getElementById("bulk-volume").value, 10);
+    if (!(v >= 0 && v <= 100)) { showToast("עוצמה בין 0 ל-100"); return; }
+    body.fields.volume = v; what.push(`עוצמה ${v}%`);
+  }
+  if (document.getElementById("bulk-do-enabled").checked) {
+    body.fields.enabled = document.getElementById("bulk-enabled").value === "1"; what.push(body.fields.enabled ? "הפעלה" : "השבתה");
+  }
+  if (document.getElementById("bulk-do-audio").checked) {
+    const a = document.getElementById("bulk-new-audio").value;
+    if (!a) { showToast("לא נבחר קובץ שמע"); return; }
+    body.fields.audio = a; what.push("החלפת קובץ השמע");
+  }
+  if (!body.days.length) { showToast("יש לבחור לפחות יום אחד"); return; }
+  if (!what.length) { showToast("יש לסמן מה לשנות"); return; }
+  if (body.scope === "audio" && !body.value) { showToast("אין קובצי שמע בלוח"); return; }
+  const dry = await api("/api/events/bulk", "POST", Object.assign({ dry_run: true }, body));
+  if (!dry.ok) { showToast((dry.data && dry.data.error) || "שגיאה"); return; }
+  if (!dry.data.count) { showToast("אין אירועים שמתאימים לבחירה"); return; }
+  const scopeText = document.getElementById("bulk-scope").selectedOptions[0].textContent;
+  const choice = await showChoice("אישור שינוי גורף",
+    `השינוי (<b>${escapeHtml(what.join(", "))}</b>) יחול על <b>${dry.data.count} אירועים</b> - ${escapeHtml(scopeText)}` +
+    (body.days.length < 7 ? `, ב-${body.days.length} ימים` : ", בכל ימות השבוע") + `.<br>להמשיך?`,
+    [{ label: `כן, לשנות ${dry.data.count} אירועים`, value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+  if (choice !== "yes") return;
+  const { ok, data } = await api("/api/events/bulk", "POST", body);
+  if (!ok) { showToast((data && data.error) || "שגיאה בשינוי"); return; }
+  closeBulk(); showToast(`עודכנו ${data.count} אירועים`); markActivity(); await fetchSchedule();
+}
+
+// ---- מספר הפעולות לביטול/החזרה: ברירת מחדל 10. כל פעולה שומרת עותק מלא של הלוח, ולכן מספר גדול = קובץ גדול ----
+let historyInfo = null;
+function fmtBytes(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + "MB" : Math.max(1, Math.round(n / 1024)) + "KB"; }
+async function loadHistorySettings() {
+  const { data } = await api("/api/undo/history");
+  historyInfo = data || null;
+  const inp = document.getElementById("s-history-limit");
+  if (historyInfo) { inp.min = historyInfo.min_limit; inp.max = historyInfo.max_limit; inp.value = historyInfo.limit; }
+  updateHistoryHint();
+}
+function updateHistoryHint() {
+  const el = document.getElementById("history-limit-hint");
+  if (!historyInfo) { el.textContent = ""; return; }
+  const n = parseInt(document.getElementById("s-history-limit").value, 10) || historyInfo.limit;
+  const est = n * historyInfo.step_bytes;
+  el.textContent = `ברירת המחדל: ${historyInfo.default_limit} פעולות. כל פעולה שומרת עותק של הלוח (כ-${fmtBytes(historyInfo.step_bytes)}), ` +
+    `כך ש-${n} פעולות תופסות עד כ-${fmtBytes(est)} בדיסק. כרגע הקובץ תופס ${fmtBytes(historyInfo.file_bytes)}.`;
+  el.style.color = n > historyInfo.default_limit ? "#b45309" : "";
+}
+async function saveHistoryLimit() {
+  if (!requireEdit() || !historyInfo) return;
+  const inp = document.getElementById("s-history-limit");
+  let n = parseInt(inp.value, 10);
+  if (!Number.isInteger(n)) { showToast("יש להזין מספר"); return; }
+  n = Math.max(historyInfo.min_limit, Math.min(historyInfo.max_limit, n)); inp.value = n;
+  if (n > historyInfo.limit && n > historyInfo.default_limit) {
+    const choice = await showChoice("הגדלת מספר הפעולות",
+      `שמירת ${n} פעולות תגדיל את נפח האחסון של ההיסטוריה עד כ-${fmtBytes(n * historyInfo.step_bytes)} (במקום כ-${fmtBytes(historyInfo.limit * historyInfo.step_bytes)}). להמשיך?`,
+      [{ label: "כן, להגדיל", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+    if (choice !== "yes") { inp.value = historyInfo.limit; updateHistoryHint(); return; }
+  }
+  const smaller = n < historyInfo.limit;
+  const { ok } = await api("/api/settings", "POST", { history_limit: n });
+  if (!ok) { showToast("שגיאה בשמירה"); return; }
+  showToast(smaller ? `נשמר. נשמרות ${n} הפעולות האחרונות - הישנות יותר נמחקו מההיסטוריה` : `נשמר. נשמרות ${n} הפעולות האחרונות`);
+  await fetchSchedule(); await loadHistorySettings(); refreshLog();
+}
 async function refreshLog() {
   const { data } = await api("/api/log");
   document.getElementById("log-list").innerHTML = !data || !data.length ? "<p style='color:#888;'>אין רישומים עדיין.</p>" :
     data.map(e => `<div class="log-entry"><span class="log-time">${escapeHtml(e.timestamp)}</span> —
-      <span class="log-action">${escapeHtml(ACTION_TITLE[e.action] || e.action)}</span>${e.details ? " - " + escapeHtml(e.details) : ""}</div>`).join("");
+      <span class="log-action">${escapeHtml(ACTION_TITLE[e.action] || e.action)}</span>${e.details ? " - " + escapeHtml(e.details) : ""}${e.user ? ` <span class="log-user">· ${escapeHtml(e.user)}</span>` : ""}</div>`).join("");
 }
 
 // ---------------- הזזת חלונות: גוררים בכותרת החלון. בכל פתיחה החלון חוזר למרכז ----------------
