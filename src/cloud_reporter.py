@@ -634,6 +634,24 @@ def build_board(data):
     }
 
 
+USERS_FILE = os.path.join(BASE_DIR, "users.json")
+
+
+def build_editors():
+    """מורשי העריכה שיכולים להתחבר מהאפליקציה: פעילים, בתוך המכסה, עם מייל. בלי סיסמאות.
+    נשלח למרכז הבקרה בנפרד מהלוח - הצופים לא רואים אותו. אותו סדר מכסה כמו ב-web_server (מנהלים, ואז ותק)."""
+    users = (read_json(USERS_FILE) or {}).get("users") or []
+    try:
+        import license_check
+        limit = max(1, int(license_check.current_state().get("max_editors") or 5))
+    except Exception:
+        limit = 5
+    active = [u for u in users if isinstance(u, dict) and u.get("active", True) and u.get("id")]
+    active.sort(key=lambda u: (0 if u.get("role") == "admin" else 1, u.get("created") or ""))
+    return [{"id": u["id"], "name": u.get("name", ""), "email": (u.get("email") or "").lower(), "role": u.get("role", "editor"),
+             "v": u.get("pw_ver", 1)} for u in active[:limit] if u.get("email")]
+
+
 _board = {"mtime": None, "date": None}
 
 
@@ -641,6 +659,10 @@ def push_board(cfg, force=False):
     """שולח את הלוח למרכז הבקרה אם השתנה (לפי hash). מחזיר True אם נשלח."""
     try:
         mtime = os.path.getmtime(SCHEDULE_FILE)
+        try:
+            mtime = (mtime, os.path.getmtime(USERS_FILE))    # גם שינוי במורשים נשלח מיד
+        except OSError:
+            pass
     except OSError:
         return False
     req = read_json(CLOUD_REQUEST_FILE) or {}
@@ -651,12 +673,14 @@ def push_board(cfg, force=False):
     if not data:
         return False
     board = build_board(data)
-    raw = json.dumps(board, ensure_ascii=False, sort_keys=True)
+    editors = build_editors()
+    raw = json.dumps([board, editors], ensure_ascii=False, sort_keys=True)
     h = hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
     state = read_json(BOARD_STATE_FILE) or {}
     body = {"hash": h}
     if h != state.get("hash") or force:
         body["board"] = board
+        body["editors"] = editors
     if req.get("rotate_view"):
         body["rotate"] = True
     if "board" not in body and "rotate" not in body:

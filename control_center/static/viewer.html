@@ -57,6 +57,18 @@
   .tag { display: inline-block; font-size: 0.68rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-inline-start: 6px; vertical-align: middle; }
   .tag.next { background: var(--next); color: #fff; } .tag.playing { background: var(--on); color: #fff; }
   .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
+  .me-btn { border: 0; background: rgba(255,255,255,.18); color: #fff; border-radius: 999px; height: 30px; min-width: 30px; padding: 0 10px;
+    font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .sheet-bg { position: fixed; inset: 0; background: rgba(15,23,42,.45); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+  .sheet-bg[hidden] { display: none; }
+  .sheet { background: #fff; width: 100%; max-width: 460px; border-radius: 18px 18px 0 0; padding: 18px 18px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 30px rgba(0,0,0,.2); }
+  @media (min-width: 600px) { .sheet-bg { align-items: center; } .sheet { border-radius: 18px; } }
+  .sheet h3 { margin: 0 0 6px; color: var(--accent); font-size: 1.15rem; } .sheet p { margin: 0 0 12px; color: var(--muted); font-size: 0.88rem; }
+  .sheet input { width: 100%; font: inherit; font-size: 1.15rem; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; }
+  .sheet input.code { letter-spacing: 8px; text-align: center; font-size: 1.6rem; font-weight: 800; }
+  .sheet .row { display: flex; gap: 8px; } .sheet button { flex: 1; font: inherit; font-size: 1.05rem; font-weight: 700; padding: 13px; border-radius: 12px; border: 0; cursor: pointer; }
+  .sheet .primary { background: var(--accent); color: #fff; } .sheet .ghost { background: #eef1f5; color: #333; }
+  .sheet .err { color: var(--off); font-size: 0.85rem; min-height: 1.2em; margin-bottom: 6px; }
   footer { text-align: center; color: var(--muted); font-size: 0.7rem; padding: 4px 12px 18px; }
   /* מסך רחב: כל השבוע */
   @media (min-width: 980px) {
@@ -73,6 +85,7 @@
   <div class="h-top">
     <div style="flex:1;min-width:0"><div class="school" id="school">עת רצון</div><div class="h-date" id="date"></div></div>
     <span class="status" id="status">טוען...</span>
+    <button class="me-btn" id="me-btn" onclick="meClick()" aria-label="כניסה למורשי עריכה">🔑</button>
     <div class="clock" id="clock">--:--:--</div>
   </div>
   <div class="h-events">
@@ -85,6 +98,10 @@
 <nav class="days" id="days"></nav>
 <main id="main"></main>
 <footer id="footer"></footer>
+
+<div class="sheet-bg" id="sheet" hidden onclick="if (event.target === this) closeSheet()">
+  <div class="sheet" id="sheet-body"></div>
+</div>
 
 <script>
 const TOKEN = location.pathname.split("/").filter(Boolean)[1] || "";
@@ -245,13 +262,64 @@ function applyTheme() {
   if (/^#[0-9a-f]{6}$/i.test(board.accent_color || "")) { document.documentElement.style.setProperty("--accent", board.accent_color); document.documentElement.style.setProperty("--accent-2", board.accent_color); }
 }
 
+// ---------------- כניסה למורשי עריכה: מייל ← קוד חד-פעמי במייל ----------------
+let me = null, loginEmail = "";
+const appApi = async (path, body) => {
+  const r = await fetch("/api/app/" + encodeURIComponent(TOKEN) + path, body === undefined ? { credentials: "same-origin" } :
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), credentials: "same-origin" });
+  let d = {}; try { d = await r.json(); } catch (e) {}
+  return { ok: r.ok && d.ok !== false, d };
+};
+function renderMe() {
+  const b = document.getElementById("me-btn");
+  b.textContent = me ? "👤 " + me.name : "🔑";
+  b.setAttribute("aria-label", me ? "מחובר: " + me.name : "כניסה למורשי עריכה");
+}
+async function loadMe() { const { ok, d } = await appApi("/me"); if (ok) { me = d.editor; renderMe(); } }
+function openSheet(html) { document.getElementById("sheet-body").innerHTML = html; document.getElementById("sheet").hidden = false; }
+function closeSheet() { document.getElementById("sheet").hidden = true; }
+function meClick() {
+  if (me) return openSheet(`<h3>👤 ${esc(me.name)}</h3><p>מחובר/ת כ${me.role === "admin" ? "מנהל/ת" : "עורך/ת"}. עריכת הלוח מהאפליקציה תתווסף בעדכון הקרוב.</p>
+    <div class="row"><button class="ghost" onclick="logout()">יציאה</button><button class="primary" onclick="closeSheet()">סגירה</button></div>`);
+  openSheet(`<h3>כניסה למורשי עריכה</h3><p>הקלידו את כתובת המייל שרשומה אצל מנהל המערכת בבית הספר. נשלח אליה קוד כניסה.</p>
+    <input type="email" id="lg-email" inputmode="email" autocomplete="email" dir="ltr" placeholder="name@example.com" value="${esc(loginEmail)}">
+    <div class="err" id="lg-err"></div>
+    <div class="row"><button class="ghost" onclick="closeSheet()">ביטול</button><button class="primary" id="lg-send" onclick="sendCode()">שליחת קוד</button></div>`);
+  setTimeout(() => document.getElementById("lg-email").focus(), 50);
+}
+async function sendCode() {
+  const email = document.getElementById("lg-email").value.trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)) { document.getElementById("lg-err").textContent = "כתובת מייל לא תקינה"; return; }
+  const btn = document.getElementById("lg-send"); btn.disabled = true; btn.textContent = "שולח...";
+  const { ok, d } = await appApi("/login/start", { email });
+  btn.disabled = false; btn.textContent = "שליחת קוד";
+  if (!ok) { document.getElementById("lg-err").textContent = d.error || "שגיאה. נסו שוב."; return; }
+  loginEmail = email;
+  openSheet(`<h3>הקלדת הקוד</h3><p>${esc(d.message || "")}<br><span dir="ltr">${esc(email)}</span></p>
+    <input type="text" id="lg-code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"
+      oninput="if (this.value.replace(/\D/g, '').length === 6) verifyCode()">
+    <div class="err" id="lg-err"></div>
+    <div class="row"><button class="ghost" onclick="meClick()">מייל אחר / קוד חדש</button><button class="primary" id="lg-ok" onclick="verifyCode()">כניסה</button></div>`);
+  setTimeout(() => document.getElementById("lg-code").focus(), 50);
+}
+async function verifyCode() {
+  const code = document.getElementById("lg-code").value.replace(/\D/g, "");
+  if (code.length !== 6) { document.getElementById("lg-err").textContent = "הקוד בן 6 ספרות"; return; }
+  const btn = document.getElementById("lg-ok"); if (btn.disabled) return; btn.disabled = true;
+  const { ok, d } = await appApi("/login/verify", { email: loginEmail, code });
+  btn.disabled = false;
+  if (!ok) { document.getElementById("lg-err").textContent = d.error || "קוד שגוי"; return; }
+  me = d.editor; renderMe(); closeSheet();
+}
+async function logout() { await appApi("/logout", {}); me = null; renderMe(); closeSheet(); }
+
 const ml = document.createElement("link"); ml.rel = "manifest"; ml.href = location.pathname.replace(/\/$/, "") + "/manifest.json"; document.head.appendChild(ml);
 let lastMinute = -1;
 setInterval(() => { renderHeader(); const m = new Date().getMinutes(); if (m !== lastMinute) { lastMinute = m; if (board) renderBoard(); } }, 1000);
 setInterval(load, 30000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
 matchMedia("(min-width: 980px)").addEventListener("change", renderBoard);
-renderHeader(); load();
+renderHeader(); load(); loadMe();
 </script>
 </body>
 </html>

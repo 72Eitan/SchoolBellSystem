@@ -375,7 +375,9 @@
   .user-row .u-role.admin { background: #fde68a; color: #7c4a03; }
   .user-row.off { opacity: 0.55; } .user-row .u-acts { display: flex; gap: 4px; }
   .user-form { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr auto; gap: 8px; align-items: end; margin-top: 12px; }
-  .user-form .field { margin: 0; } .user-form .btn-primary { height: 36px; }
+  .user-form .field { margin: 0; }
+  .user-form.user-form-6 { grid-template-columns: 1.1fr 1.5fr 1fr 1.1fr 0.8fr auto; }
+  .users-import { margin-top: 12px; font-size: 0.82rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; } .user-form .btn-primary { height: 36px; }
   @media (max-width: 700px) { .user-form { grid-template-columns: 1fr 1fr; } }
   .bulk-days { display: flex; gap: 6px; flex-wrap: wrap; }
   .bulk-days label { display: inline-flex; align-items: center; gap: 3px; font-size: 0.82rem; background: #f3f5f9; border-radius: 6px; padding: 3px 7px; cursor: pointer; }
@@ -940,7 +942,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CLIENT_VERSION = "2026.11.11-1";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
+const CLIENT_VERSION = "2026.11.12-1";   // חייב להתאים ל-SERVER_VERSION ב-web_server.py
 const RESTART_HINT = "יש לסגור את חלון הניהול ולהריץ שוב את start_all.bat (הוא עוצר את העותקים הישנים ומפעיל מחדש).";
 const DAY_ORDER = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const DAY_HEB   = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
@@ -2621,20 +2623,29 @@ async function renderUsersPane() {
       return `<div class="user-row${u.active ? "" : " off"}">
         <span class="u-name">${escapeHtml(u.name)}${me ? " (אני)" : ""}</span>
         <span class="u-role${u.role === "admin" ? " admin" : ""}">${escapeHtml(u.role_name)}</span>
-        <span class="u-meta">${u.active ? (u.in_quota ? "פעיל" : "⚠️ מעבר למכסה - לא יכול להתחבר") : "מושבת"} · כניסה אחרונה: ${escapeHtml(fmtWhen(u.last_login))}</span>
+        <span class="u-meta">${u.active ? (u.in_quota ? "פעיל" : "⚠️ מעבר למכסה - לא יכול להתחבר") : "מושבת"} · כניסה אחרונה: ${escapeHtml(fmtWhen(u.last_login))}
+          <br>${u.email ? "✉ " + escapeHtml(u.email) : "<span style='color:#b45309'>אין מייל - לא יכול להתחבר מהאפליקציה</span>"}${u.phone ? " · ☎ " + escapeHtml(u.phone) : ""}${u.has_password ? "" : " · כניסה מהאפליקציה בלבד"}</span>
         <span class="u-acts">
           <button type="button" class="btn-ghost btn-small" onclick="userRole('${u.id}', '${u.role === "admin" ? "editor" : "admin"}')">${u.role === "admin" ? "הפוך לעורך" : "הפוך למנהל"}</button>
-          <button type="button" class="btn-ghost btn-small" onclick="userResetPassword('${u.id}')">איפוס סיסמה</button>
+          <button type="button" class="btn-ghost btn-small" onclick="userContact('${u.id}', '${escapeHtml(u.email)}', '${escapeHtml(u.phone)}')">מייל וטלפון</button>
+          <button type="button" class="btn-ghost btn-small" onclick="userResetPassword('${u.id}')">${u.has_password ? "איפוס סיסמה" : "קביעת סיסמה"}</button>
           ${me ? "" : `<button type="button" class="btn-ghost btn-small" onclick="userActive('${u.id}', ${!u.active})">${u.active ? "השבתה" : "הפעלה"}</button>
           <button type="button" class="btn-ghost btn-small" title="מחיקה" onclick="userDelete('${u.id}')">🗑</button>`}
         </span></div>`;
     }).join("") +
-    (used < max ? `<div class="user-form">
-        <div class="field"><label>שם משתמש</label><input type="text" id="nu-name" maxlength="40" style="direction:rtl;text-align:right"></div>
-        ${pwFields("nu", false)}
+    (used < max ? `<div class="user-form user-form-6">
+        <div class="field"><label>שם</label><input type="text" id="nu-name" maxlength="40" style="direction:rtl;text-align:right"></div>
+        <div class="field"><label>מייל (לכניסה מהאפליקציה)</label><input type="email" id="nu-email" maxlength="120" style="direction:ltr"></div>
+        <div class="field"><label>טלפון</label><input type="tel" id="nu-phone" maxlength="20" style="direction:ltr"></div>
+        <div class="field"><label>סיסמה (רשות)</label><input type="password" id="nu-new" autocomplete="new-password" placeholder="לכניסה במחשב הצלצולים"></div>
         <div class="field"><label>תפקיד</label><select id="nu-role"><option value="editor">עורך</option><option value="admin">מנהל</option></select></div>
         <button type="button" class="btn-primary" onclick="addUser(false)">+ הוספה</button></div>`
       : `<p class="hint">הגעתם למכסה. כדי להוסיף מורשה יש להשבית או למחוק מורשה קיים, או לפנות לספק להגדלת המכסה.</p>`) +
+    `<div class="users-import"><b>ייבוא מקובץ Excel:</b> עמודות שם, מייל, טלפון, הרשאה (מנהל/עורך).
+        <a href="/api/users/template">הורדת קובץ לדוגמה</a>
+        <input type="file" id="users-file" accept=".xlsx,.csv" style="display:none" onchange="importUsers(this)">
+        <button type="button" class="btn-ghost btn-small" onclick="document.getElementById('users-file').click()">📥 בחירת קובץ וייבוא</button></div>
+    <p class="hint">מורשה עם מייל מתחבר מהטלפון באפליקציה עם קוד שנשלח למייל. סיסמה נדרשת רק לכניסה במחשב הצלצולים (גם בלי אינטרנט).</p>` +
     `<p class="hint">עורך: עורך את הלוח ואת ההגדרות. מנהל: גם מוסיף ומסיר מורשים. איפוס סיסמה או השבתה מנתקים את המשתמש מכל המכשירים.
       כל השאר - מורים, תלמידים, מסכים - צופים בלוח בלי התחברות.</p>`;
   box.innerHTML = html;
@@ -2648,19 +2659,40 @@ async function usersCall(url, method, body, okMsg) {
 async function addUser(first) {
   const name = document.getElementById("nu-name").value.trim(), password = document.getElementById("nu-new").value;
   const role = first ? "admin" : document.getElementById("nu-role").value;
-  if (!name || !password) { showToast("יש למלא שם וסיסמה"); return; }
+  const email = first ? "" : document.getElementById("nu-email").value.trim(), phone = first ? "" : document.getElementById("nu-phone").value.trim();
+  if (!name) { showToast("יש למלא שם"); return; }
+  if (first && !password) { showToast("יש למלא סיסמה"); return; }
+  if (!first && !password && !email) { showToast("יש למלא מייל (לכניסה מהאפליקציה) או סיסמה (לכניסה במחשב)"); return; }
   if (first) {
     const c = await showChoice("יצירת חשבון מנהל", `מאחר שייווצר החשבון, עריכה תתאפשר רק אחרי התחברות - גם במחשב הצלצולים.<br>
       שם המשתמש: <b>${escapeHtml(name)}</b>. כדאי לרשום את הסיסמה במקום בטוח.`,
       [{ label: "יצירה", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
     if (c !== "yes") return;
   }
-  await usersCall("/api/users", "POST", { name, password, role }, first ? `החשבון נוצר. את/ה מחובר/ת כ-${name}` : `${name} נוסף/ה למורשי העריכה`);
+  await usersCall("/api/users", "POST", { name, password, role, email, phone }, first ? `החשבון נוצר. את/ה מחובר/ת כ-${name}` : `${name} נוסף/ה למורשי העריכה`);
 }
 async function changeMyPassword() {
   const old = document.getElementById("me-old").value, nw = document.getElementById("me-new").value;
   if (!old || !nw) { showToast("יש למלא את שתי הסיסמאות"); return; }
   await usersCall("/api/me/password", "POST", { old, new: nw }, "הסיסמה הוחלפה");
+}
+async function userContact(id, email, phone) {
+  const c = await showChoice("מייל וטלפון", `<div class="field"><label>מייל (לכניסה מהאפליקציה)</label><input type="email" id="uc-email" style="direction:ltr" value="${email}"></div>
+      <div class="field"><label>טלפון</label><input type="tel" id="uc-phone" style="direction:ltr" value="${phone}"></div>`,
+    [{ label: "שמירה", value: "yes", cls: "btn-primary" }, { label: "ביטול", value: null, cls: "btn-cancel" }]);
+  if (c !== "yes") return;
+  await usersCall(`/api/users/${id}`, "PATCH", { email: document.getElementById("uc-email").value.trim(), phone: document.getElementById("uc-phone").value.trim() }, "הפרטים עודכנו");
+}
+async function importUsers(inp) {
+  const f = inp.files && inp.files[0]; inp.value = ""; if (!f) return;
+  const fd = new FormData(); fd.append("file", f);
+  const res = await fetch("/api/users/import", { method: "POST", body: fd });
+  let data = null; try { data = await res.json(); } catch (e) {}
+  if (!res.ok) { showToast((data && data.error) || "שגיאה בייבוא"); return; }
+  await renderUsersPane();
+  const lines = [`נוספו: ${data.added.length}${data.added.length ? " (" + data.added.map(escapeHtml).join(", ") + ")" : ""}`,
+    `עודכנו: ${data.updated.length}`].concat(data.skipped.length ? ["<b>לא יובאו:</b>"].concat(data.skipped.map(x => "• " + escapeHtml(x))) : []);
+  showChoice("ייבוא מורשים", lines.join("<br>"), [{ label: "סגירה", value: null, cls: "btn-primary" }]);
 }
 async function userRole(id, role) { await usersCall(`/api/users/${id}`, "PATCH", { role }, "התפקיד עודכן"); }
 async function userActive(id, active) { await usersCall(`/api/users/${id}`, "PATCH", { active }, active ? "החשבון הופעל" : "החשבון הושבת והמשתמש נותק"); }

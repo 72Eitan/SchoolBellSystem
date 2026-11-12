@@ -22,6 +22,8 @@ import base64
 import hashlib
 import io
 import json
+import ssl
+from html import escape as html_escape
 import os
 import random
 import re
@@ -37,7 +39,7 @@ from flask import Flask, g, send_file, has_request_context, jsonify, request, se
 import ed25519_pure as ed
 from werkzeug.security import check_password_hash, generate_password_hash
 
-APP_VERSION = "2026.11.11-cc3"
+APP_VERSION = "2026.11.12-cc4"
 PORT = 8600
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -147,7 +149,18 @@ CREATE TABLE IF NOT EXISTS boards (
     view_token TEXT NOT NULL UNIQUE,
     board_json TEXT NOT NULL DEFAULT '{}',
     board_hash TEXT NOT NULL DEFAULT '',
-    updated_at TEXT
+    updated_at TEXT,
+    editors_json TEXT NOT NULL DEFAULT '[]'
+);
+CREATE TABLE IF NOT EXISTS app_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    email TEXT NOT NULL,
+    code_hash TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    used INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS heartbeats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -238,6 +251,9 @@ def init_db():
     for col in ("license_token", "license_basis"):
         if col not in cols:
             conn.execute("ALTER TABLE customers ADD COLUMN %s TEXT" % col)
+    bcols = {r["name"] for r in conn.execute("PRAGMA table_info(boards)")}
+    if "editors_json" not in bcols:
+        conn.execute("ALTER TABLE boards ADD COLUMN editors_json TEXT NOT NULL DEFAULT '[]'")
     if "max_editors" not in cols:
         conn.execute("ALTER TABLE customers ADD COLUMN max_editors INTEGER DEFAULT %d" % DEFAULT_MAX_EDITORS)
     # ניסיון בלי תאריך סיום = 30 יום מיום היצירה (כך זה גם מוצג בדשבורד)
@@ -1267,6 +1283,13 @@ def api_agent_board():
         if body.get("rotate"):
             conn.execute("UPDATE boards SET view_token=? WHERE customer_id=?", (new_view_token(), c["id"]))
             audit(conn, "view_link_rotate", "קישור הצפייה הוחלף מבית הספר", c["id"], username="(מחשב)")
+        eds = body.get("editors")
+        if isinstance(eds, list):
+            clean = [{"id": str(e.get("id", ""))[:20], "name": str(e.get("name", ""))[:40],
+                      "email": str(e.get("email", "")).strip().lower()[:190], "role": "admin" if e.get("role") == "admin" else "editor",
+                      "v": int(e.get("v") or 1) if str(e.get("v") or "1").isdigit() else 1}
+                     for e in eds[:50] if isinstance(e, dict) and e.get("id") and e.get("email")]
+            conn.execute("UPDATE boards SET editors_json=? WHERE customer_id=?", (json.dumps(clean, ensure_ascii=False), c["id"]))
         board = body.get("board")
         if isinstance(board, dict):
             raw = json.dumps(board, ensure_ascii=False)
@@ -1328,6 +1351,204 @@ def api_view(token):
     resp.headers["ETag"] = etag
     resp.headers["Cache-Control"] = "no-cache"
     return resp
+
+
+# ------------------------------------------------------------------ מייל המערכת (לקוד חד-פעמי)
+# נשמר ב-data/mail.json (לא בקוד, לא ב-zip ולא ב-Git). Gmail עם סיסמת אפליקציה - במסלול החינמי של PythonAnywhere
+# זו הדרך היחידה לשלוח מייל.
+MAIL_FILE = os.path.join(DATA_DIR, "mail.json")
+
+
+def mail_cfg():
+    try:
+        with open(MAIL_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def send_mail(to, subject, text, html=None):
+    """שולח מייל דרך Gmail (STARTTLS 587). מחזיר (הצליח?, הודעה)."""
+    import smtplib
+    from email.message import EmailMessage
+    from email.utils import formataddr
+    cfg = mail_cfg()
+    user, pw = cfg.get("user"), cfg.get("app_password")
+    if not user or not pw:
+        return False, "לא הוגדר מייל מערכת (מרכז הבקרה ← הגדרות מייל)"
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = formataddr((cfg.get("from_name") or "עת רצון", user))
+    msg["To"] = to
+    msg.set_content(text)
+    if html:
+        msg.add_alternative(html, subtype="html")
+    try:
+        with smtplib.SMTP(cfg.get("host") or "smtp.gmail.com", int(cfg.get("port") or 587), timeout=25) as smtp:
+            smtp.starttls(context=ssl.create_default_context())
+            smtp.login(user, pw)
+            smtp.send_message(msg)
+        return True, "נשלח"
+    except smtplib.SMTPAuthenticationError:
+        return False, "Gmail דחה את ההתחברות - בדקו את כתובת המייל ואת סיסמת האפליקציה (16 אותיות)"
+    except Exception as e:
+        return False, "שליחת המייל נכשלה: %s" % e
+
+
+@app.route("/api/settings/mail", methods=["GET", "POST"])
+@login_required(roles=("owner",))
+def api_mail_settings():
+    if request.method == "GET":
+        cfg = mail_cfg()
+        return jsonify({"ok": True, "user": cfg.get("user", ""), "from_name": cfg.get("from_name", "עת רצון"),
+                        "has_password": bool(cfg.get("app_password"))})
+    body = request.get_json(force=True) or {}
+    cfg = mail_cfg()
+    user = str(body.get("user") or "").strip()
+    if user and not re.match(r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$", user):
+        return api_error("כתובת מייל לא תקינה")
+    cfg["user"] = user
+    cfg["from_name"] = str(body.get("from_name") or "עת רצון").strip()[:60]
+    pw = re.sub(r"\s+", "", str(body.get("app_password") or ""))
+    if pw:
+        cfg["app_password"] = pw
+    os.makedirs(DATA_DIR, exist_ok=True)
+    tmp = MAIL_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, ensure_ascii=False)
+    os.replace(tmp, MAIL_FILE)
+    audit(db(), "mail_settings", "עודכנו הגדרות מייל המערכת (%s)" % user)
+    db().commit()
+    return jsonify({"ok": True})
+
+
+@app.route("/api/settings/mail/test", methods=["POST"])
+@login_required(roles=("owner",))
+def api_mail_test():
+    to = str((request.get_json(force=True) or {}).get("to") or "").strip()
+    if not to:
+        return api_error("יש להזין כתובת לבדיקה")
+    ok, msg = send_mail(to, "עת רצון - בדיקת מייל", "זו הודעת בדיקה ממרכז הבקרה של עת רצון. אם קיבלת אותה - שליחת הקודים עובדת.")
+    return jsonify({"ok": ok, "message": msg}) if ok else api_error(msg)
+
+
+# ------------------------------------------------------------------ התחברות מורשים באפליקציה (קוד חד-פעמי במייל)
+# רשימת המורשים מגיעה ממחשב הצלצולים (פעילים, בתוך המכסה, עם מייל). מי שלא ברשימה לא מקבל קוד.
+# התשובה ל"שלח קוד" זהה תמיד, כדי שאי אפשר יהיה לבדוק מי מורשה.
+APP_CODE_TTL_MIN = 10
+APP_CODE_MAX_ATTEMPTS = 5
+APP_CODE_MAX_PER_15MIN = 3
+APP_SESSION_DAYS = 14
+
+
+def _app_editors(row):
+    try:
+        return json.loads(row["editors_json"] or "[]")
+    except (ValueError, TypeError, IndexError, KeyError):
+        return []
+
+
+def app_editor(conn, row):
+    """המורשה המחובר באפליקציה של בית הספר הזה, אם עדיין ברשימה (ובאותה גרסת סיסמה/השבתה)."""
+    a = (session.get("app") or {}).get(str(row["customer_id"]))
+    if not a:
+        return None
+    if parse_iso(a.get("until")) and parse_iso(a["until"]) < utcnow():
+        return None
+    return next((e for e in _app_editors(row) if e["id"] == a.get("id") and e.get("v", 1) == a.get("v", 1)), None)
+
+
+def _code_hash(customer_id, email, code):
+    return hashlib.sha256(("%s|%s|%s|%s" % (app.secret_key, customer_id, email, code)).encode("utf-8")).hexdigest()
+
+
+@app.route("/api/app/<token>/login/start", methods=["POST"])
+def api_app_login_start(token):
+    conn, row = _board_by_token(token)
+    if not row:
+        return api_error("לא נמצא", 404)
+    email = str((request.get_json(force=True, silent=True) or {}).get("email") or "").strip().lower()
+    generic = {"ok": True, "message": "אם הכתובת רשומה כמורשה עריכה בבית הספר, נשלח אליה קוד בן 6 ספרות. הקוד תקף %d דקות." % APP_CODE_TTL_MIN}
+    if not email or len(email) > 190:
+        return api_error("יש להזין כתובת מייל")
+    ed = next((e for e in _app_editors(row) if e.get("email") == email), None)
+    if not ed:
+        return jsonify(generic)
+    recent = conn.execute("SELECT COUNT(*) n FROM app_codes WHERE customer_id=? AND email=? AND created_at>=?",
+                          (row["customer_id"], email, iso(utcnow() - timedelta(minutes=15)))).fetchone()["n"]
+    if recent >= APP_CODE_MAX_PER_15MIN:
+        return api_error("נשלחו כבר כמה קודים לכתובת הזו. נסו שוב בעוד רבע שעה.", 429)
+    code = "%06d" % secrets.randbelow(1000000)
+    with _db_lock:
+        conn.execute("UPDATE app_codes SET used=1 WHERE customer_id=? AND email=? AND used=0", (row["customer_id"], email))
+        conn.execute("INSERT INTO app_codes(customer_id, email, code_hash, expires_at, created_at) VALUES (?,?,?,?,?)",
+                     (row["customer_id"], email, _code_hash(row["customer_id"], email, code),
+                      iso(utcnow() + timedelta(minutes=APP_CODE_TTL_MIN)), iso(utcnow())))
+        conn.commit()
+    school = json.loads(row["board_json"] or "{}").get("name") or row["cname"] or ""
+    text = ("שלום %s,\n\nקוד הכניסה שלך לעת רצון (%s) הוא: %s\n\nהקוד תקף %d דקות. אם לא ביקשת קוד - אפשר להתעלם מהמייל."
+            % (ed["name"], school, code, APP_CODE_TTL_MIN))
+    html = ("<div dir='rtl' style='font-family:Arial,sans-serif;font-size:16px'>שלום %s,<br><br>קוד הכניסה שלך לעת רצון (%s):"
+            "<div style='font-size:32px;font-weight:bold;letter-spacing:6px;margin:14px 0;color:#1e3c72'>%s</div>"
+            "הקוד תקף %d דקות. אם לא ביקשת קוד - אפשר להתעלם מהמייל.</div>"
+            % (html_escape(ed["name"]), html_escape(school), code, APP_CODE_TTL_MIN))
+    ok, msg = send_mail(email, "קוד כניסה לעת רצון: %s" % code, text, html)
+    if not ok:
+        app.logger.warning("app code mail failed: %s", msg)
+        return api_error("לא ניתן היה לשלוח את הקוד כרגע. נסו שוב מאוחר יותר או פנו למנהל המערכת.", 503)
+    return jsonify(generic)
+
+
+@app.route("/api/app/<token>/login/verify", methods=["POST"])
+def api_app_login_verify(token):
+    conn, row = _board_by_token(token)
+    if not row:
+        return api_error("לא נמצא", 404)
+    body = request.get_json(force=True, silent=True) or {}
+    email = str(body.get("email") or "").strip().lower()
+    code = re.sub(r"\D", "", str(body.get("code") or ""))
+    rec = conn.execute("SELECT * FROM app_codes WHERE customer_id=? AND email=? AND used=0 ORDER BY id DESC LIMIT 1",
+                       (row["customer_id"], email)).fetchone()
+    bad = "קוד שגוי או שפג תוקפו. אפשר לבקש קוד חדש."
+    if not rec or parse_iso(rec["expires_at"]) < utcnow() or rec["attempts"] >= APP_CODE_MAX_ATTEMPTS:
+        return api_error(bad, 400)
+    if not secrets.compare_digest(rec["code_hash"], _code_hash(row["customer_id"], email, code)):
+        with _db_lock:
+            conn.execute("UPDATE app_codes SET attempts=attempts+1 WHERE id=?", (rec["id"],))
+            conn.commit()
+        return api_error(bad, 400)
+    ed = next((e for e in _app_editors(row) if e.get("email") == email), None)
+    if not ed:
+        return api_error(bad, 400)
+    with _db_lock:
+        conn.execute("UPDATE app_codes SET used=1 WHERE id=?", (rec["id"],))
+        audit(conn, "app_login", "התחברות לאפליקציה: %s" % ed["name"], row["customer_id"], username=ed["name"])
+        conn.commit()
+    apps = dict(session.get("app") or {})
+    apps[str(row["customer_id"])] = {"id": ed["id"], "v": ed.get("v", 1),
+                                     "until": iso(utcnow() + timedelta(days=APP_SESSION_DAYS))}
+    session["app"] = apps
+    session.permanent = True
+    return jsonify({"ok": True, "editor": {"name": ed["name"], "role": ed["role"]}})
+
+
+@app.route("/api/app/<token>/me")
+def api_app_me(token):
+    conn, row = _board_by_token(token)
+    if not row:
+        return api_error("לא נמצא", 404)
+    ed = app_editor(conn, row)
+    return jsonify({"ok": True, "editor": {"name": ed["name"], "role": ed["role"]} if ed else None})
+
+
+@app.route("/api/app/<token>/logout", methods=["POST"])
+def api_app_logout(token):
+    conn, row = _board_by_token(token)
+    if row:
+        apps = dict(session.get("app") or {})
+        apps.pop(str(row["customer_id"]), None)
+        session["app"] = apps
+    return jsonify({"ok": True})
 
 
 @app.route("/api/customers/<int:cid>/view-link", methods=["GET", "POST"])

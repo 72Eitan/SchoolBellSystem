@@ -287,6 +287,7 @@ table.tbl { width: 100%; border-collapse: collapse; }
     <a data-page="org" data-owner>רשתות ומשתמשים</a>
     <a data-page="updates" data-owner>עדכוני תוכנה</a>
     <a data-page="audit" data-owner>יומן פעולות</a>
+    <a data-page="mail" data-owner>מייל המערכת</a>
     <div class="foot" id="ver"></div>
   </nav>
 
@@ -399,6 +400,21 @@ table.tbl { width: 100%; border-collapse: collapse; }
         <table class="tbl"><thead><tr><th>מתי</th><th>מי</th><th>לקוח</th><th>פעולה</th><th>פרטים</th></tr></thead><tbody id="audit-body"></tbody></table>
       </div>
     </section>
+    <section id="page-mail" class="hidden">
+      <div class="page-head"><div><h1>מייל המערכת</h1><div class="sub">מכאן נשלחים קודי הכניסה למורשי העריכה באפליקציה</div></div></div>
+      <div class="panel" style="max-width:640px"><div class="panel-b grid2" id="mail-form">
+        <div class="field span2"><label>כתובת Gmail של המערכת</label><input name="user" type="email" dir="ltr" placeholder="name@gmail.com"></div>
+        <div class="field span2"><label>סיסמת אפליקציה (16 אותיות) <span class="muted" id="mail-pw-state"></span></label>
+          <input name="app_password" type="password" dir="ltr" autocomplete="new-password" placeholder="השאירו ריק כדי לא לשנות"></div>
+        <div class="field span2"><label>שם השולח שיופיע במייל</label><input name="from_name" value="עת רצון"></div>
+        <div class="span2" style="display:flex;gap:8px"><button class="btn primary" id="mail-save">שמירה</button></div>
+      </div>
+      <div class="panel-b" style="border-top:1px solid var(--line);display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+        <div class="field" style="flex:1;min-width:220px"><label>שליחת מייל בדיקה אל</label><input id="mail-test-to" type="email" dir="ltr"></div>
+        <button class="btn" id="mail-test">שליחת בדיקה</button></div>
+      <div class="panel-b"><div class="notice info" style="font-size:12px;line-height:1.6">הסיסמה נשמרת רק בשרת (בתיקייה data), לא בקוד ולא בגיבוי ב-GitHub.
+        סיסמת אפליקציה נוצרת בחשבון Google של התיבה: myaccount.google.com/apppasswords (דורש אימות דו-שלבי).</div></div></div>
+    </section>
   </main>
 </div>
 
@@ -428,6 +444,25 @@ async function api(path, opts = {}) {
 }
 
 let toastTimer;
+async function loadMail() {
+  const f = $("#mail-form");
+  try {
+    const r = await api("/api/settings/mail");
+    $("[name=user]", f).value = r.user || ""; $("[name=from_name]", f).value = r.from_name || "עת רצון";
+    $("[name=app_password]", f).value = "";
+    $("#mail-pw-state").textContent = r.has_password ? "· שמורה" : "· עוד לא הוזנה";
+  } catch (e) { toast(e.message, true); }
+  $("#mail-save").onclick = async () => {
+    const body = { user: $("[name=user]", f).value.trim(), from_name: $("[name=from_name]", f).value.trim(), app_password: $("[name=app_password]", f).value };
+    try { await api("/api/settings/mail", { method: "POST", body }); toast("נשמר"); loadMail(); } catch (e) { toast(e.message, true); }
+  };
+  $("#mail-test").onclick = async () => {
+    const b = $("#mail-test"); b.disabled = true; b.textContent = "שולח...";
+    try { const r = await api("/api/settings/mail/test", { method: "POST", body: { to: $("#mail-test-to").value.trim() } }); toast(r.message || "נשלח"); }
+    catch (e) { toast(e.message, true); } finally { b.disabled = false; b.textContent = "שליחת בדיקה"; }
+  };
+}
+
 function toast(msg, isErr) {
   let t = $(".toast"); if (!t) { t = document.createElement("div"); document.body.appendChild(t); }
   t.className = "toast" + (isErr ? " err" : ""); t.textContent = msg;
@@ -526,6 +561,7 @@ function go(page, opts = {}) {
   if (page === "org") loadOrg();
   if (page === "audit") loadAudit();
   if (page === "updates") loadReleases();
+  if (page === "mail") loadMail();
   $("#main").scrollTop = 0;
 }
 $("#nav").addEventListener("click", e => { const a = e.target.closest("a[data-page]"); if (a) go(a.dataset.page); });

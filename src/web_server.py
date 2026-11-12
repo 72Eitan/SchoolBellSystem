@@ -70,7 +70,7 @@ THEME_PRESETS = {
 }
 
 # גרסת השרת - הממשק (index.html) משווה אליה ומציג אזהרה אם רץ שרת ישן יותר
-SERVER_VERSION = "2026.11.11-1"
+SERVER_VERSION = "2026.11.12-1"
 SERVER_PORT = 8500
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
@@ -449,7 +449,7 @@ ACTION_TITLES = {
     "update_settings": "עדכון הגדרות", "import_excel": "ייבוא Excel", "schedule_save": "שמירת לוח",
     "schedule_load": "טעינת לוח", "undo": "ביטול פעולה", "redo": "החזרת פעולה", "bulk_edit": "שינוי גורף",
     "special_dates": "ימים ללא שמע", "login": "התחברות",
-    "view_link_rotate": "החלפת קישור צפייה", "user_add": "הוספת מורשה", "user_update": "עדכון מורשה", "user_delete": "מחיקת מורשה", "license_activate": "הפעלת רישיון",
+    "view_link_rotate": "החלפת קישור צפייה", "user_import": "ייבוא מורשים", "user_add": "הוספת מורשה", "user_update": "עדכון מורשה", "user_delete": "מחיקת מורשה", "license_activate": "הפעלת רישיון",
 }
 FIELD_NAMES = {"label": "תיאור", "type": "סוג", "duration_seconds": "משך", "loop": "השמעה חוזרת",
                "fade_in_s": "Fade In", "fade_out_s": "Fade Out", "shuffle": "השמעה אקראית",
@@ -985,7 +985,7 @@ def api_login():
     if wait:
         return jsonify({"ok": False, "error": f"יותר מדי ניסיונות שגויים. נסו שוב בעוד {wait // 60 + 1} דקות."}), 429
     u = next((x for x in users if x["name"].strip().lower() == name.lower()), None)
-    good, needs_upgrade = verify_password(password, u["pw_hash"]) if u else (False, False)
+    good, needs_upgrade = verify_password(password, u["pw_hash"]) if u and u.get("pw_hash") else (False, False)
     if not good:
         _login_failures.setdefault(addr, []).append(time.time())
         logging.warning(f"ניסיון התחברות שגוי מהכתובת {addr} (שם: {name[:40]})")
@@ -1027,7 +1027,26 @@ def api_logout():
 def _public_user(u, allowed):
     return {"id": u["id"], "name": u["name"], "role": u["role"], "role_name": USER_ROLES.get(u["role"], u["role"]),
             "active": u.get("active", True), "in_quota": u["id"] in allowed,
+            "email": u.get("email", ""), "phone": u.get("phone", ""), "has_password": bool(u.get("pw_hash")),
             "created": u.get("created"), "last_login": u.get("last_login")}
+
+
+# ---- פרטי קשר של מורשה: המייל משמש להתחברות לאפליקציה (קוד חד-פעמי במייל), הטלפון לשימוש עתידי (SMS) ----
+_EMAIL_RE = re.compile(r"^[^@\s]{1,64}@[^@\s]{1,190}\.[A-Za-z]{2,24}$")
+
+
+def _validate_contact(body, users, skip_id=None):
+    """(email, phone, error). מייל ייחודי במוסד. טלפון: ספרות בלבד (מותר + בהתחלה)."""
+    email = str(body.get("email") or "").strip().lower()
+    if email and not _EMAIL_RE.match(email):
+        return None, None, "כתובת מייל לא תקינה"
+    if email and any((u.get("email") or "").lower() == email and u["id"] != skip_id for u in users):
+        return None, None, "כבר קיים מורשה עם המייל הזה"
+    raw = str(body.get("phone") or "").strip()
+    phone = re.sub(r"[\s\-()]", "", raw)
+    if phone and not re.match(r"^\+?\d{7,15}$", phone):
+        return None, None, "מספר טלפון לא תקין"
+    return email, phone, None
 
 
 def _users_payload(users):
@@ -1078,16 +1097,20 @@ def api_add_user():
         users = load_users()
         first = not users
         name, err = _validate_name(body.get("name"), users)
-        pw, err2 = _validate_password(body.get("password"))
-        if err or err2:
-            return jsonify({"error": err or err2}), 400
+        email, phone, err3 = _validate_contact(body, users)
+        pw, err2 = (None, None)
+        if body.get("password") or first or not email:
+            pw, err2 = _validate_password(body.get("password"))
+        if err or err3 or err2:
+            return jsonify({"error": err or err3 or err2}), 400
         role = "admin" if first else (body.get("role") if body.get("role") in USER_ROLES else "editor")
         limit = max_editors()
         if sum(1 for u in users if u.get("active", True)) >= limit:
             return jsonify({"error": f"הגעתם למכסת מורשי העריכה ({limit}). כדי להוסיף מורשה יש להשבית או למחוק מורשה קיים, "
                                      f"או לפנות לספק להגדלת המכסה."}), 403
-        u = {"id": uuid.uuid4().hex[:10], "name": name, "role": role, "pw_hash": hash_password(pw), "pw_ver": 1,
-             "active": True, "created": datetime.now().isoformat(timespec="seconds"), "last_login": None}
+        u = {"id": uuid.uuid4().hex[:10], "name": name, "role": role, "pw_hash": hash_password(pw) if pw else "",
+             "pw_ver": 1, "active": True, "email": email, "phone": phone,
+             "created": datetime.now().isoformat(timespec="seconds"), "last_login": None}
         users.append(u)
         save_users(users)
     append_action_log("user_add", f"נוסף מורשה עריכה: {name} ({USER_ROLES[role]})")
@@ -1115,6 +1138,18 @@ def api_update_user(uid):
                 return jsonify({"error": err}), 400
             changes.append(f"שם: {u['name']} → {name}")
             u["name"] = name
+        if "email" in body or "phone" in body:
+            email, phone, err = _validate_contact({"email": body.get("email", u.get("email")),
+                                                   "phone": body.get("phone", u.get("phone"))}, users, skip_id=uid)
+            if err:
+                return jsonify({"error": err}), 400
+            if email != (u.get("email") or ""):
+                changes.append("מייל")
+            if phone != (u.get("phone") or ""):
+                changes.append("טלפון")
+            if not email and not u.get("pw_hash"):
+                return jsonify({"error": "למורשה בלי סיסמה חייב להיות מייל (כדי שיוכל להתחבר מהאפליקציה)"}), 400
+            u["email"], u["phone"] = email, phone
         if "role" in body and body["role"] in USER_ROLES and body["role"] != u["role"]:
             if u["role"] == "admin" and not _active_admins(users, skip_id=uid):
                 return jsonify({"error": "חייב להישאר לפחות מנהל פעיל אחד"}), 400
@@ -1144,6 +1179,104 @@ def api_update_user(uid):
     return jsonify(_users_payload(users))
 
 
+USER_IMPORT_HEADERS = ["שם", "מייל", "טלפון", "הרשאה"]
+_ROLE_WORDS = {"מנהל": "admin", "admin": "admin", "עורך": "editor", "editor": "editor", "": "editor"}
+
+
+@app.route("/api/users/template", methods=["GET"])
+def api_users_template():
+    """קובץ Excel לדוגמה לייבוא מורשים."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "מורשים"
+    ws.sheet_view.rightToLeft = True
+    ws.append(USER_IMPORT_HEADERS)
+    ws.append(["ישראל ישראלי", "israel@example.com", "0501234567", "עורך"])
+    for col, w in zip("ABCD", (22, 30, 16, 10)):
+        ws.column_dimensions[col].width = w
+    out = io.BytesIO()
+    wb.save(out)
+    out.seek(0)
+    return send_file(out, as_attachment=True, download_name="מורשי_עריכה.xlsx",
+                     mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+
+@app.route("/api/users/import", methods=["POST"])
+def api_import_users():
+    """ייבוא מורשים מ-Excel / CSV: שם, מייל, טלפון, הרשאה (מנהל/עורך). קיים לפי מייל או שם = עדכון פרטים;
+    חדש = נוסף בלי סיסמה (מתחבר מהאפליקציה בקוד במייל). המכסה נשמרת: מעבר לה - לא נוסף, ומדווח."""
+    guard = require_admin()
+    if guard:
+        return guard
+    f = request.files.get("file")
+    if not f:
+        return jsonify({"error": "לא נבחר קובץ"}), 400
+    try:
+        rows = _read_rows(f.stream, f.filename or "")
+    except Exception as e:
+        return jsonify({"error": f"לא ניתן לקרוא את הקובץ: {e}"}), 400
+    if not rows:
+        return jsonify({"error": "הקובץ ריק"}), 400
+    head = list(rows[0].keys())
+    def col(*names):
+        for n in names:
+            for h in head:
+                if str(h).strip() == n:
+                    return h
+        return None
+    ci = {"name": col("שם", "שם מלא", "name"), "email": col("מייל", "דוא\"ל", "דואל", "email"),
+          "phone": col("טלפון", "נייד", "phone"), "role": col("הרשאה", "תפקיד", "role")}
+    if ci["name"] is None:
+        return jsonify({"error": "חסרה עמודת 'שם' בשורה הראשונה"}), 400
+    added, updated, skipped = [], [], []
+    with _users_lock:
+        users = load_users()
+        limit = max_editors()
+        for r in rows:
+            get = lambda k: (_cell_text(r.get(ci[k])).strip() if ci[k] is not None else "")
+            name = get("name")
+            if not name:
+                continue
+            role = _ROLE_WORDS.get(get("role").lower(), "editor")
+            email_in = get("email").lower()
+            u = next((x for x in users if (email_in and (x.get("email") or "").lower() == email_in)
+                      or x["name"].strip().lower() == name.lower()), None)
+            ph = get("phone")
+            if re.match(r"^[5-9]\d{7,8}$", ph):     # Excel שומר טלפון כמספר ומוחק את ה-0 בהתחלה
+                ph = "0" + ph
+            email, phone, err = _validate_contact({"email": email_in, "phone": ph}, users,
+                                                  skip_id=u["id"] if u else None)
+            if err:
+                skipped.append(f"{name}: {err}")
+                continue
+            if u:
+                u["email"] = email or u.get("email", "")
+                u["phone"] = phone or u.get("phone", "")
+                updated.append(name)
+                continue
+            if not email:
+                skipped.append(f"{name}: חסר מייל (בלי מייל אי אפשר להתחבר מהאפליקציה)")
+                continue
+            nm, err = _validate_name(name, users)
+            if err:
+                skipped.append(f"{name}: {err}")
+                continue
+            if sum(1 for x in users if x.get("active", True)) >= limit:
+                skipped.append(f"{name}: מעבר למכסת מורשי העריכה ({limit})")
+                continue
+            users.append({"id": uuid.uuid4().hex[:10], "name": nm, "role": role, "pw_hash": "", "pw_ver": 1,
+                          "active": True, "email": email, "phone": phone,
+                          "created": datetime.now().isoformat(timespec="seconds"), "last_login": None})
+            added.append(nm)
+        if not any(u.get("role") == "admin" and u.get("active", True) and u.get("pw_hash") for u in users) and not request_is_local():
+            return jsonify({"error": "חייב להישאר מנהל עם סיסמה"}), 400
+        save_users(users)
+    append_action_log("user_import", f"ייבוא מורשים: נוספו {len(added)}, עודכנו {len(updated)}, דולגו {len(skipped)}")
+    out = _users_payload(users)
+    out.update(added=added, updated=updated, skipped=skipped)
+    return jsonify(out)
+
+
 @app.route("/api/users/<uid>", methods=["DELETE"])
 def api_delete_user(uid):
     guard = require_admin()
@@ -1169,7 +1302,7 @@ def api_change_my_password():
     if not u:
         return jsonify({"error": "יש להתחבר קודם"}), 403
     body = request.get_json(force=True)
-    good, _ = verify_password(str(body.get("old") or ""), u["pw_hash"])
+    good, _ = verify_password(str(body.get("old") or ""), u["pw_hash"]) if u.get("pw_hash") else (True, False)
     if not good:
         return jsonify({"error": "הסיסמה הנוכחית שגויה"}), 400
     pw, err = _validate_password(body.get("new"))
